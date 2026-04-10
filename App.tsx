@@ -46,8 +46,6 @@ const Dashboard: React.FC = () => {
   
   // Track previous sales to detect updates
   const prevTotalSalesRef = useRef<number>(0);
-
-  const randomClientes = useMemo(() => 15000 + Math.floor(Math.random() * 1000), []);
   
   const loadData = useCallback(async () => {
     try {
@@ -192,7 +190,6 @@ const Dashboard: React.FC = () => {
   const totalSales = data?.totalSales || 0;
   const totalOrders = data?.totalOrders || 0;
   const totalUnits = data?.totalUnits || 0;
-  const totalCliente = data?.totalCliente || 0;
   const target = data?.dailyTarget || 1;
   const progress = totalSales / target;
   const topPerformer = data?.branches[0]; 
@@ -313,13 +310,30 @@ const Dashboard: React.FC = () => {
           branch={topPerformer} 
           totalSales={totalSales} 
         />
-        <KpiCard
-          title="Alta de Clientes"
-          value={new Intl.NumberFormat('es-AR').format(randomClientes)}
-          numericValue={randomClientes}
-          format={(val) => new Intl.NumberFormat('es-AR').format(val)}
-          color={COLORS.GREEN}
-        />
+        <div className="bg-[#121620] p-3 2xl:p-4 rounded-xl border border-white/5 flex flex-col shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-[#01B693]"></div>
+            <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#01B693] rounded-full opacity-5 blur-2xl group-hover:opacity-10 transition-opacity"></div>
+            
+            <h3 className="text-gray-400 text-[10px] 2xl:text-xs font-bold tracking-widest uppercase mb-2">PROGRAMA DE BENEFICIOS</h3>
+            
+            <div className="flex flex-col gap-2 flex-1 justify-center">
+                <div className="flex justify-between items-end">
+                    <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">ALTA DE CLIENTES</span>
+                    <span className="text-white font-mono font-bold text-lg 2xl:text-xl drop-shadow-md">
+                        {new Intl.NumberFormat('es-AR').format(data.altaClientes)}
+                    </span>
+                </div>
+                
+                <div className="w-full h-[1px] bg-white/5"></div>
+                
+                <div className="flex justify-between items-end">
+                    <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">% TICKETS NOMINADOS</span>
+                    <span className="text-[#01B693] font-mono font-bold text-lg 2xl:text-xl drop-shadow-md">
+                        {data.ticketNominados.toFixed(2).replace('.', ',')}%
+                    </span>
+                </div>
+            </div>
+        </div>
       </div>
 
       {/* ROW 2: Ticker & Coverage */}
@@ -344,7 +358,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center gap-1.5">
                 <span className="text-[#01B693] font-mono font-bold text-[10px] 2xl:text-xs">{new Intl.NumberFormat('es-AR').format(data.totalCobertura)}</span>
                 <span className="text-gray-500 text-[10px]">/</span>
-                <span className="text-[#325795] font-mono font-bold text-[10px] 2xl:text-xs">{new Intl.NumberFormat('es-AR').format(randomClientes)}</span>
+                <span className="text-[#325795] font-mono font-bold text-[10px] 2xl:text-xs">{new Intl.NumberFormat('es-AR').format(data.totalCliente)}</span>
             </div>
           </div>
         </div>

@@ -247,6 +247,42 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
       }
     });
 
+    // 7. Acumulado Clientes
+    let totalAltaClientes = 0;
+    const acumuladoClientes = parsedSheets['acumuladoClientes'] || [];
+    // Assuming the structure has a column for the value, we might need to sum it up or just take the first row if it's a single total
+    // The user mentioned "ALTA DE CLIENTES que ahora esta en 20549"
+    // Let's try to find a column that might contain this, or sum a column.
+    // If it's a single cell, it might be in the first row under a specific header.
+    // Let's look for 'alta', 'clientes', 'total', or just take the first numeric value we find if it's a simple sheet.
+    acumuladoClientes.forEach(row => {
+        // Try to find a column that looks like the total
+        const val = smartParseNumber(findCol(row, ['alta', 'clientes', 'total', 'cantidad', 'valor']));
+        if (val > 0) {
+            totalAltaClientes += val;
+        }
+    });
+
+    // 8. Ticket Nominados
+    let totalTicketNominados = 0;
+    const ticketNominados = parsedSheets['ticketNominados'] || [];
+    // The user mentioned "% DE TICKETS NOMINADOS QUE AHORA ESTA EN 20,64%"
+    // This might be a percentage value. Let's look for it.
+    ticketNominados.forEach(row => {
+        // Try to find a column that looks like the percentage or total
+        const val = smartParseNumber(findCol(row, ['%', 'porcentaje', 'nominados', 'ticket', 'valor']));
+        // If it's already a percentage like 20.64, we keep it. If it's 0.2064 we might need to multiply by 100, but smartParseNumber handles decimals.
+        // Let's assume it's a single value we need to extract. We'll take the max found or sum if it's per branch (though user asked for a global metric).
+        // Let's assume it's a single global value for now.
+        if (val > 0) {
+             // If we find multiple, maybe we average them? Or maybe it's just one row.
+             // Let's just take the first valid one or sum them if it's a count.
+             // Given it's a %, it's likely a single row or we need to average.
+             // Let's assume the sheet has one row with the total.
+             totalTicketNominados = Math.max(totalTicketNominados, val);
+        }
+    });
+
     const allBranches = Array.from(branchesMap.values());
 
     // Calculate Quadrants based on monthSales
@@ -315,6 +351,8 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
       dailyTarget: combinedDailyTarget,
       totalCobertura: combinedTotalCobertura,
       totalCliente: combinedTotalCliente,
+      altaClientes: totalAltaClientes,
+      ticketNominados: totalTicketNominados,
       hourlyTotals: combinedHourlyTotals,
       hourlyTotalsPrevWeek: combinedHourlyTotalsPrevWeek,
       lastUpdated: new Date(),

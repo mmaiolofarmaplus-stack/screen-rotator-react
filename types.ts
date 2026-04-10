@@ -30,6 +30,8 @@ export interface DashboardData {
   dailyTarget: number;
   totalCobertura: number;
   totalCliente: number;
+  altaClientes: number;
+  ticketNominados: number;
   hourlyTotals: number[];
   hourlyTotalsPrevWeek: number[];
   lastUpdated: Date;

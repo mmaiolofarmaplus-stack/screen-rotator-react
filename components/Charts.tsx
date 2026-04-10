@@ -257,32 +257,30 @@ interface EvolutionLineChartProps {
 
 export const EvolutionLineChart: React.FC<EvolutionLineChartProps> = ({ hourlyTotals, hourlyTotalsPrevWeek }) => {
   
-  // Find last non-zero index for current week
-  let lastActiveIndex = -1;
-  for (let i = hourlyTotals.length - 1; i >= 0; i--) {
-      if (hourlyTotals[i] > 0) {
-          lastActiveIndex = i;
-          break;
-      }
-  }
+  // Get current hour in Argentina to accurately cut off the chart
+  const now = new Date();
+  const argTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"}));
+  const currentHour = argTime.getHours();
 
-  // Create dataset where future hours are null for current week
-  // The user's HOURS array is length 10 (10:00 to 19:00).
-  // But our hourlyTotals is length 24. We need to slice it to match HOURS.
-  // Let's assume HOURS maps to indices 10 to 19.
-  const startIndex = 10;
+  // We start at 09:00 (index 9) to provide a baseline (0) so the chart always draws a line
+  // even if it's 10:00 AM and there's only one active hour of sales.
+  const startIndex = 9;
   const endIndex = 19;
   
   const processedData = hourlyTotals.slice(startIndex, endIndex + 1).map((val, index) => {
       const realIndex = index + startIndex;
-      if (realIndex > lastActiveIndex && lastActiveIndex !== -1) return null;
+      // Cut off future hours based on the actual clock, not just non-zero values
+      if (realIndex > currentHour) return null;
       return val;
   });
 
   const prevWeekData = hourlyTotalsPrevWeek.slice(startIndex, endIndex + 1);
 
+  // Prepend 09:00 to the labels to match our new startIndex
+  const chartLabels = ['09:00', ...HOURS];
+
   const data = {
-    labels: HOURS,
+    labels: chartLabels,
     datasets: [
       {
         label: 'Hoy',
