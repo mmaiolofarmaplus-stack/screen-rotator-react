@@ -1,0 +1,1 @@
+ams(c.location.search);f.has("gid")&&(h=f.get("gid"));h||(c=/gi
