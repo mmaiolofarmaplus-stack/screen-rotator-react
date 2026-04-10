@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ROTATOR_CONFIG = {
   videoDuration: 26, // seconds
   videoLoopsBeforeDashboard: 3,
-  dashboardDuration: 25, // seconds
+  dashboardDuration: 90, // seconds - Increased to allow a full scroll of all branches
   videoUrl: "https://martinmaiolo.es/video.mp4"
 };
 
