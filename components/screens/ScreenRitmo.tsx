@@ -55,7 +55,7 @@ const Row: React.FC<{ b: BranchData; maxRitmo: number }> = ({ b, maxRitmo }) => 
 };
 
 export const ScreenRitmo: React.FC<Props> = ({ data }) => {
-  const { sorted, half, maxRitmo, arriba, ritmoRed } = useMemo(() => {
+  const { sorted, half, maxRitmo, arriba, totalActive, ritmoRed } = useMemo(() => {
     const active = data.branches.filter(b => b.ritmoReal > 0);
     const sorted = [...active].sort((a, b) => {
       const ra = a.ritmoNecesarioM1 > 0 ? a.ritmoReal / a.ritmoNecesarioM1 : 0;
@@ -67,6 +67,7 @@ export const ScreenRitmo: React.FC<Props> = ({ data }) => {
       half: Math.ceil(sorted.length / 2),
       maxRitmo: Math.max(...active.map(b => Math.max(b.ritmoReal, b.ritmoNecesarioM3, b.ritmoNecesarioM1)), 1),
       arriba: active.filter(b => b.ritmoReal >= b.ritmoNecesarioM1).length,
+      totalActive: active.length,
       ritmoRed: data.branches.reduce((s, b) => s + b.ritmoReal, 0),
     };
   }, [data.branches]);
@@ -89,7 +90,7 @@ export const ScreenRitmo: React.FC<Props> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">BAJO META 1</p>
-            <p className="text-[#C8102E] font-mono font-black text-2xl">{active.length - arriba}</p>
+            <p className="text-[#C8102E] font-mono font-black text-2xl">{totalActive - arriba}</p>
           </div>
         </div>
       </div>
