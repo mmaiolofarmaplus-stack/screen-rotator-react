@@ -7,7 +7,7 @@ import { KpiCard } from './components/KpiCard';
 import { TopBranchCard } from './components/TopBranchCard';
 import { BranchBarChart, EvolutionLineChart } from './components/Charts';
 import { COLORS, ROTATOR_CONFIG } from './constants';
-import { formatMillions } from './utils/formatters';
+import { formatMillions, formatPct } from './utils/formatters';
 import { motion, AnimatePresence } from 'framer-motion';
 
 
@@ -276,7 +276,7 @@ const Dashboard: React.FC<{ phase: 'video' | 'dashboard' }> = ({ phase }) => {
               </span>
               <span className="text-gray-400 text-[9px] 2xl:text-[10px] font-bold tracking-wider">
                 VS SEM ANT: <span className={varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}>
-                  {varPctVsSemAnt >= 0 ? '+' : ''}{varPctVsSemAnt.toFixed(1)}%
+                  {varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(varPctVsSemAnt)}%
                 </span>
               </span>
             </div>
@@ -324,7 +324,7 @@ const Dashboard: React.FC<{ phase: 'video' | 'dashboard' }> = ({ phase }) => {
                 <div className="flex justify-between items-end">
                     <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">VS SEM. ANT.</span>
                     <span className={`font-mono font-bold text-lg 2xl:text-xl drop-shadow-md ${varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
-                        {varPctVsSemAnt >= 0 ? '+' : ''}{varPctVsSemAnt.toFixed(1)}%
+                        {varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(varPctVsSemAnt)}%
                     </span>
                 </div>
             </div>

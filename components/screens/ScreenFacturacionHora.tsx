@@ -5,7 +5,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { DashboardData } from '../../types';
-import { formatMillions } from '../../utils/formatters';
+import { formatMillions, formatPct } from '../../utils/formatters';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
@@ -109,7 +109,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">VS SEM. ANT.</p>
             <p className={`font-mono font-black text-2xl ${varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
-              {varPctVsSemAnt >= 0 ? '+' : ''}{varPctVsSemAnt.toFixed(1)}%
+              {varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(varPctVsSemAnt)}%
             </p>
           </div>
           <div className="text-right">

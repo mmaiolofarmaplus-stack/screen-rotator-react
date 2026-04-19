@@ -63,8 +63,8 @@ export const ScreenRanking: React.FC<Props> = ({ data }) => {
       countByMeta: {
         m3:   data.branches.filter(b => b.semaforo === 'VERDE SOBRE META 3').length,
         m2:   data.branches.filter(b => b.semaforo === 'AMARILLO SOBRE META 2').length,
-        m1:   data.branches.filter(b => b.semaforo.includes('META 1')).length,
-        bajo: data.branches.filter(b => b.semaforo === 'ROJO DEBAJO META 1').length,
+        m1:   data.branches.filter(b => b.semaforo === 'NARANJA SOBRE META 1').length,
+        bajo: data.branches.filter(b => b.semaforo === 'ROJO DEBAJO META 1' || b.semaforo === 'NARANJA CERCA META 1').length,
       },
     };
   }, [data.branches]);

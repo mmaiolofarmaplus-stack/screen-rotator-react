@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { DashboardData, BranchData } from '../../types';
-import { formatMillions } from '../../utils/formatters';
+import { formatMillions, formatPct } from '../../utils/formatters';
 import { AnimatedBar } from '../AnimatedBar';
 
 interface Props { data: DashboardData; }
@@ -27,7 +27,7 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
             className="font-mono font-black text-sm px-2 py-0.5 rounded"
             style={{ color, background: color + '22' }}
           >
-            {b.varPctVsSemAnt >= 0 ? '+' : ''}{b.varPctVsSemAnt.toFixed(1)}%
+            {b.varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(b.varPctVsSemAnt)}%
           </span>
         </div>
       </div>
@@ -51,7 +51,7 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">RED TOTAL</p>
             <p className={`font-mono font-black text-2xl ${varRed >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
-              {varRed >= 0 ? '+' : ''}{varRed.toFixed(1)}%
+              {varRed >= 0 ? '+' : ''}{formatPct(varRed)}%
             </p>
           </div>
           <div className="text-right">

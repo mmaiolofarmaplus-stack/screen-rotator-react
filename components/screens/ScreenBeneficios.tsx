@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DashboardData } from '../../types';
+import { formatPct } from '../../utils/formatters';
 
 interface Props { data: DashboardData; }
 
@@ -110,7 +111,7 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
               className="font-mono font-black text-5xl leading-none"
               style={{ color: diffNominados >= 0 ? '#01B693' : '#C8102E' }}
             >
-              {safePctNom.toFixed(2)}%
+              {formatPct(safePctNom, 2)}%
             </span>
             <span className="text-gray-400 text-sm font-bold mt-1 tracking-wider uppercase">nominados</span>
           </CircleGauge>
@@ -120,7 +121,7 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
               className="font-mono font-black text-3xl"
               style={{ color: diffNominados >= 0 ? '#01B693' : '#C8102E' }}
             >
-              {diffNominados >= 0 ? '+' : ''}{diffNominados.toFixed(2)} pp
+              {diffNominados >= 0 ? '+' : ''}{formatPct(diffNominados, 2)} pp
             </p>
             {ticketsNominadosBase > 0 && (
               <p className="text-gray-500 text-xs font-mono mt-1">

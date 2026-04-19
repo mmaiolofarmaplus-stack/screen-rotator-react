@@ -13,7 +13,9 @@ import {
   Filler 
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { COLORS, HOURS } from '../constants';
+import { COLORS } from '../constants';
+
+const HOURS = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
 import { formatMillions } from '../utils/formatters';
 import { BranchData } from '../types';
 import { AnimatedNumber } from './AnimatedNumber';

@@ -5,6 +5,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { DashboardData } from '../../types';
+import { formatPct } from '../../utils/formatters';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip, Legend);
 
@@ -100,7 +101,7 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">VS SEM. ANT.</p>
             <p className={`font-mono font-black text-2xl ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
-              {varPct >= 0 ? '+' : ''}{varPct.toFixed(1)}%
+              {varPct >= 0 ? '+' : ''}{formatPct(varPct)}%
             </p>
           </div>
           <div className="text-right">

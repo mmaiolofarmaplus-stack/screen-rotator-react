@@ -123,6 +123,7 @@ fecha_hoy      = datetime.date(1899, 12, 30) + datetime.timedelta(days=int(df_di
 dia_actual     = fecha_hoy.day
 dias_mes       = calendar.monthrange(fecha_hoy.year, fecha_hoy.month)[1]
 dias_restantes = dias_mes - dia_actual
+dias_restantes_safe = max(dias_restantes, 1)  # evita división por cero el último día del mes
 
 print(f"    Fecha: {fecha_hoy} | Dia {dia_actual}/{dias_mes} | Dias restantes: {dias_restantes}")
 
@@ -275,10 +276,10 @@ df['Proyeccion_Neto_FinMes'] = round(df['Acum_Neto'] + df['Ritmo_Real_Diario'] *
 df['Proyeccion_UN_FinMes']   = round(df['Acum_Unidades'] + df['Acum_Unidades'] / dia_actual * dias_restantes, 0)
 
 # Avance vs meta acumulada REAL (no division lineal del mes)
-df['Avance_Pct_vs_MetaAcum_M1']    = round(df['Acum_Neto'] / df['MetaAcum_Meta1_Pesos'] * 100, 1)
-df['Avance_Pct_vs_MetaAcum_M2']    = round(df['Acum_Neto'] / df['MetaAcum_Meta2_Pesos'] * 100, 1)
-df['Avance_Pct_vs_MetaAcum_M3']    = round(df['Acum_Neto'] / df['MetaAcum_Meta3_Pesos'] * 100, 1)
-df['Avance_Pct_vs_MetaAcum_UN_M1'] = round(df['Acum_Unidades'] / df['MetaAcum_Meta1_UN'] * 100, 1)
+df['Avance_Pct_vs_MetaAcum_M1']    = round(df['Acum_Neto']     / df['MetaAcum_Meta1_Pesos'].replace(0, float('nan')) * 100, 1).fillna(0)
+df['Avance_Pct_vs_MetaAcum_M2']    = round(df['Acum_Neto']     / df['MetaAcum_Meta2_Pesos'].replace(0, float('nan')) * 100, 1).fillna(0)
+df['Avance_Pct_vs_MetaAcum_M3']    = round(df['Acum_Neto']     / df['MetaAcum_Meta3_Pesos'].replace(0, float('nan')) * 100, 1).fillna(0)
+df['Avance_Pct_vs_MetaAcum_UN_M1'] = round(df['Acum_Unidades'] / df['MetaAcum_Meta1_UN'].replace(0, float('nan'))    * 100, 1).fillna(0)
 
 # Superavit / deficit vs meta acumulada (+ bien, - mal)
 df['Delta_vs_MetaAcum_M1'] = round(df['Acum_Neto'] - df['MetaAcum_Meta1_Pesos'], 0)
@@ -291,13 +292,13 @@ df['Falta_Meta2_FinMes'] = round(df['Obj_Meta2_Pesos_Mes'] - df['Acum_Neto'], 0)
 df['Falta_Meta3_FinMes'] = round(df['Obj_Meta3_Pesos_Mes'] - df['Acum_Neto'], 0)
 
 # Ritmo necesario en dias restantes para llegar a cada meta
-df['Ritmo_Necesario_Meta1'] = round(df['Falta_Meta1_FinMes'].clip(lower=0) / dias_restantes, 0)
-df['Ritmo_Necesario_Meta2'] = round(df['Falta_Meta2_FinMes'].clip(lower=0) / dias_restantes, 0)
-df['Ritmo_Necesario_Meta3'] = round(df['Falta_Meta3_FinMes'].clip(lower=0) / dias_restantes, 0)
+df['Ritmo_Necesario_Meta1'] = round(df['Falta_Meta1_FinMes'].clip(lower=0) / dias_restantes_safe, 0)
+df['Ritmo_Necesario_Meta2'] = round(df['Falta_Meta2_FinMes'].clip(lower=0) / dias_restantes_safe, 0)
+df['Ritmo_Necesario_Meta3'] = round(df['Falta_Meta3_FinMes'].clip(lower=0) / dias_restantes_safe, 0)
 
 # Variacion vs semana anterior (mismo tramo horario, comparacion justa)
 df['Var_Pct_vs_SemAnt_HastaAhora'] = round(
-    (df['Hoy_Neto'] - df['SemAnt_Neto_HastaAhora']) / df['SemAnt_Neto_HastaAhora'] * 100, 1)
+    (df['Hoy_Neto'] - df['SemAnt_Neto_HastaAhora']) / df['SemAnt_Neto_HastaAhora'].replace(0, float('nan')) * 100, 1).fillna(0)
 
 # Estado actual vs meta acumulada real
 def estado_acumulado(row):

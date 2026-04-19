@@ -1,3 +1,6 @@
+export const formatPct = (value: number, decimals = 1): string =>
+  value.toLocaleString('es-AR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+
 export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',

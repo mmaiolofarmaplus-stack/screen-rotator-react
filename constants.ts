@@ -2,21 +2,7 @@ export const ROTATOR_CONFIG = {
   videoDuration: 26, // seconds
   videoLoopsBeforeDashboard: 3,
   dashboardDuration: 90, // seconds
-  videoUrl: "https://martinmaiolo.es/video.mp4",
-};
-
-export const CONFIG = {
-  SHEETS: {
-    facturacionDia: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1',
-    facturacionMes: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1168579076',
-    sucursalSemanaAnterior: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1836036306',
-    sucursalPorHora: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1665181462',
-    ultimaHoraTicket: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1576292630',
-    objetivos: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1915087423',
-    acumuladoClientes: 'https://docs.google.com/spreadsheets/d/1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4/export?format=csv&gid=1855567166',
-    ticketNominados: 'https://docs.google.com/spreadsheets/d/1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4/export?format=csv&gid=1235412273',
-  },
-  REFRESH_INTERVAL_MS: 300000, // 5 minutes
+  videoUrl: '/FP%20ABRIL%20Video%20Awareness%201920x1080%20CF%2030MAR26.mp4',
 };
 
 export const COLORS = {
@@ -29,7 +15,3 @@ export const COLORS = {
   PREMIUM_BG: '#0b0e14',
 };
 
-export const HOURS = [
-  '10:00', '11:00', '12:00', '13:00', '14:00',
-  '15:00', '16:00', '17:00', '18:00', '19:00'
-];
