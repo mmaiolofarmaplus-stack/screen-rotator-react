@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement,
-  LineElement, Tooltip, Legend, Filler, ChartOptions,
+  LineElement, Tooltip, Legend, Filler, ChartOptions, ScriptableContext,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { DashboardData } from '../../types';
@@ -36,14 +36,21 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
         label: 'Hoy',
         data: todaySlice,
         borderColor: '#C8102E',
-        backgroundColor: 'rgba(200, 16, 46, 0.12)',
+        backgroundColor: (context: ScriptableContext<'line'>) => {
+          const { ctx, chartArea } = context.chart;
+          if (!chartArea) return 'transparent';
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0.05, 'rgba(200, 16, 46, 0.4)');
+          gradient.addColorStop(0.95, 'rgba(11, 14, 20, 0)');
+          return gradient;
+        },
         fill: true,
         tension: 0.4,
         pointRadius: 5,
         pointBackgroundColor: '#C8102E',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
-        borderWidth: 3,
+        borderWidth: 4,
         spanGaps: false,
       },
       {
@@ -83,7 +90,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
       },
     },
     scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#9ca3af', font: { size: 12, weight: 600 as const } } },
+      x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 12, weight: 600 as const } } },
       y: {
         grid: { color: 'rgba(255,255,255,0.05)' },
         ticks: {
