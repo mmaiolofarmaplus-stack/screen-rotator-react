@@ -1,5 +1,6 @@
 import React from 'react';
 import { BranchData } from '../types';
+import { formatCurrency } from '../utils/formatters';
 
 interface TopBranchCardProps {
   branch: BranchData | undefined;
@@ -7,7 +8,7 @@ interface TopBranchCardProps {
 }
 
 export const TopBranchCard: React.FC<TopBranchCardProps> = ({ branch, totalSales }) => {
-  if (!branch || branch.todaySales === 0) {
+  if (!branch || branch.hoyNeto === 0) {
     return (
       <div className="flex flex-col justify-center items-center p-6 rounded-2xl relative overflow-hidden backdrop-blur-2xl border border-white/10 bg-[#121620] h-full min-h-[160px]">
          <span className="text-3xl mb-2 grayscale opacity-50">🏆</span>
@@ -16,17 +17,9 @@ export const TopBranchCard: React.FC<TopBranchCardProps> = ({ branch, totalSales
     );
   }
 
-  const percentage = totalSales > 0 
-    ? ((branch.todaySales / totalSales) * 100).toFixed(1) 
+  const percentage = totalSales > 0
+    ? ((branch.hoyNeto / totalSales) * 100).toFixed(1)
     : '0.0';
-
-  const formatCurrency = (val: number) => {
-      return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        maximumFractionDigits: 0
-      }).format(val);
-  };
 
   return (
     <div className="flex flex-col justify-center p-2 2xl:p-3 rounded-xl relative overflow-hidden backdrop-blur-2xl border border-white/10 bg-[#121620]">
@@ -46,7 +39,7 @@ export const TopBranchCard: React.FC<TopBranchCardProps> = ({ branch, totalSales
 
             <div className="flex items-center justify-between mt-auto pt-1.5 border-t border-white/5">
                 <span className="text-gray-300 text-sm 2xl:text-base font-mono font-medium">
-                    {formatCurrency(branch.todaySales)}
+                    {formatCurrency(branch.hoyNeto)}
                 </span>
                 <span className="text-[#01B693] text-[10px] 2xl:text-xs font-bold bg-[#01B693]/10 px-2 py-0.5 rounded-full border border-[#01B693]/20">
                     {percentage}%

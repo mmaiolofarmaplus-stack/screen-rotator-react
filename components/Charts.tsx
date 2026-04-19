@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { COLORS, HOURS } from '../constants';
+import { formatMillions } from '../utils/formatters';
 import { BranchData } from '../types';
 import { AnimatedNumber } from './AnimatedNumber';
 
@@ -75,7 +76,7 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
   const isHoveredRef = React.useRef(false);
 
   // Filter out branches with 0 sales
-  const activeBranches = branches.filter(branch => branch.todaySales > 0);
+  const activeBranches = branches.filter(branch => branch.hoyNeto > 0);
 
   React.useEffect(() => {
     const el = scrollRef.current;
@@ -122,10 +123,9 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
   }
 
   // Calculate total sales to determine the share percentage
-  const totalSalesAll = activeBranches.reduce((sum, branch) => sum + branch.todaySales, 0);
-  
-  // Find the maximum sales to determine the relative width of the bars (Top 1 = 100% width)
-  const maxSales = activeBranches.length > 0 ? activeBranches[0].todaySales : 0;
+  const totalSalesAll = activeBranches.reduce((sum, branch) => sum + branch.hoyNeto, 0);
+
+  const maxSales = activeBranches.length > 0 ? activeBranches[0].hoyNeto : 0;
 
   // --- ON FIRE LOGIC ---
   // Find the last active hour index across ALL active branches
@@ -149,18 +149,6 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
       });
   }
 
-  const formatCurrency = (val: number) => {
-    if (val >= 1000000) {
-      const millions = val / 1000000;
-      return `$ ${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(millions)}M`;
-    }
-    return new Intl.NumberFormat('es-AR', { 
-        style: 'currency', 
-        currency: 'ARS', 
-        maximumFractionDigits: 0 
-    }).format(val);
-  };
-
   // Duplicate the list for seamless infinite scrolling
   const displayBranches = [...activeBranches, ...activeBranches];
 
@@ -180,8 +168,8 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
 
        {displayBranches.map((branch, idx) => {
           const uniqueKey = `${branch.name}-${idx}`;
-          const widthPercentage = maxSales > 0 ? (branch.todaySales / maxSales) * 100 : 0;
-          const sharePercentage = totalSalesAll > 0 ? (branch.todaySales / totalSalesAll) * 100 : 0;
+          const widthPercentage = maxSales > 0 ? (branch.hoyNeto / maxSales) * 100 : 0;
+          const sharePercentage = totalSalesAll > 0 ? (branch.hoyNeto / totalSalesAll) * 100 : 0;
           const rank = (idx % activeBranches.length) + 1;
           
           const isOnFire = globalLastActiveIndex >= 0 && 
@@ -218,7 +206,7 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
                     {/* Right: Value & Percentage */}
                     <div className="flex items-end gap-3 text-right shrink-0">
                         <span className="text-white font-bold text-sm md:text-base 2xl:text-lg font-mono tracking-tight drop-shadow-md">
-                            <AnimatedNumber value={branch.todaySales} format={formatCurrency} />
+                            <AnimatedNumber value={branch.hoyNeto} format={formatMillions} />
                         </span>
                         <span className="text-gray-500 text-xs 2xl:text-sm font-bold w-10 mb-0.5">
                             <AnimatedNumber value={sharePercentage} format={(val) => `${val.toFixed(1)}%`} />
@@ -253,23 +241,18 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
 interface EvolutionLineChartProps {
   hourlyTotals: number[];
   hourlyTotalsPrevWeek: number[];
+  currentFranja?: number;
 }
 
-export const EvolutionLineChart: React.FC<EvolutionLineChartProps> = ({ hourlyTotals, hourlyTotalsPrevWeek }) => {
-  
-  // Get current hour in Argentina to accurately cut off the chart
-  const now = new Date();
-  const argTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"}));
-  const currentHour = argTime.getHours();
+export const EvolutionLineChart: React.FC<EvolutionLineChartProps> = ({ hourlyTotals, hourlyTotalsPrevWeek, currentFranja }) => {
+  const argTime = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Argentina/Buenos_Aires"}));
+  const currentHour = currentFranja ?? argTime.getHours();
 
-  // We start at 09:00 (index 9) to provide a baseline (0) so the chart always draws a line
-  // even if it's 10:00 AM and there's only one active hour of sales.
   const startIndex = 9;
   const endIndex = 19;
-  
+
   const processedData = hourlyTotals.slice(startIndex, endIndex + 1).map((val, index) => {
       const realIndex = index + startIndex;
-      // Cut off future hours based on the actual clock, not just non-zero values
       if (realIndex > currentHour) return null;
       return val;
   });

@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
+
+# Credenciales y tokens OAuth (nunca commitear)
+input/credentials.json
+input/token.json
+
+# Archivos de entrada grandes (Excel)
+input/*.xlsx
+input/*.xls
+
+# Logs del generador de datos
+logs/

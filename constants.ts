@@ -1,3 +1,10 @@
+export const ROTATOR_CONFIG = {
+  videoDuration: 26, // seconds
+  videoLoopsBeforeDashboard: 3,
+  dashboardDuration: 90, // seconds
+  videoUrl: "https://martinmaiolo.es/video.mp4",
+};
+
 export const CONFIG = {
   SHEETS: {
     facturacionDia: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1',
@@ -6,8 +13,8 @@ export const CONFIG = {
     sucursalPorHora: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1665181462',
     ultimaHoraTicket: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1576292630',
     objetivos: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1915087423',
-    acumuladoClientes: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1055745267', // Assuming gid based on standard structure, will need to be verified
-    ticketNominados: 'https://docs.google.com/spreadsheets/d/1wf3hR0gX28TspJQqeaRNOMP1p4vU8ln9YSF37It9s8k/export?format=csv&gid=1834241065', // Assuming gid based on standard structure, will need to be verified
+    acumuladoClientes: 'https://docs.google.com/spreadsheets/d/1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4/export?format=csv&gid=1855567166',
+    ticketNominados: 'https://docs.google.com/spreadsheets/d/1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4/export?format=csv&gid=1235412273',
   },
   REFRESH_INTERVAL_MS: 300000, // 5 minutes
 };

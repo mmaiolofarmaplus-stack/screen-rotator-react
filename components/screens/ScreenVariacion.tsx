@@ -1,0 +1,84 @@
+import React, { useMemo } from 'react';
+import { DashboardData, BranchData } from '../../types';
+import { formatMillions } from '../../utils/formatters';
+import { AnimatedBar } from '../AnimatedBar';
+
+interface Props { data: DashboardData; }
+
+export const ScreenVariacion: React.FC<Props> = ({ data }) => {
+  const { positive, negative, maxAbs } = useMemo(() => {
+    const withVar = data.branches
+      .filter(b => b.hoyNeto > 0 && b.semAntNeto > 0)
+      .sort((a, b) => b.varPctVsSemAnt - a.varPctVsSemAnt);
+    return {
+      positive: withVar.filter(b => b.varPctVsSemAnt >= 0),
+      negative: [...withVar.filter(b => b.varPctVsSemAnt < 0)].reverse(),
+      maxAbs: Math.max(...withVar.map(b => Math.abs(b.varPctVsSemAnt)), 1),
+    };
+  }, [data.branches]);
+
+  const Row: React.FC<{ b: BranchData; color: string }> = ({ b, color }) => (
+    <div className="flex flex-col gap-1 py-1">
+      <div className="flex justify-between items-center">
+        <span className="text-white font-bold text-sm uppercase tracking-wide truncate mr-3">{b.name}</span>
+        <div className="flex items-center gap-3 shrink-0">
+          <span className="text-gray-500 text-xs font-mono">{formatMillions(b.hoyNeto)}</span>
+          <span
+            className="font-mono font-black text-sm px-2 py-0.5 rounded"
+            style={{ color, background: color + '22' }}
+          >
+            {b.varPctVsSemAnt >= 0 ? '+' : ''}{b.varPctVsSemAnt.toFixed(1)}%
+          </span>
+        </div>
+      </div>
+      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+        <AnimatedBar pct={(Math.abs(b.varPctVsSemAnt) / maxAbs) * 100} color={color} />
+      </div>
+    </div>
+  );
+
+  const redTotal = data.branches.reduce((s, b) => s + b.semAntNeto, 0);
+  const varRed = redTotal > 0 ? ((data.totalNeto - redTotal) / redTotal) * 100 : 0;
+
+  return (
+    <div className="w-screen h-screen bg-[#0b0e14] text-white flex flex-col p-8 overflow-hidden">
+      <div className="mb-6 shrink-0 flex items-end justify-between border-b border-white/5 pb-4">
+        <div>
+          <p className="text-[#325795] text-xs font-bold tracking-[0.3em] uppercase mb-1">Mismo tramo horario · hasta {data.ultimaFranjaHora}hs</p>
+          <h1 className="text-4xl font-black uppercase tracking-wider">Variación vs Semana Anterior</h1>
+        </div>
+        <div className="flex gap-6">
+          <div className="text-right">
+            <p className="text-gray-500 text-xs font-bold tracking-widest">RED TOTAL</p>
+            <p className={`font-mono font-black text-2xl ${varRed >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+              {varRed >= 0 ? '+' : ''}{varRed.toFixed(1)}%
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-gray-500 text-xs font-bold tracking-widest">MEJORAN</p>
+            <p className="text-[#01B693] font-mono font-black text-2xl">{positive.length}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-gray-500 text-xs font-bold tracking-widest">BAJAN</p>
+            <p className="text-[#C8102E] font-mono font-black text-2xl">{negative.length}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 min-h-0 grid grid-cols-2 gap-x-10 overflow-hidden">
+        <div className="flex flex-col overflow-hidden pr-2">
+          <p className="text-[#01B693] text-xs font-bold tracking-widest uppercase mb-3 shrink-0">↑ Mejores</p>
+          <div className="flex flex-col gap-1 overflow-hidden">
+            {positive.map(b => <Row key={b.id} b={b} color="#01B693" />)}
+          </div>
+        </div>
+        <div className="flex flex-col overflow-hidden pl-2 border-l border-white/5">
+          <p className="text-[#C8102E] text-xs font-bold tracking-widest uppercase mb-3 shrink-0">↓ Peores</p>
+          <div className="flex flex-col gap-1 overflow-hidden">
+            {negative.map(b => <Row key={b.id} b={b} color="#C8102E" />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,40 +1,20 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
-import { fetchDashboardData } from './services/sheetService';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { DebugLauncher } from './components/debug/DebugLauncher';
+import { fetchDashboardData, getCachedData } from './services/csvService';
 import { playNotificationSound, playCelebrationSound, initAudio } from './services/soundService';
 import { DashboardData } from './types';
 import { KpiCard } from './components/KpiCard';
 import { TopBranchCard } from './components/TopBranchCard';
 import { BranchBarChart, EvolutionLineChart } from './components/Charts';
-import { COLORS, CONFIG, HOURS } from './constants';
+import { COLORS, ROTATOR_CONFIG } from './constants';
+import { formatMillions } from './utils/formatters';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ROTATOR_CONFIG = {
-  videoDuration: 26, // seconds
-  videoLoopsBeforeDashboard: 3,
-  dashboardDuration: 90, // seconds - Increased to allow a full scroll of all branches
-  videoUrl: "https://martinmaiolo.es/video.mp4"
-};
 
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
-};
-
-const formatMillions = (value: number) => {
-  if (value >= 1000000) {
-    const millions = value / 1000000;
-    return `$ ${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(millions)}M`;
-  }
-  return formatCurrency(value);
-};
 
 const Dashboard: React.FC = () => {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<DashboardData | null>(() => getCachedData());
+  const [loading, setLoading] = useState<boolean>(() => getCachedData() === null);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   
@@ -66,22 +46,20 @@ const Dashboard: React.FC = () => {
       }
 
       // Check for Sales Increase (Data Update Sound)
-      if (prevTotalSalesRef.current > 0 && dashboardData.totalSales > prevTotalSalesRef.current) {
-          console.log("💰 Sales increased!", { prev: prevTotalSalesRef.current, new: dashboardData.totalSales, audioEnabled });
-          
+      if (prevTotalSalesRef.current > 0 && dashboardData.totalNeto > prevTotalSalesRef.current) {
+          console.log("💰 Sales increased!", { prev: prevTotalSalesRef.current, new: dashboardData.totalNeto, audioEnabled });
           if (audioEnabled) {
               playNotificationSound();
           }
       }
-      // Update reference for next cycle
-      prevTotalSalesRef.current = dashboardData.totalSales;
+      prevTotalSalesRef.current = dashboardData.totalNeto;
 
       setData(dashboardData);
       setLastRefresh(new Date());
       setError(null);
       
       // Check for Daily Target Celebration
-      if (dashboardData.dailyTarget > 0 && dashboardData.totalSales >= dashboardData.dailyTarget) {
+      if (dashboardData.totalMetaAcumM1 > 0 && dashboardData.totalNeto >= dashboardData.totalMetaAcumM1) {
         if (!hasCelebratedRef.current) {
           console.log("🎉 DAILY TARGET MET! CELEBRATING!");
           hasCelebratedRef.current = true; // Mark as celebrated so we don't spam it
@@ -187,23 +165,17 @@ const Dashboard: React.FC = () => {
 
   if (!data) return null;
 
-  const totalSales = data?.totalSales || 0;
-  const totalOrders = data?.totalOrders || 0;
-  const totalUnits = data?.totalUnits || 0;
-  const target = data?.dailyTarget || 1;
-  const progress = totalSales / target;
-  const topPerformer = data?.branches[0]; 
+  const totalSales = data?.totalNeto || 0;
+  const totalOrders = data?.totalTickets || 0;
+  const totalUnits = data?.totalUnidades || 0;
+  const topPerformer = [...(data?.branches ?? [])].sort((a, b) => b.hoyNeto - a.hoyNeto)[0];
   const inactiveBranches = data?.branches.filter(b => b.inactiveMinutes > 60).sort((a, b) => b.inactiveMinutes - a.inactiveMinutes) || [];
 
-  // Forecast Calculation
-  // We assume active hours are between 10 and 19 (indices 10 to 19)
-  const activeHoursCount = data?.hourlyTotals.slice(10, 20).filter(v => v > 0).length || 1;
-  const projectedSales = (totalSales / activeHoursCount) * HOURS.length;
-
-  // Dynamic Progress Color
-  let progressColor = COLORS.RED;
-  if (progress >= 0.8) progressColor = COLORS.GREEN;
-  else if (progress >= 0.5) progressColor = '#eab308'; // Yellow
+  const proyeccionFinMes = data?.proyeccionTotal || 0;
+  const varPctVsSemAnt = data?.varPctVsSemAnt || 0;
+  const diasRestantes = data?.diasRestantes || 0;
+  const diaActual = data?.diaActual || 0;
+  const diasMes = data?.diasMes || 0;
 
   return (
     <div className={`h-screen w-screen flex flex-col p-4 2xl:p-6 transition-all duration-1000 ease-in-out font-sans overflow-hidden select-none
@@ -287,9 +259,16 @@ const Dashboard: React.FC = () => {
           format={formatMillions}
           color={COLORS.BLUE}
           subtitle={
-            <span className="text-gray-400 text-[9px] 2xl:text-[10px] font-bold tracking-wider">
-              PROYECCIÓN: <span className="text-white/80">{formatMillions(projectedSales)}</span>
-            </span>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-gray-400 text-[9px] 2xl:text-[10px] font-bold tracking-wider">
+                PROY. MES: <span className="text-white/80">{formatMillions(proyeccionFinMes)}</span>
+              </span>
+              <span className="text-gray-400 text-[9px] 2xl:text-[10px] font-bold tracking-wider">
+                VS SEM ANT: <span className={varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}>
+                  {varPctVsSemAnt >= 0 ? '+' : ''}{varPctVsSemAnt.toFixed(1)}%
+                </span>
+              </span>
+            </div>
           }
         />
         <KpiCard
@@ -298,6 +277,11 @@ const Dashboard: React.FC = () => {
           numericValue={totalOrders}
           format={(val) => new Intl.NumberFormat('es-AR').format(val)}
           color={COLORS.RED}
+          subtitle={
+            <span className="text-gray-400 text-[9px] 2xl:text-[10px] font-bold tracking-wider">
+              DÍA <span className="text-white/80">{diaActual}</span> DE <span className="text-white/80">{diasMes}</span> · FALTAN <span className="text-white/80">{diasRestantes}d</span>
+            </span>
+          }
         />
         <KpiCard
           title="Unidades"
@@ -314,22 +298,22 @@ const Dashboard: React.FC = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-[#01B693]"></div>
             <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#01B693] rounded-full opacity-5 blur-2xl group-hover:opacity-10 transition-opacity"></div>
             
-            <h3 className="text-gray-400 text-[10px] 2xl:text-xs font-bold tracking-widest uppercase mb-2">PROGRAMA DE BENEFICIOS</h3>
-            
+            <h3 className="text-gray-400 text-[10px] 2xl:text-xs font-bold tracking-widest uppercase mb-2">PROYECCIÓN / VARIACIÓN</h3>
+
             <div className="flex flex-col gap-2 flex-1 justify-center">
                 <div className="flex justify-between items-end">
-                    <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">ALTA DE CLIENTES</span>
+                    <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">PROY. FIN DE MES</span>
                     <span className="text-white font-mono font-bold text-lg 2xl:text-xl drop-shadow-md">
-                        {new Intl.NumberFormat('es-AR').format(data.altaClientes)}
+                        {formatMillions(proyeccionFinMes)}
                     </span>
                 </div>
-                
+
                 <div className="w-full h-[1px] bg-white/5"></div>
-                
+
                 <div className="flex justify-between items-end">
-                    <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">% TICKETS NOMINADOS</span>
-                    <span className="text-[#01B693] font-mono font-bold text-lg 2xl:text-xl drop-shadow-md">
-                        {data.ticketNominados.toFixed(2).replace('.', ',')}%
+                    <span className="text-gray-500 text-[9px] 2xl:text-[10px] font-bold">VS SEM. ANT.</span>
+                    <span className={`font-mono font-bold text-lg 2xl:text-xl drop-shadow-md ${varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+                        {varPctVsSemAnt >= 0 ? '+' : ''}{varPctVsSemAnt.toFixed(1)}%
                     </span>
                 </div>
             </div>
@@ -377,7 +361,7 @@ const Dashboard: React.FC = () => {
         {/* Evolution Chart */}
         <div className="lg:col-span-1 bg-[#121620] p-3 2xl:p-4 rounded-xl border border-white/5 flex flex-col shadow-2xl relative backdrop-blur-md overflow-hidden">
              <div className="flex-1 min-h-0 relative">
-                {data && <EvolutionLineChart hourlyTotals={data.hourlyTotals} hourlyTotalsPrevWeek={data.hourlyTotalsPrevWeek} />}
+                {data && <EvolutionLineChart hourlyTotals={data.hourlyTotalsHoy} hourlyTotalsPrevWeek={data.hourlyTotalsSemAnt} currentFranja={data.ultimaFranjaHora} />}
             </div>
         </div>
       </div>
@@ -386,10 +370,13 @@ const Dashboard: React.FC = () => {
   );
 };
 
+const isDebug = new URLSearchParams(window.location.search).has('debug');
+
 const App: React.FC = () => {
-  const [phase, setPhase] = useState<'video' | 'dashboard'>('video');
+  const [phase, setPhase] = useState<'video' | 'dashboard'>('dashboard'); // video temporalmente desactivado
 
   useEffect(() => {
+    if (isDebug) return;
     let timeout: NodeJS.Timeout;
     if (phase === 'video') {
       const duration = ROTATOR_CONFIG.videoDuration * ROTATOR_CONFIG.videoLoopsBeforeDashboard * 1000;
@@ -400,6 +387,8 @@ const App: React.FC = () => {
     }
     return () => clearTimeout(timeout);
   }, [phase]);
+
+  if (isDebug) return <DebugLauncher />;
 
   return (
     <div className="w-full h-screen overflow-hidden bg-black relative">

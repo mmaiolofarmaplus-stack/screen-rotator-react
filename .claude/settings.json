@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npx vercel *)",
+      "Bash(cat vercel.json)",
+      "Bash(schtasks /create /tn FarmaPlus_GenerarDatos /tr '\"C:\\\\Users\\\\MMaiolo\\\\screen-rotator-react\\\\run_generate_data.bat\"' /sc hourly /mo 1 /st 00:00 /f)",
+      "Bash(cmd.exe /c 'schtasks /create /tn \"FarmaPlus_GenerarDatos\" /tr \"C:\\\\\\\\Users\\\\\\\\MMaiolo\\\\\\\\screen-rotator-react\\\\\\\\run_generate_data.bat\" /sc hourly /mo 1 /st 00:00 /f')",
+      "Bash(powershell.exe -Command \"schtasks /create /tn 'FarmaPlus_GenerarDatos' /tr 'C:\\\\\\\\Users\\\\\\\\MMaiolo\\\\\\\\screen-rotator-react\\\\\\\\run_generate_data.bat' /sc hourly /mo 1 /st 00:00 /f\")",
+      "Bash(powershell.exe -Command \"schtasks /query /tn 'FarmaPlus_GenerarDatos' /fo LIST\")",
+      "mcp__claude_ai_Google_Drive__search_files",
+      "mcp__claude_ai_Google_Drive__download_file_content",
+      "Bash(powershell.exe -Command ' *)",
+      "Bash(powershell.exe -Command \"Get-Item 'C:\\\\Users\\\\MMaiolo\\\\screen-rotator-react\\\\input\\\\Dashboard \\(2\\).xlsx' | Select Name, Length, LastWriteTime\")",
+      "Bash(powershell.exe -Command \"python generate_data.py\")",
+      "Bash(powershell.exe -Command \"Get-Command python3, py, python* -ErrorAction SilentlyContinue | Select Name, Source\")",
+      "Bash(powershell.exe -Command \"py --version\")",
+      "Bash(powershell.exe -Command \"py generate_data.py\")",
+      "Bash(powershell.exe -Command \"Get-Content 'c:/Users/MMaiolo/screen-rotator-react/base_conocimiento.csv' | Select-Object -First 3\")"
+    ]
+  }
+}
