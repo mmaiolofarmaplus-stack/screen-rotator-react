@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 
 
-const Dashboard: React.FC = () => {
+const Dashboard: React.FC<{ phase: 'video' | 'dashboard' }> = ({ phase }) => {
   const [data, setData] = useState<DashboardData | null>(() => getCachedData());
   const [loading, setLoading] = useState<boolean>(() => getCachedData() === null);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,9 @@ const Dashboard: React.FC = () => {
   const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
   const [isHotZone, setIsHotZone] = useState<boolean>(false);
   const hasCelebratedRef = useRef<boolean>(false);
-  
+  const phaseRef = useRef(phase);
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
+
   // Track previous sales to detect updates
   const prevTotalSalesRef = useRef<number>(0);
   
@@ -104,13 +106,22 @@ const Dashboard: React.FC = () => {
       // Hot zone: refresh every 30 seconds. Cold zone: refresh every 5 minutes.
       const delay = hotZoneActive ? 30000 : 300000;
       
-      timeoutId = setTimeout(fetchAndSchedule, delay);
+      if (phaseRef.current !== 'video') {
+        timeoutId = setTimeout(fetchAndSchedule, delay);
+      }
     };
 
     fetchAndSchedule();
 
     return () => clearTimeout(timeoutId);
   }, [loadData]);
+
+  // Resume polling when returning from video phase
+  useEffect(() => {
+    if (phase === 'dashboard') {
+      loadData();
+    }
+  }, [phase, loadData]);
 
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
@@ -402,7 +413,7 @@ const App: React.FC = () => {
         className="absolute inset-0 w-full h-full"
         style={{ pointerEvents: phase === 'dashboard' ? 'auto' : 'none' }}
       >
-        <Dashboard />
+        <Dashboard phase={phase} />
       </motion.div>
 
       <AnimatePresence>

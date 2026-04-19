@@ -7,7 +7,7 @@ interface TopBranchCardProps {
   totalSales: number;
 }
 
-export const TopBranchCard: React.FC<TopBranchCardProps> = ({ branch, totalSales }) => {
+const TopBranchCardInner: React.FC<TopBranchCardProps> = ({ branch, totalSales }) => {
   if (!branch || branch.hoyNeto === 0) {
     return (
       <div className="flex flex-col justify-center items-center p-6 rounded-2xl relative overflow-hidden backdrop-blur-2xl border border-white/10 bg-[#121620] h-full min-h-[160px]">
@@ -49,3 +49,5 @@ export const TopBranchCard: React.FC<TopBranchCardProps> = ({ branch, totalSales
     </div>
   );
 };
+
+export const TopBranchCard = React.memo(TopBranchCardInner);

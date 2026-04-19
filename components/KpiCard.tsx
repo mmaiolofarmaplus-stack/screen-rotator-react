@@ -12,7 +12,7 @@ interface KpiCardProps {
   subtitle?: React.ReactNode;
 }
 
-export const KpiCard: React.FC<KpiCardProps> = ({ title, value, numericValue, format, color = COLORS.BLUE, percentage, subtitle }) => {
+const KpiCardInner: React.FC<KpiCardProps> = ({ title, value, numericValue, format, color = COLORS.BLUE, percentage, subtitle }) => {
   // Logic to adjust font size based on string length to prevent overflow
   // Optimized for 4K legibility
   const getFontSize = (str: string) => {
@@ -61,3 +61,5 @@ export const KpiCard: React.FC<KpiCardProps> = ({ title, value, numericValue, fo
     </div>
   );
 };
+
+export const KpiCard = React.memo(KpiCardInner);
