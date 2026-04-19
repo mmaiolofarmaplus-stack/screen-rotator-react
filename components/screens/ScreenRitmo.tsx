@@ -103,10 +103,10 @@ export const ScreenRitmo: React.FC<Props> = ({ data }) => {
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-x-10 overflow-hidden">
-        <div className="flex flex-col overflow-hidden pr-2 gap-0.5">
+        <div className="flex flex-col overflow-y-auto custom-scrollbar pr-2 gap-0.5">
           {sorted.slice(0, half).map(b => <Row key={b.id} b={b} maxRitmo={maxRitmo} />)}
         </div>
-        <div className="flex flex-col overflow-hidden pl-2 border-l border-white/5 gap-0.5">
+        <div className="flex flex-col overflow-y-auto custom-scrollbar pl-2 border-l border-white/5 gap-0.5">
           {sorted.slice(half).map(b => <Row key={b.id} b={b} maxRitmo={maxRitmo} />)}
         </div>
       </div>

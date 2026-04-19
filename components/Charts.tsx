@@ -211,7 +211,7 @@ export const BranchBarChart: React.FC<BranchBarChartProps> = ({ branches }) => {
                             <AnimatedNumber value={branch.hoyNeto} format={formatMillions} />
                         </span>
                         <span className="text-gray-500 text-xs 2xl:text-sm font-bold w-10 mb-0.5">
-                            <AnimatedNumber value={sharePercentage} format={(val) => `${val.toFixed(1)}%`} />
+                            <AnimatedNumber value={sharePercentage} format={(val) => `${val.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`} />
                         </span>
                     </div>
                 </div>

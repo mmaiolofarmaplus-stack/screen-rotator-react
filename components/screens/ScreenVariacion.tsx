@@ -68,13 +68,13 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-x-10 overflow-hidden">
         <div className="flex flex-col overflow-hidden pr-2">
           <p className="text-[#01B693] text-xs font-bold tracking-widest uppercase mb-3 shrink-0">↑ Mejores</p>
-          <div className="flex flex-col gap-1 overflow-hidden">
+          <div className="flex flex-col gap-1 overflow-y-auto custom-scrollbar">
             {positive.map(b => <Row key={b.id} b={b} color="#01B693" />)}
           </div>
         </div>
         <div className="flex flex-col overflow-hidden pl-2 border-l border-white/5">
           <p className="text-[#C8102E] text-xs font-bold tracking-widest uppercase mb-3 shrink-0">↓ Peores</p>
-          <div className="flex flex-col gap-1 overflow-hidden">
+          <div className="flex flex-col gap-1 overflow-y-auto custom-scrollbar">
             {negative.map(b => <Row key={b.id} b={b} color="#C8102E" />)}
           </div>
         </div>
