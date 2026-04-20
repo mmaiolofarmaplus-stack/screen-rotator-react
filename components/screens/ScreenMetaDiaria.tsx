@@ -12,6 +12,8 @@ const rowColor = (pct: number) => {
   return '#C8102E';
 };
 
+const COLS = '2.5rem 1fr 280px 140px 240px';
+
 const BranchRow: React.FC<{ b: BranchData; rank: number }> = ({ b, rank }) => {
   const pct   = b.avancePctDiario;
   const c     = rowColor(pct);
@@ -19,32 +21,33 @@ const BranchRow: React.FC<{ b: BranchData; rank: number }> = ({ b, rank }) => {
   const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : String(rank);
 
   return (
-    <div className="grid items-center gap-x-4 py-2 border-b border-white/5"
-         style={{ gridTemplateColumns: '2rem 1fr 160px 80px 100px' }}>
+    <div className="grid items-center gap-x-6 py-2 border-b border-white/5"
+         style={{ gridTemplateColumns: COLS }}>
+
       {/* Rank */}
-      <span className="text-gray-500 font-bold text-sm text-right">{medal}</span>
+      <span className="text-gray-500 font-bold text-base text-right">{medal}</span>
 
       {/* Nombre + barra */}
-      <div className="flex flex-col gap-1 min-w-0">
-        <span className="text-white font-bold text-sm uppercase tracking-wide truncate">{b.name}</span>
-        <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+      <div className="flex flex-col gap-1.5 min-w-0">
+        <span className="text-white font-bold text-base uppercase tracking-wide truncate">{b.name}</span>
+        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
           <AnimatedBar pct={Math.min(pct, 100)} color={c} delay={rank * 15} />
         </div>
       </div>
 
       {/* Hoy / Meta */}
       <div className="text-right">
-        <span className="text-white font-mono text-base">{formatMillions(b.hoyNeto)}</span>
-        <span className="text-gray-500 text-sm font-mono"> / {formatMillions(b.metaDiaria)}</span>
+        <div className="text-white font-mono font-bold text-lg leading-tight">{formatMillions(b.hoyNeto)}</div>
+        <div className="text-gray-500 font-mono text-sm leading-tight">{formatMillions(b.metaDiaria)}</div>
       </div>
 
       {/* % avance */}
-      <span className="font-mono font-black text-base text-right" style={{ color: c }}>
+      <span className="font-mono font-black text-2xl text-right" style={{ color: c }}>
         {pct.toFixed(1)}%
       </span>
 
       {/* Falta / sobra */}
-      <span className="font-mono text-sm text-right" style={{ color: falta <= 0 ? '#01B693' : '#C8102E' }}>
+      <span className="font-mono font-black text-xl text-right" style={{ color: falta <= 0 ? '#01B693' : '#C8102E' }}>
         {falta <= 0 ? `+${formatMillions(Math.abs(falta))}` : `-${formatMillions(falta)}`}
       </span>
     </div>
@@ -99,8 +102,7 @@ export const ScreenMetaDiaria: React.FC<Props> = ({ data }) => {
       </div>
 
       {/* Column headers */}
-      <div className="grid gap-x-4 px-0 mb-1 shrink-0"
-           style={{ gridTemplateColumns: '2rem 1fr 160px 80px 100px' }}>
+      <div className="grid gap-x-6 mb-1 shrink-0" style={{ gridTemplateColumns: COLS }}>
         <span />
         <span className="text-gray-500 text-[10px] font-bold tracking-widest uppercase">Sucursal</span>
         <span className="text-gray-500 text-[10px] font-bold tracking-widest uppercase text-right">Hoy / Meta</span>
@@ -112,7 +114,7 @@ export const ScreenMetaDiaria: React.FC<Props> = ({ data }) => {
       <div className="flex-1 min-h-0 overflow-hidden">
         <AutoScrollList
           items={sorted}
-          itemHeight={52}
+          itemHeight={58}
           renderItem={(b, i) => <BranchRow key={b.id} b={b} rank={i + 1} />}
         />
       </div>
