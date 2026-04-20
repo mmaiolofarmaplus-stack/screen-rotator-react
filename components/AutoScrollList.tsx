@@ -18,37 +18,34 @@ export function AutoScrollList<T>({
 }: Props<T>) {
   if (!items.length) return null;
 
-  // If too few items, render statically
   if (items.length < minToScroll) {
     return (
-      <div className={`flex flex-col gap-1 overflow-hidden h-full ${className}`}>
+      <div className={`flex flex-col overflow-hidden h-full ${className}`}>
         {items.map((item, i) => renderItem(item, i))}
       </div>
     );
   }
 
-  const n = items.length;
-  const totalH = n * itemHeight;
-  const duration = n * 2;
+  const totalH = items.length * itemHeight;
+  const duration = items.length * 2;
 
   return (
-    <div className={`relative overflow-hidden h-full ${className}`}>
-      {items.map((item, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-full"
-          initial={{ y: totalH + i * itemHeight }}
-          animate={{ y: -totalH }}
-          transition={{
-            repeat: Infinity,
-            duration,
-            ease: 'linear',
-            delay: (i * itemHeight) / (totalH / duration),
-          }}
-        >
-          {renderItem(item, i)}
-        </motion.div>
-      ))}
+    <div className={`overflow-hidden h-full ${className}`}>
+      <motion.div
+        animate={{ y: [0, -totalH] }}
+        transition={{ repeat: Infinity, duration, ease: 'linear', repeatType: 'loop' }}
+      >
+        {items.map((item, i) => (
+          <div key={`a-${i}`} style={{ height: itemHeight }}>
+            {renderItem(item, i)}
+          </div>
+        ))}
+        {items.map((item, i) => (
+          <div key={`b-${i}`} style={{ height: itemHeight }}>
+            {renderItem(item, i)}
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 }
