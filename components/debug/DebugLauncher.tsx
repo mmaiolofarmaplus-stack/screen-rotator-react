@@ -5,12 +5,10 @@ import { ScreenRanking } from '../screens/ScreenRanking';
 import { ScreenFacturacionHora } from '../screens/ScreenFacturacionHora';
 import { ScreenTicketsHora } from '../screens/ScreenTicketsHora';
 import { ScreenVariacion } from '../screens/ScreenVariacion';
-import { ScreenProyeccion } from '../screens/ScreenProyeccion';
 import { ScreenAlertas } from '../screens/ScreenAlertas';
-import { ScreenRitmo } from '../screens/ScreenRitmo';
 import { ScreenBeneficios } from '../screens/ScreenBeneficios';
 
-type ScreenId = 'ranking' | 'facturacion-hora' | 'tickets-hora' | 'variacion' | 'proyeccion' | 'alertas' | 'ritmo' | 'beneficios';
+type ScreenId = 'ranking' | 'facturacion-hora' | 'tickets-hora' | 'variacion' | 'alertas' | 'beneficios';
 
 interface ScreenDef {
   id: ScreenId;
@@ -25,9 +23,7 @@ const SCREENS: ScreenDef[] = [
   { id: 'facturacion-hora',label: 'Facturación x Hora',   sublabel: 'Hoy vs semana anterior',         accent: '#C8102E', component: ScreenFacturacionHora },
   { id: 'tickets-hora',    label: 'Tickets x Hora',       sublabel: 'Ranking del día',                accent: '#C8102E', component: ScreenTicketsHora },
   { id: 'variacion',       label: 'Variación %',          sublabel: 'Vs semana anterior',             accent: '#01B693', component: ScreenVariacion },
-  { id: 'proyeccion',      label: 'Proyección',           sublabel: 'A fin de mes',                   accent: '#01B693', component: ScreenProyeccion },
   { id: 'alertas',         label: 'Alertas',              sublabel: 'Inactividad por sucursal',       accent: '#ef4444', component: ScreenAlertas },
-  { id: 'ritmo',           label: 'Ritmo Diario',         sublabel: 'Real vs necesario',              accent: '#f59e0b', component: ScreenRitmo },
   { id: 'beneficios',      label: 'Beneficios',           sublabel: 'Alta clientes & nominados',      accent: '#01B693', component: ScreenBeneficios },
 ];
 
