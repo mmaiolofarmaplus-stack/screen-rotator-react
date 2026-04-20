@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { DashboardData, BranchData } from '../../types';
+import { AutoScrollList } from '../AutoScrollList';
 
 interface Props { data: DashboardData; }
 
@@ -89,9 +90,13 @@ export const ScreenAlertas: React.FC<Props> = ({ data }) => {
         </div>
 
         <div className="flex flex-col overflow-hidden pl-2 border-l border-white/5">
-          <p className="text-[#01B693] text-xs font-bold tracking-widest uppercase mb-2">Activas (&lt;1hs)</p>
-          <div className="flex flex-col gap-1.5 overflow-y-auto custom-scrollbar">
-            {ok.map(b => <BranchRow key={b.id} b={b} accent="#01B693" />)}
+          <p className="text-[#01B693] text-xs font-bold tracking-widest uppercase mb-2 shrink-0">Activas (&lt;1hs)</p>
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <AutoScrollList
+              items={ok}
+              itemHeight={52}
+              renderItem={(b) => <BranchRow key={b.id} b={b} accent="#01B693" />}
+            />
           </div>
         </div>
       </div>

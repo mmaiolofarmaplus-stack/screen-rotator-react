@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { DashboardData, BranchData } from '../../types';
 import { formatMillions } from '../../utils/formatters';
 import { AnimatedBar } from '../AnimatedBar';
+import { AutoScrollList } from '../AutoScrollList';
 
 interface Props { data: DashboardData; }
 
@@ -118,11 +119,19 @@ export const ScreenProyeccion: React.FC<Props> = ({ data }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-x-10 h-[calc(100%-2rem)] overflow-hidden">
-          <div className="flex flex-col overflow-y-auto custom-scrollbar pr-2 gap-0.5">
-            {sorted.slice(0, half).map(b => <Row key={b.id} b={b} />)}
+          <div className="overflow-hidden pr-2">
+            <AutoScrollList
+              items={sorted.slice(0, half)}
+              itemHeight={44}
+              renderItem={(b) => <Row key={b.id} b={b} />}
+            />
           </div>
-          <div className="flex flex-col overflow-y-auto custom-scrollbar pl-2 border-l border-white/5 gap-0.5">
-            {sorted.slice(half).map(b => <Row key={b.id} b={b} />)}
+          <div className="overflow-hidden pl-2 border-l border-white/5">
+            <AutoScrollList
+              items={sorted.slice(half)}
+              itemHeight={44}
+              renderItem={(b) => <Row key={b.id} b={b} />}
+            />
           </div>
         </div>
       </div>
