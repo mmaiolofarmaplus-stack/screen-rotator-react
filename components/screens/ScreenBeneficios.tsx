@@ -11,7 +11,7 @@ const CircleGauge: React.FC<{
   size?: number;
   strokeWidth?: number;
   children: React.ReactNode;
-}> = ({ pct, color, trackColor = '#1e2333', size = 260, strokeWidth = 20, children }) => {
+}> = ({ pct, color, trackColor = '#1e2333', size = 320, strokeWidth = 22, children }) => {
   const r = (size - strokeWidth) / 2;
   const cx = size / 2;
   const cy = size / 2;
@@ -51,9 +51,8 @@ const formatNumber = (n: number): string =>
 
 export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
   const { altaClientes, promedioDiarioClientes, pctNominados, metaPctNominados,
-          ticketsNominados, ticketsNominadosBase, diasMes, diaActual } = data;
+          diasMes, diaActual } = data;
 
-  // Meta de clientes = promedio diario * días del mes
   const safeAlta    = altaClientes           || 0;
   const safeProm    = promedioDiarioClientes || 0;
   const safePctNom  = pctNominados           || 0;
@@ -66,58 +65,47 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
   return (
     <div className="w-screen h-screen bg-[#0b0e14] text-white flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-10 pt-8 pb-4 border-b border-white/5 shrink-0 flex items-end justify-between">
-        <div>
-          <p className="text-[#325795] text-xs font-bold tracking-[0.3em] uppercase mb-1">
-            Día {diaActual} de {diasMes}
-          </p>
-          <h1 className="text-4xl font-black uppercase tracking-wider">Programa de Beneficios</h1>
-        </div>
+      <div className="px-10 pt-8 pb-4 border-b border-white/5 shrink-0">
+        <p className="text-[#325795] text-xs font-bold tracking-[0.3em] uppercase mb-1">
+          Día {diaActual} de {diasMes}
+        </p>
+        <h1 className="text-4xl font-black uppercase tracking-wider">Programa de Beneficios</h1>
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 min-h-0 flex items-center justify-center gap-20 px-10">
+      {/* Main content — centered */}
+      <div className="flex-1 min-h-0 flex items-center justify-center gap-24 px-10">
 
         {/* Alta de Clientes */}
-        <div className="flex flex-col items-center gap-6">
-          <p className="text-[#325795] text-sm font-bold tracking-[0.25em] uppercase">Alta de Clientes</p>
-          <CircleGauge pct={pctClientes} color="#01B693" size={300} strokeWidth={22}>
-            <span className="text-white font-mono font-black text-5xl leading-none">
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-[#325795] text-lg font-black tracking-[0.25em] uppercase">Alta de Clientes Acumulado</p>
+          <CircleGauge pct={pctClientes} color="#01B693" size={320} strokeWidth={24}>
+            <span className="text-white font-mono font-black text-6xl leading-none">
               {formatNumber(safeAlta)}
             </span>
-            <span className="text-gray-400 text-sm font-bold mt-1 tracking-wider uppercase">clientes</span>
+            <span className="text-gray-400 text-base font-bold mt-2 tracking-wider uppercase">clientes</span>
           </CircleGauge>
         </div>
 
         {/* Divider */}
-        <div className="w-px h-64 bg-white/10" />
+        <div className="w-px h-72 bg-white/10" />
 
         {/* Tickets Nominados */}
-        <div className="flex flex-col items-center gap-6">
-          <p className="text-[#325795] text-sm font-bold tracking-[0.25em] uppercase">Tickets Nominados Hoy Total Red</p>
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-[#325795] text-lg font-black tracking-[0.25em] uppercase">Tickets Nominados Hoy Total Red</p>
           <CircleGauge
             pct={(safePctNom / safeMetaNom) * 100}
             color={diffNominados >= 0 ? '#01B693' : '#C8102E'}
-            size={300}
-            strokeWidth={22}
+            size={320}
+            strokeWidth={24}
           >
             <span
-              className="font-mono font-black text-5xl leading-none"
+              className="font-mono font-black text-6xl leading-none"
               style={{ color: diffNominados >= 0 ? '#01B693' : '#C8102E' }}
             >
               {formatPct(safePctNom, 2)}%
             </span>
-            <span className="text-gray-400 text-sm font-bold mt-1 tracking-wider uppercase">nominados</span>
+            <span className="text-gray-400 text-base font-bold mt-2 tracking-wider uppercase">nominados</span>
           </CircleGauge>
-          <div className="text-center">
-            <p className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase">vs Meta {safeMetaNom}%</p>
-            <p
-              className="font-mono font-black text-3xl"
-              style={{ color: diffNominados >= 0 ? '#01B693' : '#C8102E' }}
-            >
-              {diffNominados >= 0 ? '+' : ''}{formatPct(diffNominados, 2)} pp
-            </p>
-          </div>
         </div>
 
       </div>

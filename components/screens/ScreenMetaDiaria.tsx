@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { DashboardData, BranchData } from '../../types';
-import { formatMillions } from '../../utils/formatters';
+import { formatMillions, formatThousands } from '../../utils/formatters';
 import { AnimatedBar } from '../AnimatedBar';
 import { AutoScrollList } from '../AutoScrollList';
 
@@ -34,8 +34,8 @@ const BranchRow: React.FC<{ b: BranchData; rank: number }> = ({ b, rank }) => {
 
       {/* Hoy / Meta */}
       <div className="text-right">
-        <span className="text-white font-mono text-sm">{formatMillions(b.hoyNeto)}</span>
-        <span className="text-gray-500 text-xs font-mono"> / {formatMillions(b.metaDiaria)}</span>
+        <span className="text-white font-mono text-sm">{formatThousands(b.hoyNeto)}</span>
+        <span className="text-gray-500 text-xs font-mono"> / {formatThousands(b.metaDiaria)}</span>
       </div>
 
       {/* % avance */}
@@ -45,7 +45,7 @@ const BranchRow: React.FC<{ b: BranchData; rank: number }> = ({ b, rank }) => {
 
       {/* Falta / sobra */}
       <span className="font-mono text-sm text-right" style={{ color: falta <= 0 ? '#01B693' : '#C8102E' }}>
-        {falta <= 0 ? `+${formatMillions(Math.abs(falta))}` : `-${formatMillions(falta)}`}
+        {falta <= 0 ? `+${formatThousands(Math.abs(falta))}` : `-${formatThousands(falta)}`}
       </span>
     </div>
   );
