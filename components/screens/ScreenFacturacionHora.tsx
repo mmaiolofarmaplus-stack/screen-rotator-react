@@ -5,7 +5,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { DashboardData } from '../../types';
-import { formatMillions, formatThousands, formatPct } from '../../utils/formatters';
+import { formatMillions, formatPct } from '../../utils/formatters';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
@@ -86,7 +86,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
         borderWidth: 1,
         padding: 12,
         displayColors: false,
-        callbacks: { label: (ctx) => formatThousands(ctx.raw as number) },
+        callbacks: { label: (ctx) => formatMillions(ctx.raw as number) },
       },
     },
     scales: {
@@ -111,7 +111,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
         <div className="flex gap-8">
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">TOTAL HOY</p>
-            <p className="text-white font-mono font-black text-2xl">{formatThousands(totalNeto)}</p>
+            <p className="text-white font-mono font-black text-2xl">{formatMillions(totalNeto)}</p>
           </div>
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">VS SEM. ANT.</p>
@@ -121,7 +121,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">SEM. ANT. (HOY)</p>
-            <p className="text-white font-mono font-black text-2xl">{formatThousands(semAntTotal)}</p>
+            <p className="text-white font-mono font-black text-2xl">{formatMillions(semAntTotal)}</p>
           </div>
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">HORA PICO</p>
