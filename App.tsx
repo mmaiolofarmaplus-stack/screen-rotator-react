@@ -26,11 +26,12 @@ const SCREENS: { id: string; component: React.FC<{ data: DashboardData }> }[] = 
   { id: 'beneficios',       component: ScreenBeneficios },
 ];
 
-// Playlist: 7 screens then video, then repeat
-const PLAYLIST = [
-  ...SCREENS.map((_, i) => ({ type: 'screen' as const, index: i })),
-  { type: 'video' as const, index: -1 },
-];
+// Playlist: screen → video → screen → video → ... repeat
+const VIDEO_SLOT = { type: 'video' as const, index: -1 };
+const PLAYLIST = SCREENS.flatMap((_, i) => [
+  { type: 'screen' as const, index: i },
+  VIDEO_SLOT,
+]);
 
 const isDebug = new URLSearchParams(window.location.search).has('debug');
 
