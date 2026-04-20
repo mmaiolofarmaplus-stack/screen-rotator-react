@@ -43,10 +43,11 @@ const setCachedData = (data: DashboardData): void => {
   } catch {}
 };
 
-const fetchSheet = async (gid: string): Promise<any[]> => {
+const fetchSheet = async (gid: string, skipRows = 0): Promise<any[]> => {
   const res = await fetch(sheetUrl(gid));
   if (!res.ok) throw new Error(`HTTP ${res.status} fetching gid=${gid}`);
-  const text = await res.text();
+  let text = await res.text();
+  if (skipRows > 0) text = text.split('\n').slice(skipRows).join('\n');
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
 };
 
@@ -77,7 +78,7 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
     fetchSheet(SHEETS.horas_semana_anterior),
     fetchSheet(SHEETS.clientes),
     fetchSheet(SHEETS.nominados),
-    fetchSheet(SHEETS.meta_diaria),
+    fetchSheet(SHEETS.meta_diaria, 2),
   ]);
 
   // Hourly maps: sucursal -> number[24]
