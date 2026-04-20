@@ -2,7 +2,7 @@ import { DashboardData, BranchData } from '../types';
 
 declare const Papa: any;
 
-const CACHE_KEY = 'farmaplus_v3_cache';
+const CACHE_KEY = 'farmaplus_v4_cache';
 
 const SHEET_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4';
 const SHEETS = {
@@ -14,7 +14,7 @@ const SHEETS = {
 } as const;
 
 const sheetUrl = (gid: string) =>
-  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`;
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}&t=${Date.now()}`;
 
 export const getCachedData = (): DashboardData | null => {
   try {
@@ -43,7 +43,7 @@ const setCachedData = (data: DashboardData): void => {
 };
 
 const fetchSheet = async (gid: string): Promise<any[]> => {
-  const res = await fetch(sheetUrl(gid), { cache: 'no-store' });
+  const res = await fetch(sheetUrl(gid));
   if (!res.ok) throw new Error(`HTTP ${res.status} fetching gid=${gid}`);
   const text = await res.text();
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
