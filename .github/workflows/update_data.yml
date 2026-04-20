@@ -25,6 +25,7 @@ jobs:
 
       - name: Write Google credentials
         run: |
+          mkdir -p input
           echo '${{ secrets.GOOGLE_TOKEN_JSON }}' > input/token.json
           echo '${{ secrets.GOOGLE_CREDENTIALS_JSON }}' > input/credentials.json
 
