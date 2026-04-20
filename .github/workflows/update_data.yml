@@ -21,16 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Python dependencies
-        run: pip install pandas openpyxl google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-
-      - name: Write Google credentials
-        env:
-          GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
-          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
-        run: |
-          mkdir -p input
-          printf '%s' "$GOOGLE_TOKEN_JSON" > input/token.json
-          printf '%s' "$GOOGLE_CREDENTIALS_JSON" > input/credentials.json
+        run: pip install pandas requests
 
       - name: Run data generator
         run: python generate_data.py

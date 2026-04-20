@@ -1,359 +1,64 @@
 """
-GENERADOR BASE DE CONOCIMIENTO - DASHBOARD FARMACIAS
+GENERADOR DE DATOS - DASHBOARD FARMAPLUS
 
-Lee dos archivos:
-  - Dashboard.xlsx  → 5 hojas operativas, se actualiza cada hora via EasyMorph
-  - Objetivos.xlsx  → archivo fijo, se reemplaza una vez por mes
-
-Genera base_conocimiento.csv en la misma carpeta.
-
-DEPENDENCIAS:
-    pip install pandas openpyxl
+Lee todas las hojas directamente desde Google Sheets (generadas por EasyMorph).
+No hace calculos — solo descarga y guarda los CSVs.
 """
 
 import pandas as pd
-import datetime
-import calendar
 import os
 
-# ==============================================================================
-# CONFIGURACION - AJUSTAR RUTAS
-# ==============================================================================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SHEET_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4'
 
-BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
+SHEETS = {
+    'base_conocimiento':     '1016914412',
+    'horas_hoy':             '1209004727',
+    'horas_semana_anterior': '2088265702',
+    'clientes':              '1855567166',
+    'nominados':             '1235412273',
+}
 
-# ==============================================================================
-# DESCARGA AUTOMATICA DESDE GOOGLE DRIVE
-# ==============================================================================
-
-DASHBOARD_FILE_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4'
-TOKEN_PATH        = os.path.join(BASE_DIR, "input", "token.json")
-CREDS_PATH        = os.path.join(BASE_DIR, "input", "credentials.json")
-
-# GIDs de las hojas de beneficios (fuente directa, no via Excel)
-GID_CLIENTES  = '1855567166'
-GID_NOMINADOS = '1235412273'
-
-def fetch_beneficios_sheet(gid: str) -> pd.DataFrame:
-    """Lee una hoja del Dashboard directamente como CSV (sin pasar por la descarga del Excel)."""
-    url = f'https://docs.google.com/spreadsheets/d/{DASHBOARD_FILE_ID}/export?format=csv&gid={gid}'
+def fetch_sheet(name: str, gid: str) -> pd.DataFrame:
+    url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={gid}'
     try:
         df = pd.read_csv(url)
-        print(f"  OK: hoja gid={gid} leida desde Sheets ({len(df)} filas)")
+        print(f"  OK: {name} → {len(df)} filas")
         return df
     except Exception as e:
-        print(f"  WARN: No se pudo leer gid={gid} desde Sheets: {e}")
+        print(f"  ERROR: {name} → {e}")
         return pd.DataFrame()
 
-def download_dashboard_from_drive(dest_path):
-    """Descarga el Dashboard de Google Drive usando token OAuth guardado."""
-    try:
-        from google.oauth2.credentials import Credentials
-        from google.auth.transport.requests import Request
-        from googleapiclient.discovery import build
-        from googleapiclient.http import MediaIoBaseDownload
-        import io
+print("Descargando hojas desde Google Sheets...")
+df_base = fetch_sheet('base_conocimiento',     SHEETS['base_conocimiento'])
+df_hoy  = fetch_sheet('horas_hoy',             SHEETS['horas_hoy'])
+df_sem  = fetch_sheet('horas_semana_anterior',  SHEETS['horas_semana_anterior'])
+df_cli  = fetch_sheet('clientes',              SHEETS['clientes'])
+df_nom  = fetch_sheet('nominados',             SHEETS['nominados'])
 
-        if not os.path.exists(TOKEN_PATH):
-            print(f"  WARN: Sin token.json — usando archivo local existente.")
-            print(f"        Corre setup_google_auth.py una vez para activar la descarga automatica.")
-            return False
+print("\nGuardando CSVs...")
 
-        creds = Credentials.from_authorized_user_file(TOKEN_PATH)
+df_base.to_csv(os.path.join(BASE_DIR, 'public', 'data', 'base_conocimiento.csv'),    index=False, encoding='utf-8-sig')
+df_hoy.to_csv( os.path.join(BASE_DIR, 'public', 'data', 'horas_hoy.csv'),            index=False, encoding='utf-8-sig')
+df_sem.to_csv( os.path.join(BASE_DIR, 'public', 'data', 'horas_semana_anterior.csv'),index=False, encoding='utf-8-sig')
 
-        # Refrescar token si venció
-        if creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-            with open(TOKEN_PATH, 'w') as f:
-                f.write(creds.to_json())
+# Beneficios — fila unica
+ctx        = df_base.iloc[0] if not df_base.empty else {}
+dia_actual = int(ctx.get('Ctx_Dia_Del_Mes', 1))
 
-        service  = build('drive', 'v3', credentials=creds)
-        request  = service.files().export_media(
-            fileId   = DASHBOARD_FILE_ID,
-            mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-        buf = io.BytesIO()
-        downloader = MediaIoBaseDownload(buf, request)
-        done = False
-        while not done:
-            _, done = downloader.next_chunk()
+alta_clientes = int(df_cli['TotalClientes'].iloc[0])                                      if not df_cli.empty else 0
+pct_nominados = float(str(df_nom['PctNominados'].iloc[0]).replace(',', '.'))              if not df_nom.empty else 0
+tickets_nom   = int(df_nom['TicketsNominados'].iloc[0])                                   if not df_nom.empty else 0
+tickets_base  = int(df_nom['TotalTickets'].iloc[0])                                       if not df_nom.empty else 0
 
-        with open(dest_path, 'wb') as f:
-            f.write(buf.getvalue())
-
-        print(f"  OK: Dashboard descargado desde Drive ({len(buf.getvalue())//1024} KB)")
-        return True
-
-    except Exception as e:
-        print(f"  WARN: Error descargando de Drive: {e}")
-        print(f"        Usando archivo local existente.")
-        return False
-
-PATH_DASH     = os.path.join(BASE_DIR, "input", "Dashboard (2).xlsx")
-PATH_OBJ_CSV  = os.path.join(BASE_DIR, "input", "Objetivos Sucursales Abril 2026.csv")
-PATH_OUT      = os.path.join(BASE_DIR, "public", "data", "base_conocimiento.csv")
-PATH_OUT_HORA = os.path.join(BASE_DIR, "public", "data", "horas_hoy.csv")
-PATH_OUT_SEM  = os.path.join(BASE_DIR, "public", "data", "horas_semana_anterior.csv")
-
-# ==============================================================================
-# HELPERS
-# ==============================================================================
-
-def normalizar(v):
-    return str(v).upper().strip()
-
-# ==============================================================================
-# 1. FACTURACION ACUMULADA DEL MES
-# ==============================================================================
-
-print("[0/8] Descargando Dashboard desde Google Drive...")
-download_dashboard_from_drive(PATH_DASH)
-
-print("[1/8] Leyendo facturacion acumulada del mes...")
-df_mes = pd.read_excel(PATH_DASH, sheet_name='Facturacion Mes')
-df_mes['Sucursal'] = df_mes['Nombre_Sucu'].apply(normalizar)
-df_mes = df_mes.rename(columns={
-    'sucursal':        'ID_Sucursal',
-    'Tickets':         'Acum_Tickets',
-    'Unidades':        'Acum_Unidades',
-    'Neto':            'Acum_Neto',
-    'Saldo_Cobertura': 'Acum_Cobertura',
-    'Saldo_Cliente':   'Acum_Cliente',
-})
-df_mes = df_mes[[
-    'ID_Sucursal', 'Sucursal',
-    'Acum_Tickets', 'Acum_Unidades', 'Acum_Neto', 'Acum_Cobertura', 'Acum_Cliente',
-]]
-
-# ==============================================================================
-# 2. FACTURACION DEL DIA + DETECCION AUTOMATICA DE FECHA
-# ==============================================================================
-
-print("[2/8] Leyendo facturacion del dia y detectando fecha...")
-df_dia = pd.read_excel(PATH_DASH, sheet_name='Facturacion x Dia')
-df_dia['Sucursal'] = df_dia['Nombre_Sucu'].apply(normalizar)
-
-if df_dia.empty:
-    fecha_hoy = datetime.date.today()
-    print(f"    Sin datos de facturacion hoy — usando fecha del sistema: {fecha_hoy}")
-else:
-    fecha_hoy = datetime.date(1899, 12, 30) + datetime.timedelta(days=int(df_dia['Fecha'].iloc[0]))
-
-dia_actual     = fecha_hoy.day
-dias_mes       = calendar.monthrange(fecha_hoy.year, fecha_hoy.month)[1]
-dias_restantes = dias_mes - dia_actual
-dias_restantes_safe = max(dias_restantes, 1)  # evita división por cero el último día del mes
-
-print(f"    Fecha: {fecha_hoy} | Dia {dia_actual}/{dias_mes} | Dias restantes: {dias_restantes}")
-
-df_dia = df_dia.rename(columns={
-    'Tickets':         'Hoy_Tickets',
-    'Unidades':        'Hoy_Unidades',
-    'Neto':            'Hoy_Neto',
-    'Saldo_Cobertura': 'Hoy_Cobertura',
-    'Saldo_Cliente':   'Hoy_Cliente',
-})
-df_dia = df_dia[[
-    'Sucursal', 'Hoy_Tickets', 'Hoy_Unidades', 'Hoy_Neto', 'Hoy_Cobertura', 'Hoy_Cliente',
-]]
-
-# ==============================================================================
-# 3. SUCURSAL X HORA (HOY)
-# ==============================================================================
-
-print("[3/8] Leyendo datos por hora...")
-df_hora = pd.read_excel(PATH_DASH, sheet_name='Sucursal x Hora')
-df_hora['Sucursal'] = df_hora['Nombre_Sucu'].apply(normalizar)
-
-ultima_franja_hoy = int(df_hora['Franja_Horaria'].max())
-print(f"    Ultima franja disponible: {ultima_franja_hoy}hs")
-
-hora_pico = (
-    df_hora.loc[df_hora.groupby('Sucursal')['Neto'].idxmax()]
-    [['Sucursal', 'Franja_Horaria', 'Neto']].copy()
-)
-hora_pico.columns = ['Sucursal', 'Hora_Pico_Hoy', 'Hora_Pico_Hoy_Neto']
-
-ult_franja = df_hora.groupby('Sucursal')['Franja_Horaria'].max().reset_index()
-ult_franja.columns = ['Sucursal', 'Ultima_Franja_Con_Datos']
-
-neto_hora = df_hora.groupby('Sucursal').agg(
-    Hora_Neto_Total=('Neto', 'sum'),
-    Hora_Tickets_Total=('Tickets', 'sum'),
-    Hora_Unidades_Total=('Unidades', 'sum'),
-).reset_index()
-
-df_hora_res = hora_pico.merge(ult_franja, on='Sucursal').merge(neto_hora, on='Sucursal')
-
-# ==============================================================================
-# 4. SEMANA ANTERIOR
-#    Comparacion hasta la misma franja de ahora + total dia completo
-# ==============================================================================
-
-print("[4/8] Leyendo semana anterior...")
-df_sem = pd.read_excel(PATH_DASH, sheet_name='Sucursal Semana Anterior')
-df_sem['Sucursal'] = df_sem['Nombre_Sucu'].apply(normalizar)
-
-sem_hasta = (
-    df_sem[df_sem['Franja_Horaria'] <= ultima_franja_hoy]
-    .groupby('Sucursal').agg(
-        SemAnt_Neto_HastaAhora=('Neto', 'sum'),
-        SemAnt_Tickets_HastaAhora=('Tickets', 'sum'),
-        SemAnt_Unidades_HastaAhora=('Unidades', 'sum'),
-    ).reset_index()
-)
-sem_total = df_sem.groupby('Sucursal').agg(
-    SemAnt_Neto_DiaCompleto=('Neto', 'sum'),
-    SemAnt_Tickets_DiaCompleto=('Tickets', 'sum'),
-).reset_index()
-df_sem_res = sem_hasta.merge(sem_total, on='Sucursal')
-
-# ==============================================================================
-# 5. ULTIMA HORA DE TICKET
-# ==============================================================================
-
-print("[5/8] Leyendo ultima hora de ticket...")
-df_ult = pd.read_excel(PATH_DASH, sheet_name='Ultima Hora Ticket')
-df_ult['Sucursal'] = df_ult['sucursal(2)'].apply(normalizar)
-df_ult = df_ult.rename(columns={'ultima_hora': 'Ultima_Hora_Ticket'})[['Sucursal', 'Ultima_Hora_Ticket']]
-
-# ==============================================================================
-# 6. META DIARIA DESDE CSV
-# ==============================================================================
-
-print("[6/8] Leyendo meta diaria...")
-df_obj_csv = pd.read_csv(PATH_OBJ_CSV, encoding='utf-8-sig', sep=';', skiprows=2,
-                         usecols=['FECHA', 'FARMACIA', 'Meta 1 $$'])
-df_obj_csv['Sucursal'] = df_obj_csv['FARMACIA'].apply(normalizar)
-def parse_meta(v):
-    try:
-        return float(str(v).replace('$', '').replace('.', '').replace(' ', '').replace(',', '.'))
-    except (ValueError, TypeError):
-        return 0
-df_obj_csv['Meta_Diaria'] = df_obj_csv['Meta 1 $$'].apply(parse_meta)
-
-fecha_str = f"{dia_actual}/{fecha_hoy.month}/{fecha_hoy.year}"
-df_meta_hoy = df_obj_csv[df_obj_csv['FECHA'].str.strip() == fecha_str][['Sucursal', 'Meta_Diaria']]
-print(f"    Meta diaria: {len(df_meta_hoy)} sucursales para {fecha_str}")
-
-# ==============================================================================
-# 7. MERGE MAESTRO
-# ==============================================================================
-
-print("[7/8] Unificando y calculando metricas...")
-df = (
-    df_mes
-    .merge(df_dia,       on='Sucursal', how='left')
-    .merge(df_hora_res,  on='Sucursal', how='left')
-    .merge(df_sem_res,   on='Sucursal', how='left')
-    .merge(df_ult,       on='Sucursal', how='left')
-    .merge(df_meta_hoy,  on='Sucursal', how='left')
-)
-
-# ==============================================================================
-# 8. COLUMNAS CALCULADAS
-# ==============================================================================
-
-# Contexto temporal
-df['Ctx_Fecha_Hoy']            = str(fecha_hoy)
-df['Ctx_Dia_Del_Mes']          = dia_actual
-df['Ctx_Dias_Totales_Mes']     = dias_mes
-df['Ctx_Dias_Restantes']       = dias_restantes
-df['Ctx_Pct_Mes_Transcurrido'] = round(dia_actual / dias_mes * 100, 1)
-df['Ctx_Ultima_Franja_Hora']   = ultima_franja_hoy
-
-df['Meta_Diaria'] = df['Meta_Diaria'].fillna(0)
-
-# Avance vs meta diaria
-df['Avance_Pct_Diario'] = round(
-    df['Hoy_Neto'] / df['Meta_Diaria'].replace(0, float('nan')) * 100, 1
-).fillna(0)
-df['Falta_Meta_Diaria'] = round(df['Meta_Diaria'] - df['Hoy_Neto'], 0)
-
-# Variacion vs semana anterior
-df['Var_Pct_vs_SemAnt_HastaAhora'] = round(
-    (df['Hoy_Neto'] - df['SemAnt_Neto_HastaAhora']) / df['SemAnt_Neto_HastaAhora'].replace(0, float('nan')) * 100, 1
-).fillna(0)
-
-# Alerta de inactividad
-def alerta_inactividad(row):
-    try:
-        p = str(row['Ultima_Hora_Ticket']).split(':')
-        h = int(p[0]) + int(p[1]) / 60
-        return f'SIN TICKET DESDE {row["Ultima_Hora_Ticket"]}' if h < (ultima_franja_hoy - 1) else 'ACTIVA'
-    except Exception:
-        return 'SIN DATOS'
-df['Alerta_Inactividad'] = df.apply(alerta_inactividad, axis=1)
-
-# ==============================================================================
-# ORDEN FINAL DE COLUMNAS
-# ==============================================================================
-
-columnas_finales = [
-    'ID_Sucursal', 'Sucursal',
-    'Ctx_Fecha_Hoy', 'Ctx_Dia_Del_Mes', 'Ctx_Dias_Totales_Mes', 'Ctx_Dias_Restantes',
-    'Ctx_Pct_Mes_Transcurrido', 'Ctx_Ultima_Franja_Hora',
-    'Acum_Tickets', 'Acum_Unidades', 'Acum_Neto', 'Acum_Cobertura', 'Acum_Cliente',
-    'Hoy_Tickets', 'Hoy_Unidades', 'Hoy_Neto', 'Hoy_Cobertura', 'Hoy_Cliente',
-    'Hora_Pico_Hoy', 'Hora_Pico_Hoy_Neto', 'Ultima_Franja_Con_Datos',
-    'Hora_Neto_Total', 'Hora_Tickets_Total', 'Hora_Unidades_Total',
-    'Ultima_Hora_Ticket', 'Alerta_Inactividad',
-    'SemAnt_Neto_HastaAhora', 'SemAnt_Tickets_HastaAhora', 'SemAnt_Unidades_HastaAhora',
-    'SemAnt_Neto_DiaCompleto', 'SemAnt_Tickets_DiaCompleto', 'Var_Pct_vs_SemAnt_HastaAhora',
-    'Meta_Diaria', 'Avance_Pct_Diario', 'Falta_Meta_Diaria',
-]
-df = df[columnas_finales]
-
-# ==============================================================================
-# GUARDAR
-# ==============================================================================
-
-print("[8/8] Guardando archivos de salida...")
-
-# Leer hojas de beneficios directamente desde Google Sheets (fuente de verdad)
-df_clientes  = fetch_beneficios_sheet(GID_CLIENTES)
-df_nominados = fetch_beneficios_sheet(GID_NOMINADOS)
-alta_clientes     = int(df_clientes['TotalClientes'].iloc[0]) if not df_clientes.empty else 0
-pct_nominados     = float(str(df_nominados['PctNominados'].iloc[0]).replace(',', '.')) if not df_nominados.empty else 0
-total_tickets_nom = int(df_nominados['TicketsNominados'].iloc[0]) if not df_nominados.empty else 0
-total_tickets_nom_base = int(df_nominados['TotalTickets'].iloc[0]) if not df_nominados.empty else 0
-
-# base_conocimiento.csv
-df.fillna('').to_csv(PATH_OUT, index=False, encoding='utf-8-sig')
-
-# horas_hoy.csv - detalle hora x sucursal del dia actual
-df_hora_out = df_hora.copy()
-df_hora_out['Fecha']    = str(fecha_hoy)
-df_hora_out['Sucursal'] = df_hora_out['Nombre_Sucu'].str.upper().str.strip()
-df_hora_out = df_hora_out.rename(columns={'sucursal':'ID_Sucursal','Franja_Horaria':'Hora'})
-df_hora_out = df_hora_out[['ID_Sucursal','Sucursal','Fecha','Hora','Tickets','Unidades','Neto','Saldo_Cobertura','Saldo_Cliente']]
-df_hora_out.to_csv(PATH_OUT_HORA, index=False, encoding='utf-8-sig')
-
-# horas_semana_anterior.csv - detalle hora x sucursal semana pasada
-df_sem_out = df_sem.copy()
-df_sem_out['Fecha']    = df_sem_out['Fecha'].dt.strftime('%Y-%m-%d')
-df_sem_out['Sucursal'] = df_sem_out['Nombre_Sucu'].str.upper().str.strip()
-df_sem_out = df_sem_out.rename(columns={'sucursal':'ID_Sucursal','Franja_Horaria':'Hora'})
-df_sem_out = df_sem_out[['ID_Sucursal','Sucursal','Fecha','Hora','Tickets','Unidades','Neto','Saldo_Cobertura','Saldo_Cliente']]
-df_sem_out.to_csv(PATH_OUT_SEM, index=False, encoding='utf-8-sig')
-
-# beneficios.csv - fila unica con datos de la red
-PATH_OUT_BEN = os.path.join(BASE_DIR, "public", "data", "beneficios.csv")
 pd.DataFrame([{
-    'Alta_Clientes':       alta_clientes,
-    'Pct_Nominados':       pct_nominados,
-    'Tickets_Nominados':   total_tickets_nom,
-    'Total_Tickets':       total_tickets_nom_base,
-    'Promedio_Diario_Clientes': round(alta_clientes / dia_actual, 0),
-    'Meta_Pct_Nominados':  35.0,
-}]).to_csv(PATH_OUT_BEN, index=False, encoding='utf-8-sig')
+    'Alta_Clientes':            alta_clientes,
+    'Pct_Nominados':            pct_nominados,
+    'Tickets_Nominados':        tickets_nom,
+    'Total_Tickets':            tickets_base,
+    'Promedio_Diario_Clientes': round(alta_clientes / dia_actual, 0) if dia_actual else 0,
+    'Meta_Pct_Nominados':       35.0,
+}]).to_csv(os.path.join(BASE_DIR, 'public', 'data', 'beneficios.csv'), index=False, encoding='utf-8-sig')
 
-print(f"\nLISTO - 4 archivos generados:")
-print(f"  {PATH_OUT}      -> {len(df)} sucursales x {len(df.columns)} columnas")
-print(f"  {PATH_OUT_HORA} -> {len(df_hora_out)} filas ({df_hora_out['Sucursal'].nunique()} sucursales x hora)")
-print(f"  {PATH_OUT_SEM}  -> {len(df_sem_out)} filas ({df_sem_out['Sucursal'].nunique()} sucursales x hora)")
-print(f"\n  Fecha      : {fecha_hoy} (Dia {dia_actual}/{dias_mes})")
-print(f"  Franja hoy : {ultima_franja_hoy}hs")
-print(f"\n  Alertas:")
-for alerta, count in df['Alerta_Inactividad'].value_counts().items():
-    print(f"    {alerta}: {count}")
+print("  OK: beneficios.csv")
+print(f"\nLISTO — fecha: {ctx.get('Ctx_Fecha_Hoy', '?')} · franja: {ctx.get('Ctx_Ultima_Franja_Hora', '?')}hs")
