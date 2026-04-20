@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { DashboardData, BranchData } from '../../types';
-import { formatMillions } from '../../utils/formatters';
+import { formatMillions, formatThousands } from '../../utils/formatters';
 import { AnimatedBar } from '../AnimatedBar';
 import { AutoScrollList } from '../AutoScrollList';
 
@@ -17,7 +17,7 @@ const BranchRow: React.FC<{ b: BranchData; rank: number; maxNeto: number }> = ({
           <span className="text-gray-500 font-bold text-sm w-6 text-right shrink-0">{medal ?? rank}</span>
           <span className="text-white font-bold text-base uppercase tracking-wide truncate">{b.name}</span>
         </div>
-        <span className="text-white font-mono font-black text-xl shrink-0">{formatMillions(b.hoyNeto)}</span>
+        <span className="text-white font-mono font-black text-xl shrink-0">{formatThousands(b.hoyNeto)}</span>
       </div>
       <div className="ml-8 h-2 bg-white/5 rounded-full overflow-hidden">
         <AnimatedBar pct={widthPct} color="#01B693" delay={rank * 18} />

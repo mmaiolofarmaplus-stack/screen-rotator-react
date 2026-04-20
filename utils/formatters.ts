@@ -17,3 +17,8 @@ export const formatMillions = (value: number): string => {
   }
   return formatCurrency(value);
 };
+
+export const formatThousands = (value: number): string => {
+  const k = value / 1000;
+  return `$ ${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(k)}K`;
+};
