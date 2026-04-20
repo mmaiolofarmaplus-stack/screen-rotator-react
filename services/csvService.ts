@@ -11,6 +11,7 @@ const SHEETS = {
   horas_semana_anterior: '2088265702',
   clientes:              '1855567166',
   nominados:             '1235412273',
+  meta_diaria:           '1440527970',
 } as const;
 
 const sheetUrl = (gid: string) =>
@@ -70,12 +71,13 @@ const calcInactiveMinutes = (ultimaHoraTicket: string, ultimaFranjaHora: number)
 };
 
 export const fetchDashboardData = async (): Promise<DashboardData> => {
-  const [baseRows, horaRows, semRows, cliRows, nomRows] = await Promise.all([
+  const [baseRows, horaRows, semRows, cliRows, nomRows, metaRows] = await Promise.all([
     fetchSheet(SHEETS.base_conocimiento),
     fetchSheet(SHEETS.horas_hoy),
     fetchSheet(SHEETS.horas_semana_anterior),
     fetchSheet(SHEETS.clientes),
     fetchSheet(SHEETS.nominados),
+    fetchSheet(SHEETS.meta_diaria),
   ]);
 
   // Hourly maps: sucursal -> number[24]
@@ -110,6 +112,18 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
     }
     semSalesMap.get(suc)![hora]   += n(row.Neto);
     semTicketsMap.get(suc)![hora] += n(row.Tickets);
+  });
+
+  // Build meta map: FARMACIA (uppercase) → meta value for today
+  const today        = new Date();
+  const metaDateKey  = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+  const metaMap      = new Map<string, number>();
+  metaRows.forEach((row: any) => {
+    if (String(row.FECHA || '').trim() !== metaDateKey) return;
+    const farmacia = String(row.FARMACIA || '').trim().toUpperCase();
+    const raw      = String(row['Meta 1 $$'] || '').replace(/[$\s.]/g, '').replace(',', '.');
+    const val      = parseFloat(raw);
+    if (farmacia && !isNaN(val)) metaMap.set(farmacia, val);
   });
 
   const ctx               = baseRows[0] || {};
@@ -153,9 +167,11 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
       semAntNetoDiaCompleto:   n(row.SemAnt_Neto_DiaCompleto),
       varPctVsSemAnt:          n(row.Var_Pct_vs_SemAnt_HastaAhora),
 
-      metaDiaria:       n(row.Meta_Diaria),
-      avancePctDiario:  n(row.Avance_Pct_Diario),
-      faltaMetaDiaria:  n(row.Falta_Meta_Diaria),
+      metaDiaria:       metaMap.get(sucursal) ?? 0,
+      avancePctDiario:  (metaMap.get(sucursal) ?? 0) > 0
+                          ? (n(row.Hoy_Neto) / metaMap.get(sucursal)!) * 100
+                          : 0,
+      faltaMetaDiaria:  (metaMap.get(sucursal) ?? 0) - n(row.Hoy_Neto),
 
       hourlySales:         hoySalesMap.get(sucursal)    ?? Array(24).fill(0),
       hourlyTickets:       hoyTicketsMap.get(sucursal)  ?? Array(24).fill(0),
