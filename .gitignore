@@ -28,9 +28,8 @@ dist-ssr
 input/credentials.json
 input/token.json
 
-# Archivos de entrada grandes (Excel)
-input/*.xlsx
-input/*.xls
+# Dashboard se descarga fresh cada hora desde Drive, no va en el repo
+input/Dashboard*.xlsx
 
 # Logs del generador de datos
 logs/

@@ -9,7 +9,7 @@ interface Props<T> {
   className?: string;
 }
 
-export function AutoScrollList<T>({
+export function AutoScrollList<T extends { id: string }>({
   items,
   renderItem,
   itemHeight = 52,
