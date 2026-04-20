@@ -119,14 +119,14 @@ export const ScreenProyeccion: React.FC<Props> = ({ data }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-x-10 h-[calc(100%-2rem)] overflow-hidden">
-          <div className="overflow-hidden pr-2">
+          <div className="h-full overflow-hidden pr-2">
             <AutoScrollList
               items={sorted.slice(0, half)}
               itemHeight={44}
               renderItem={(b) => <Row key={b.id} b={b} />}
             />
           </div>
-          <div className="overflow-hidden pl-2 border-l border-white/5">
+          <div className="h-full overflow-hidden pl-2 border-l border-white/5">
             <AutoScrollList
               items={sorted.slice(half)}
               itemHeight={44}

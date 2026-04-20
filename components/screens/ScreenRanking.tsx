@@ -97,14 +97,14 @@ export const ScreenRanking: React.FC<Props> = ({ data }) => {
       </div>
 
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-x-10 overflow-hidden">
-        <div className="overflow-hidden pr-2">
+        <div className="h-full overflow-hidden pr-2">
           <AutoScrollList
             items={sorted.slice(0, half)}
             itemHeight={44}
             renderItem={(b, i) => <BranchRow key={b.id} b={b} rank={i + 1} maxNeto={maxNeto} />}
           />
         </div>
-        <div className="overflow-hidden pl-2 border-l border-white/5">
+        <div className="h-full overflow-hidden pl-2 border-l border-white/5">
           <AutoScrollList
             items={sorted.slice(half)}
             itemHeight={44}
