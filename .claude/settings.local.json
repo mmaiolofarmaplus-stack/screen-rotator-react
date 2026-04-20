@@ -35,7 +35,17 @@
       "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add components/screens/ScreenMetaDiaria.tsx)",
       "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"fix: meta diaria layout con nombres visibles y columnas claras\")",
       "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" stash)",
-      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" stash pop)"
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" stash pop)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" checkout --theirs public/data/base_conocimiento.csv)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add public/data/base_conocimiento.csv)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" reset --soft origin/main)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" stash drop)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(git checkout *)"
     ]
   }
 }
