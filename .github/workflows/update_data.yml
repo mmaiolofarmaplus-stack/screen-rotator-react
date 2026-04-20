@@ -24,10 +24,13 @@ jobs:
         run: pip install pandas openpyxl google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 
       - name: Write Google credentials
+        env:
+          GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
         run: |
           mkdir -p input
-          echo '${{ secrets.GOOGLE_TOKEN_JSON }}' > input/token.json
-          echo '${{ secrets.GOOGLE_CREDENTIALS_JSON }}' > input/credentials.json
+          printf '%s' "$GOOGLE_TOKEN_JSON" > input/token.json
+          printf '%s' "$GOOGLE_CREDENTIALS_JSON" > input/credentials.json
 
       - name: Run data generator
         run: python generate_data.py
