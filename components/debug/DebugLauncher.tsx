@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { fetchDashboardData, getCachedData } from '../../services/csvService';
 import { DashboardData } from '../../types';
 import { ScreenRanking } from '../screens/ScreenRanking';
+import { ScreenMetaDiaria } from '../screens/ScreenMetaDiaria';
 import { ScreenFacturacionHora } from '../screens/ScreenFacturacionHora';
 import { ScreenTicketsHora } from '../screens/ScreenTicketsHora';
 import { ScreenVariacion } from '../screens/ScreenVariacion';
 import { ScreenAlertas } from '../screens/ScreenAlertas';
 import { ScreenBeneficios } from '../screens/ScreenBeneficios';
 
-type ScreenId = 'ranking' | 'facturacion-hora' | 'tickets-hora' | 'variacion' | 'alertas' | 'beneficios';
+type ScreenId = 'ranking' | 'meta-diaria' | 'facturacion-hora' | 'tickets-hora' | 'variacion' | 'alertas' | 'beneficios';
 
 interface ScreenDef {
   id: ScreenId;
@@ -20,6 +21,7 @@ interface ScreenDef {
 
 const SCREENS: ScreenDef[] = [
   { id: 'ranking',         label: 'Ranking',              sublabel: 'Acumulado del mes',              accent: '#325795', component: ScreenRanking },
+  { id: 'meta-diaria',     label: 'Meta Diaria',          sublabel: 'Hoy vs meta por sucursal',       accent: '#01B693', component: ScreenMetaDiaria },
   { id: 'facturacion-hora',label: 'Facturación x Hora',   sublabel: 'Hoy vs semana anterior',         accent: '#C8102E', component: ScreenFacturacionHora },
   { id: 'tickets-hora',    label: 'Tickets x Hora',       sublabel: 'Ranking del día',                accent: '#C8102E', component: ScreenTicketsHora },
   { id: 'variacion',       label: 'Variación %',          sublabel: 'Vs semana anterior',             accent: '#01B693', component: ScreenVariacion },

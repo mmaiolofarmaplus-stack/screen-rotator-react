@@ -31,50 +31,10 @@ export interface BranchData {
   semAntNetoDiaCompleto: number;
   varPctVsSemAnt: number;
 
-  // Metas totales del mes
-  meta1UN: number;
-  meta1Pesos: number;
-  meta2UN: number;
-  meta2Pesos: number;
-  meta3UN: number;
-  meta3Pesos: number;
-
-  // Meta acumulada real hasta hoy
-  metaAcumM1: number;
-  metaAcumM2: number;
-  metaAcumM3: number;
-  metaAcumM1UN: number;
-
-  // Avance vs meta acumulada
-  avancePctM1: number;
-  avancePctM2: number;
-  avancePctM3: number;
-  avancePctM1UN: number;
-
-  // Delta vs meta acumulada (+ bien, - mal)
-  deltaM1: number;
-  deltaM2: number;
-  deltaM3: number;
-
-  // Falta para cerrar el mes
-  faltaMeta1: number;
-  faltaMeta2: number;
-  faltaMeta3: number;
-
-  // Ritmo
-  ritmoReal: number;
-  ritmoNecesarioM1: number;
-  ritmoNecesarioM2: number;
-  ritmoNecesarioM3: number;
-
-  // Proyecciones
-  proyeccionNeto: number;
-  proyeccionUN: number;
-
-  // Conclusión
-  estadoAcumulado: string;
-  metaProyectada: string;
-  semaforo: string;
+  // Meta diaria
+  metaDiaria: number;
+  avancePctDiario: number;
+  faltaMetaDiaria: number;
 
   // Arrays horarios (índice = hora 0..23)
   hourlySales: number[];
@@ -87,7 +47,7 @@ export interface BranchData {
 export interface DashboardData {
   branches: BranchData[];
 
-  // Contexto temporal (igual para todas las sucursales)
+  // Contexto temporal
   fechaHoy: string;
   diaActual: number;
   diasMes: number;
@@ -104,13 +64,14 @@ export interface DashboardData {
 
   // Totales acumulados del mes
   totalAcumNeto: number;
-  totalMetaAcumM1: number;
 
-  // Variación y proyección
+  // Meta diaria red
+  totalMetaDiaria: number;
+
+  // Variación vs semana anterior
   varPctVsSemAnt: number;
-  proyeccionTotal: number;
 
-  // Arrays horarios totales (suma de todas las sucursales)
+  // Arrays horarios totales
   hourlyTotalsHoy: number[];
   hourlyTotalsSemAnt: number[];
   hourlyTicketsTotalsHoy: number[];

@@ -12,7 +12,6 @@ DEPENDENCIAS:
 """
 
 import pandas as pd
-from openpyxl import load_workbook
 import datetime
 import calendar
 import os
@@ -91,7 +90,7 @@ def download_dashboard_from_drive(dest_path):
         return False
 
 PATH_DASH     = os.path.join(BASE_DIR, "input", "Dashboard (2).xlsx")
-PATH_OBJ      = os.path.join(BASE_DIR, "input", "Objetivos Sucursales Abril 2026 - SIN UN KIOSCO.xlsx")
+PATH_OBJ_CSV  = os.path.join(BASE_DIR, "input", "Objetivos Sucursales Abril 2026.csv")
 PATH_OUT      = os.path.join(BASE_DIR, "public", "data", "base_conocimiento.csv")
 PATH_OUT_HORA = os.path.join(BASE_DIR, "public", "data", "horas_hoy.csv")
 PATH_OUT_SEM  = os.path.join(BASE_DIR, "public", "data", "horas_semana_anterior.csv")
@@ -219,49 +218,23 @@ df_ult['Sucursal'] = df_ult['sucursal(2)'].apply(normalizar)
 df_ult = df_ult.rename(columns={'ultima_hora': 'Ultima_Hora_Ticket'})[['Sucursal', 'Ultima_Hora_Ticket']]
 
 # ==============================================================================
-# 6. OBJETIVOS DESDE ARCHIVO SEPARADO
-#    6a. Metas totales del mes (Entregable a Sucursales)
-#    6b. Meta acumulada real dias 1 a hoy (Reporte Encargado)
+# 6. META DIARIA DESDE CSV
 # ==============================================================================
 
-print("[6/8] Leyendo objetivos...")
-wb_obj = load_workbook(PATH_OBJ, read_only=True)
+print("[6/8] Leyendo meta diaria...")
+df_obj_csv = pd.read_csv(PATH_OBJ_CSV, encoding='utf-8-sig', sep=';', skiprows=2,
+                         usecols=['FECHA', 'FARMACIA', 'Meta 1 $$'])
+df_obj_csv['Sucursal'] = df_obj_csv['FARMACIA'].apply(normalizar)
+def parse_meta(v):
+    try:
+        return float(str(v).replace('$', '').replace('.', '').replace(' ', '').replace(',', '.'))
+    except (ValueError, TypeError):
+        return 0
+df_obj_csv['Meta_Diaria'] = df_obj_csv['Meta 1 $$'].apply(parse_meta)
 
-# 6a. Metas totales del mes
-ws_ent   = wb_obj['Entregable a Sucursales']
-rows_ent = list(ws_ent.iter_rows(values_only=True))
-data_ent = [r for r in rows_ent[6:] if r[1] and str(r[1]).lower() != 'total general']
-df_obj   = pd.DataFrame(data_ent, columns=rows_ent[5])
-df_obj   = df_obj[['FARMACIA', 'Meta 1 UN', 'Meta 1 $$', 'Meta 2 UN', 'Meta 2 $$', 'Meta 3 UN', 'Meta 3 $$']].copy()
-df_obj.columns = [
-    'Sucursal',
-    'Obj_Meta1_UN_Mes',    'Obj_Meta1_Pesos_Mes',
-    'Obj_Meta2_UN_Mes',    'Obj_Meta2_Pesos_Mes',
-    'Obj_Meta3_UN_Mes',    'Obj_Meta3_Pesos_Mes',
-]
-df_obj['Sucursal'] = df_obj['Sucursal'].apply(normalizar)
-
-# 6b. Meta acumulada real dias 1 a dia_actual
-ws_enc   = wb_obj['REPORTE ENCARGADO']
-rows_enc = list(ws_enc.iter_rows(values_only=True))
-enc_data = []
-for row in rows_enc[6:]:
-    if row[2] is None or row[4] is None:
-        continue
-    if isinstance(row[2], datetime.datetime) and row[2].day <= dia_actual:
-        enc_data.append({
-            'Sucursal': normalizar(row[4]),
-            'M1P': row[6]  or 0,
-            'M2P': row[8]  or 0,
-            'M3P': row[10] or 0,
-            'M1U': row[5]  or 0,
-        })
-df_enc = pd.DataFrame(enc_data).groupby('Sucursal').agg(
-    MetaAcum_Meta1_Pesos=('M1P', 'sum'),
-    MetaAcum_Meta2_Pesos=('M2P', 'sum'),
-    MetaAcum_Meta3_Pesos=('M3P', 'sum'),
-    MetaAcum_Meta1_UN   =('M1U', 'sum'),
-).reset_index()
+fecha_str = f"{dia_actual}/{fecha_hoy.month}/{fecha_hoy.year}"
+df_meta_hoy = df_obj_csv[df_obj_csv['FECHA'].str.strip() == fecha_str][['Sucursal', 'Meta_Diaria']]
+print(f"    Meta diaria: {len(df_meta_hoy)} sucursales para {fecha_str}")
 
 # ==============================================================================
 # 7. MERGE MAESTRO
@@ -270,12 +243,11 @@ df_enc = pd.DataFrame(enc_data).groupby('Sucursal').agg(
 print("[7/8] Unificando y calculando metricas...")
 df = (
     df_mes
-    .merge(df_dia,      on='Sucursal', how='left')
-    .merge(df_hora_res, on='Sucursal', how='left')
-    .merge(df_sem_res,  on='Sucursal', how='left')
-    .merge(df_ult,      on='Sucursal', how='left')
-    .merge(df_obj,      on='Sucursal', how='left')
-    .merge(df_enc,      on='Sucursal', how='left')
+    .merge(df_dia,       on='Sucursal', how='left')
+    .merge(df_hora_res,  on='Sucursal', how='left')
+    .merge(df_sem_res,   on='Sucursal', how='left')
+    .merge(df_ult,       on='Sucursal', how='left')
+    .merge(df_meta_hoy,  on='Sucursal', how='left')
 )
 
 # ==============================================================================
@@ -290,67 +262,18 @@ df['Ctx_Dias_Restantes']       = dias_restantes
 df['Ctx_Pct_Mes_Transcurrido'] = round(dia_actual / dias_mes * 100, 1)
 df['Ctx_Ultima_Franja_Hora']   = ultima_franja_hoy
 
-# Ritmo y proyeccion
-df['Ritmo_Real_Diario']      = round(df['Acum_Neto'] / dia_actual, 0)
-df['Proyeccion_Neto_FinMes'] = round(df['Acum_Neto'] + df['Ritmo_Real_Diario'] * dias_restantes, 0)
-df['Proyeccion_UN_FinMes']   = round(df['Acum_Unidades'] + df['Acum_Unidades'] / dia_actual * dias_restantes, 0)
+df['Meta_Diaria'] = df['Meta_Diaria'].fillna(0)
 
-# Avance vs meta acumulada REAL (no division lineal del mes)
-df['Avance_Pct_vs_MetaAcum_M1']    = round(df['Acum_Neto']     / df['MetaAcum_Meta1_Pesos'].replace(0, float('nan')) * 100, 1).fillna(0)
-df['Avance_Pct_vs_MetaAcum_M2']    = round(df['Acum_Neto']     / df['MetaAcum_Meta2_Pesos'].replace(0, float('nan')) * 100, 1).fillna(0)
-df['Avance_Pct_vs_MetaAcum_M3']    = round(df['Acum_Neto']     / df['MetaAcum_Meta3_Pesos'].replace(0, float('nan')) * 100, 1).fillna(0)
-df['Avance_Pct_vs_MetaAcum_UN_M1'] = round(df['Acum_Unidades'] / df['MetaAcum_Meta1_UN'].replace(0, float('nan'))    * 100, 1).fillna(0)
+# Avance vs meta diaria
+df['Avance_Pct_Diario'] = round(
+    df['Hoy_Neto'] / df['Meta_Diaria'].replace(0, float('nan')) * 100, 1
+).fillna(0)
+df['Falta_Meta_Diaria'] = round(df['Meta_Diaria'] - df['Hoy_Neto'], 0)
 
-# Superavit / deficit vs meta acumulada (+ bien, - mal)
-df['Delta_vs_MetaAcum_M1'] = round(df['Acum_Neto'] - df['MetaAcum_Meta1_Pesos'], 0)
-df['Delta_vs_MetaAcum_M2'] = round(df['Acum_Neto'] - df['MetaAcum_Meta2_Pesos'], 0)
-df['Delta_vs_MetaAcum_M3'] = round(df['Acum_Neto'] - df['MetaAcum_Meta3_Pesos'], 0)
-
-# Cuanto falta para cerrar cada meta del mes completo
-df['Falta_Meta1_FinMes'] = round(df['Obj_Meta1_Pesos_Mes'] - df['Acum_Neto'], 0)
-df['Falta_Meta2_FinMes'] = round(df['Obj_Meta2_Pesos_Mes'] - df['Acum_Neto'], 0)
-df['Falta_Meta3_FinMes'] = round(df['Obj_Meta3_Pesos_Mes'] - df['Acum_Neto'], 0)
-
-# Ritmo necesario en dias restantes para llegar a cada meta
-df['Ritmo_Necesario_Meta1'] = round(df['Falta_Meta1_FinMes'].clip(lower=0) / dias_restantes_safe, 0)
-df['Ritmo_Necesario_Meta2'] = round(df['Falta_Meta2_FinMes'].clip(lower=0) / dias_restantes_safe, 0)
-df['Ritmo_Necesario_Meta3'] = round(df['Falta_Meta3_FinMes'].clip(lower=0) / dias_restantes_safe, 0)
-
-# Variacion vs semana anterior (mismo tramo horario, comparacion justa)
+# Variacion vs semana anterior
 df['Var_Pct_vs_SemAnt_HastaAhora'] = round(
-    (df['Hoy_Neto'] - df['SemAnt_Neto_HastaAhora']) / df['SemAnt_Neto_HastaAhora'].replace(0, float('nan')) * 100, 1).fillna(0)
-
-# Estado actual vs meta acumulada real
-def estado_acumulado(row):
-    if pd.isna(row.get('MetaAcum_Meta1_Pesos')): return 'SIN OBJETIVO'
-    n = row['Acum_Neto']
-    if   n >= row['MetaAcum_Meta3_Pesos']:        return 'ARRIBA META 3'
-    elif n >= row['MetaAcum_Meta2_Pesos']:        return 'ARRIBA META 2'
-    elif n >= row['MetaAcum_Meta1_Pesos']:        return 'ARRIBA META 1'
-    elif row['Avance_Pct_vs_MetaAcum_M1'] >= 90: return 'CERCA META 1'
-    else:                                         return 'DEBAJO META 1'
-df['Estado_Acumulado'] = df.apply(estado_acumulado, axis=1)
-
-# Meta proyectada a fin de mes
-def meta_proyectada(row):
-    p = row['Proyeccion_Neto_FinMes']
-    if pd.isna(p) or pd.isna(row.get('Obj_Meta1_Pesos_Mes')): return 'SIN OBJETIVO'
-    if   p >= row['Obj_Meta3_Pesos_Mes']: return 'META 3'
-    elif p >= row['Obj_Meta2_Pesos_Mes']: return 'META 2'
-    elif p >= row['Obj_Meta1_Pesos_Mes']: return 'META 1'
-    else:                                 return 'SIN META'
-df['Meta_Proyectada_FinMes'] = df.apply(meta_proyectada, axis=1)
-
-# Semaforo
-SEMAFORO = {
-    'ARRIBA META 3': 'VERDE SOBRE META 3',
-    'ARRIBA META 2': 'AMARILLO SOBRE META 2',
-    'ARRIBA META 1': 'NARANJA SOBRE META 1',
-    'CERCA META 1':  'NARANJA CERCA META 1',
-    'DEBAJO META 1': 'ROJO DEBAJO META 1',
-    'SIN OBJETIVO':  'SIN OBJETIVO',
-}
-df['Semaforo'] = df['Estado_Acumulado'].map(SEMAFORO)
+    (df['Hoy_Neto'] - df['SemAnt_Neto_HastaAhora']) / df['SemAnt_Neto_HastaAhora'].replace(0, float('nan')) * 100, 1
+).fillna(0)
 
 # Alerta de inactividad
 def alerta_inactividad(row):
@@ -363,45 +286,21 @@ def alerta_inactividad(row):
 df['Alerta_Inactividad'] = df.apply(alerta_inactividad, axis=1)
 
 # ==============================================================================
-# ORDEN FINAL DE COLUMNAS (61 columnas)
+# ORDEN FINAL DE COLUMNAS
 # ==============================================================================
 
 columnas_finales = [
-    # Identificacion
     'ID_Sucursal', 'Sucursal',
-    # Contexto temporal
     'Ctx_Fecha_Hoy', 'Ctx_Dia_Del_Mes', 'Ctx_Dias_Totales_Mes', 'Ctx_Dias_Restantes',
     'Ctx_Pct_Mes_Transcurrido', 'Ctx_Ultima_Franja_Hora',
-    # Facturacion acumulada del mes
     'Acum_Tickets', 'Acum_Unidades', 'Acum_Neto', 'Acum_Cobertura', 'Acum_Cliente',
-    # Facturacion de hoy
     'Hoy_Tickets', 'Hoy_Unidades', 'Hoy_Neto', 'Hoy_Cobertura', 'Hoy_Cliente',
-    # Actividad por hora
     'Hora_Pico_Hoy', 'Hora_Pico_Hoy_Neto', 'Ultima_Franja_Con_Datos',
     'Hora_Neto_Total', 'Hora_Tickets_Total', 'Hora_Unidades_Total',
     'Ultima_Hora_Ticket', 'Alerta_Inactividad',
-    # Semana anterior
     'SemAnt_Neto_HastaAhora', 'SemAnt_Tickets_HastaAhora', 'SemAnt_Unidades_HastaAhora',
     'SemAnt_Neto_DiaCompleto', 'SemAnt_Tickets_DiaCompleto', 'Var_Pct_vs_SemAnt_HastaAhora',
-    # Objetivos totales del mes
-    'Obj_Meta1_UN_Mes', 'Obj_Meta1_Pesos_Mes',
-    'Obj_Meta2_UN_Mes', 'Obj_Meta2_Pesos_Mes',
-    'Obj_Meta3_UN_Mes', 'Obj_Meta3_Pesos_Mes',
-    # Meta acumulada real dias 1 a hoy
-    'MetaAcum_Meta1_Pesos', 'MetaAcum_Meta2_Pesos', 'MetaAcum_Meta3_Pesos', 'MetaAcum_Meta1_UN',
-    # Avance vs meta acumulada real
-    'Avance_Pct_vs_MetaAcum_M1', 'Avance_Pct_vs_MetaAcum_M2',
-    'Avance_Pct_vs_MetaAcum_M3', 'Avance_Pct_vs_MetaAcum_UN_M1',
-    # Superavit / deficit (+ bien, - mal)
-    'Delta_vs_MetaAcum_M1', 'Delta_vs_MetaAcum_M2', 'Delta_vs_MetaAcum_M3',
-    # Cuanto falta para cerrar el mes
-    'Falta_Meta1_FinMes', 'Falta_Meta2_FinMes', 'Falta_Meta3_FinMes',
-    # Ritmo
-    'Ritmo_Real_Diario', 'Ritmo_Necesario_Meta1', 'Ritmo_Necesario_Meta2', 'Ritmo_Necesario_Meta3',
-    # Proyecciones
-    'Proyeccion_Neto_FinMes', 'Proyeccion_UN_FinMes',
-    # Conclusion
-    'Estado_Acumulado', 'Meta_Proyectada_FinMes', 'Semaforo',
+    'Meta_Diaria', 'Avance_Pct_Diario', 'Falta_Meta_Diaria',
 ]
 df = df[columnas_finales]
 
@@ -455,9 +354,6 @@ print(f"  {PATH_OUT_HORA} -> {len(df_hora_out)} filas ({df_hora_out['Sucursal'].
 print(f"  {PATH_OUT_SEM}  -> {len(df_sem_out)} filas ({df_sem_out['Sucursal'].nunique()} sucursales x hora)")
 print(f"\n  Fecha      : {fecha_hoy} (Dia {dia_actual}/{dias_mes})")
 print(f"  Franja hoy : {ultima_franja_hoy}hs")
-print(f"\n  Estado acumulado:")
-for estado, count in df['Estado_Acumulado'].value_counts().items():
-    print(f"    {estado}: {count}")
 print(f"\n  Alertas:")
 for alerta, count in df['Alerta_Inactividad'].value_counts().items():
     print(f"    {alerta}: {count}")

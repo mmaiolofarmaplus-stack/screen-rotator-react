@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:doc-04-9o-sheets.googleusercontent.com)",
+      "Bash('C:\\\\Users\\\\MMaiolo\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe' -c ' *)",
+      "Bash(python3 -c ' *)",
+      "Bash(\"C:\\\\Users\\\\MMaiolo\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe\" generate_data.py)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" status)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add components/screens/ScreenBeneficios.tsx generate_data.py public/data/base_conocimiento.csv public/data/beneficios.csv public/data/horas_hoy.csv public/data/horas_semana_anterior.csv)",
+      "Bash('C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe' commit -m ' *)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" push)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" remote -v)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" config --list)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" config credential.helper manager)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" pull --rebase)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" checkout --ours public/data/base_conocimiento.csv public/data/beneficios.csv public/data/horas_hoy.csv)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add public/data/base_conocimiento.csv public/data/beneficios.csv public/data/horas_hoy.csv)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" rebase --continue)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" show HEAD:public/data/beneficios.csv)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add public/data/base_conocimiento.csv public/data/beneficios.csv public/data/horas_hoy.csv public/data/horas_semana_anterior.csv)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"data: CSVs actualizados 20-abr franja 10hs \\(datos correctos\\)\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" ls-files input/)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" log --oneline origin/main..HEAD)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" log --oneline -10 origin/main)",
+      "Bash(gh run *)",
+      "Bash(\"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" run list --repo mmaiolofarmaplus-stack/screen-rotator-react --limit 5)",
+      "Bash(where gh *)",
+      "Read(//c/Users/MMaiolo/AppData/Local/**)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" fetch origin)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" log --oneline -5 origin/main)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add components/screens/ScreenRanking.tsx components/debug/DebugLauncher.tsx)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"feat: ranking una columna sin metas, quitar ritmo y proyeccion del debug\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add -A)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"feat: meta diaria por sucursal — nueva pantalla, refactor limpio\")"
+    ]
+  }
+}
