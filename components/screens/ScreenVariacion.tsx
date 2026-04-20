@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { DashboardData, BranchData } from '../../types';
-import { formatMillions, formatPct } from '../../utils/formatters';
+import { formatPct } from '../../utils/formatters';
 import { AnimatedBar } from '../AnimatedBar';
 import { AutoScrollList } from '../AutoScrollList';
 
@@ -23,7 +23,6 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
       <div className="flex justify-between items-center">
         <span className="text-white font-bold text-sm uppercase tracking-wide truncate mr-3">{b.name}</span>
         <div className="flex items-center gap-3 shrink-0">
-          <span className="text-gray-500 text-xs font-mono">{formatMillions(b.hoyNeto)}</span>
           <span
             className="font-mono font-black text-sm px-2 py-0.5 rounded"
             style={{ color, background: color + '22' }}
