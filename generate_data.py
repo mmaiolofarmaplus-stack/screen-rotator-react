@@ -31,6 +31,21 @@ DASHBOARD_FILE_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4'
 TOKEN_PATH        = os.path.join(BASE_DIR, "input", "token.json")
 CREDS_PATH        = os.path.join(BASE_DIR, "input", "credentials.json")
 
+# GIDs de las hojas de beneficios (fuente directa, no via Excel)
+GID_CLIENTES  = '1855567166'
+GID_NOMINADOS = '1235412273'
+
+def fetch_beneficios_sheet(gid: str) -> pd.DataFrame:
+    """Lee una hoja del Dashboard directamente como CSV (sin pasar por la descarga del Excel)."""
+    url = f'https://docs.google.com/spreadsheets/d/{DASHBOARD_FILE_ID}/export?format=csv&gid={gid}'
+    try:
+        df = pd.read_csv(url)
+        print(f"  OK: hoja gid={gid} leida desde Sheets ({len(df)} filas)")
+        return df
+    except Exception as e:
+        print(f"  WARN: No se pudo leer gid={gid} desde Sheets: {e}")
+        return pd.DataFrame()
+
 def download_dashboard_from_drive(dest_path):
     """Descarga el Dashboard de Google Drive usando token OAuth guardado."""
     try:
@@ -119,7 +134,12 @@ print("[2/8] Leyendo facturacion del dia y detectando fecha...")
 df_dia = pd.read_excel(PATH_DASH, sheet_name='Facturacion x Dia')
 df_dia['Sucursal'] = df_dia['Nombre_Sucu'].apply(normalizar)
 
-fecha_hoy      = datetime.date(1899, 12, 30) + datetime.timedelta(days=int(df_dia['Fecha'].iloc[0]))
+if df_dia.empty:
+    fecha_hoy = datetime.date.today()
+    print(f"    Sin datos de facturacion hoy — usando fecha del sistema: {fecha_hoy}")
+else:
+    fecha_hoy = datetime.date(1899, 12, 30) + datetime.timedelta(days=int(df_dia['Fecha'].iloc[0]))
+
 dia_actual     = fecha_hoy.day
 dias_mes       = calendar.monthrange(fecha_hoy.year, fecha_hoy.month)[1]
 dias_restantes = dias_mes - dia_actual
@@ -391,11 +411,11 @@ df = df[columnas_finales]
 
 print("[8/8] Guardando archivos de salida...")
 
-# Leer hojas de beneficios
-df_clientes = pd.read_excel(PATH_DASH, sheet_name='Acumulado Clientes')
-df_nominados = pd.read_excel(PATH_DASH, sheet_name='Ticket nominados')
+# Leer hojas de beneficios directamente desde Google Sheets (fuente de verdad)
+df_clientes  = fetch_beneficios_sheet(GID_CLIENTES)
+df_nominados = fetch_beneficios_sheet(GID_NOMINADOS)
 alta_clientes     = int(df_clientes['TotalClientes'].iloc[0]) if not df_clientes.empty else 0
-pct_nominados     = float(df_nominados['PctNominados'].iloc[0]) if not df_nominados.empty else 0
+pct_nominados     = float(str(df_nominados['PctNominados'].iloc[0]).replace(',', '.')) if not df_nominados.empty else 0
 total_tickets_nom = int(df_nominados['TicketsNominados'].iloc[0]) if not df_nominados.empty else 0
 total_tickets_nom_base = int(df_nominados['TotalTickets'].iloc[0]) if not df_nominados.empty else 0
 

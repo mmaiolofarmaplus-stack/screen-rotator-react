@@ -87,12 +87,6 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
             </span>
             <span className="text-gray-400 text-sm font-bold mt-1 tracking-wider uppercase">clientes</span>
           </CircleGauge>
-          <div className="text-center">
-            <p className="text-gray-500 text-xs font-bold tracking-[0.2em] uppercase">Promedio Diario</p>
-            <p className="text-white font-mono font-black text-3xl">
-              {formatNumber(Math.round(safeProm))}
-            </p>
-          </div>
         </div>
 
         {/* Divider */}
@@ -100,7 +94,7 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
 
         {/* Tickets Nominados */}
         <div className="flex flex-col items-center gap-6">
-          <p className="text-[#325795] text-sm font-bold tracking-[0.25em] uppercase">Tickets Nominados</p>
+          <p className="text-[#325795] text-sm font-bold tracking-[0.25em] uppercase">Tickets Nominados Hoy Total Red</p>
           <CircleGauge
             pct={(safePctNom / safeMetaNom) * 100}
             color={diffNominados >= 0 ? '#01B693' : '#C8102E'}
@@ -123,11 +117,6 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
             >
               {diffNominados >= 0 ? '+' : ''}{formatPct(diffNominados, 2)} pp
             </p>
-            {ticketsNominadosBase > 0 && (
-              <p className="text-gray-500 text-xs font-mono mt-1">
-                {formatNumber(ticketsNominados)} / {formatNumber(ticketsNominadosBase)} tickets
-              </p>
-            )}
           </div>
         </div>
 
