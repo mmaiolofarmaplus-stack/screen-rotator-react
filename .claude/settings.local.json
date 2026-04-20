@@ -31,7 +31,11 @@
       "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add components/screens/ScreenRanking.tsx components/debug/DebugLauncher.tsx)",
       "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"feat: ranking una columna sin metas, quitar ritmo y proyeccion del debug\")",
       "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add -A)",
-      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"feat: meta diaria por sucursal — nueva pantalla, refactor limpio\")"
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"feat: meta diaria por sucursal — nueva pantalla, refactor limpio\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" add components/screens/ScreenMetaDiaria.tsx)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" commit -m \"fix: meta diaria layout con nombres visibles y columnas claras\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" stash)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\" stash pop)"
     ]
   }
 }
