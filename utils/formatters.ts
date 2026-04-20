@@ -10,13 +10,8 @@ export const formatCurrency = (value: number): string => {
   }).format(value);
 };
 
-export const formatMillions = (value: number): string => {
-  if (value >= 1000000) {
-    const millions = value / 1000000;
-    return `$ ${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(millions)}M`;
-  }
-  return formatCurrency(value);
-};
+export const formatMillions = (value: number): string =>
+  `$ ${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value)}`;
 
 export const formatThousands = (value: number): string => {
   const k = value / 1000;
