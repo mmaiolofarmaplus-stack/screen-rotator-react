@@ -14,7 +14,7 @@ import { ROTATOR_CONFIG } from './constants';
 
 const SCREEN_MS  = 3 * 60 * 1000;
 const VIDEO_MS   = ROTATOR_CONFIG.videoDuration * ROTATOR_CONFIG.videoLoopsBeforeDashboard * 1000;
-const REFRESH_MS = 30 * 60 * 1000;
+const REFRESH_MS = 5 * 60 * 1000;
 
 const SCREENS: { id: string; component: React.FC<{ data: DashboardData }> }[] = [
   { id: 'ranking',          component: ScreenRanking },
