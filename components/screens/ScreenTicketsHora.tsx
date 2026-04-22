@@ -96,7 +96,7 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
         <div className="flex gap-8">
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">TICKETS HOY</p>
-            <p className="text-white font-mono font-black text-2xl">{hoyTotal.toLocaleString('es-AR')}</p>
+            <p className="text-white font-mono font-black text-2xl">{data.totalTickets.toLocaleString('es-AR')}</p>
           </div>
           <div className="text-right">
             <p className="text-gray-500 text-xs font-bold tracking-widest">VS SEM. ANT.</p>
