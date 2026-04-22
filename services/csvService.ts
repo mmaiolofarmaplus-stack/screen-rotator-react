@@ -8,7 +8,7 @@ const SHEET_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4';
 const SHEETS = {
   base_conocimiento:     '1016914412',
   horas_hoy:             '944190076',
-  horas_semana_anterior: '2088265702',
+  horas_semana_anterior: '1264963191',
   clientes:              '1855567166',
   nominados:             '1235412273',
   meta_diaria:           '1440527970',
@@ -104,8 +104,8 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
   const semTicketsMap = new Map<string, number[]>();
 
   semRows.forEach((row: any) => {
-    const suc  = String(row.Sucursal || '').trim().toUpperCase();
-    const hora = parseInt(row.Hora, 10);
+    const suc  = String(row.Nombre_Sucu || '').trim().toUpperCase();
+    const hora = parseInt(row.Franja_Horaria, 10);
     if (!suc || isNaN(hora) || hora < 0 || hora > 23) return;
     if (!semSalesMap.has(suc)) {
       semSalesMap.set(suc,   Array(24).fill(0));
