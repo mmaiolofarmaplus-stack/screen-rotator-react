@@ -6,7 +6,7 @@ import { AutoScrollList } from '../AutoScrollList';
 
 interface Props { data: DashboardData; }
 
-const DAY_START = 9;
+const DAY_START = 7;
 const DAY_END   = 19;
 const DAY_HOURS = DAY_END - DAY_START;
 

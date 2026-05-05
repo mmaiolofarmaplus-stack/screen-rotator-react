@@ -16,7 +16,21 @@
       "Bash(powershell.exe -Command \"Get-Command python3, py, python* -ErrorAction SilentlyContinue | Select Name, Source\")",
       "Bash(powershell.exe -Command \"py --version\")",
       "Bash(powershell.exe -Command \"py generate_data.py\")",
-      "Bash(powershell.exe -Command \"Get-Content 'c:/Users/MMaiolo/screen-rotator-react/base_conocimiento.csv' | Select-Object -First 3\")"
+      "Bash(powershell.exe -Command \"Get-Content 'c:/Users/MMaiolo/screen-rotator-react/base_conocimiento.csv' | Select-Object -First 3\")",
+      "Bash(npm audit *)",
+      "Bash(npm run lint *)",
+      "mcp__claude_ai_Google_Drive__read_file_content",
+      "mcp__ga4-vtex__ga4_report",
+      "mcp__ga4-vtex__ga4_realtime",
+      "mcp__vtex-pedidosfarma__vtex_get_orders",
+      "mcp__vtex-pedidosfarma__vtex_get_apps",
+      "mcp__novamira-elementsbcn-com__mcp-adapter-discover-abilities",
+      "Bash(python3 -c ' *)",
+      "Bash(py -c ' *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\MMaiolo\\\\screen-rotator-react\" -Force | ForEach-Object { $_.FullName })"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\MMaiolo\\.claude\\projects\\c--Users-MMaiolo-screen-rotator-react\\memory"
     ]
   }
 }

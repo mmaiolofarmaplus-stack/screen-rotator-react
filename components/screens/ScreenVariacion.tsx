@@ -6,6 +6,25 @@ import { AutoScrollList } from '../AutoScrollList';
 
 interface Props { data: DashboardData; }
 
+const VariacionRow: React.FC<{ b: BranchData; color: string; maxAbs: number }> = ({ b, color, maxAbs }) => (
+  <div className="flex flex-col gap-1 py-1.5">
+    <div className="flex justify-between items-center">
+      <span className="text-white font-bold text-base uppercase tracking-wide truncate mr-3">{b.name}</span>
+      <div className="flex items-center gap-3 shrink-0">
+        <span
+          className="font-mono font-black text-base px-3 py-0.5 rounded"
+          style={{ color, background: color + '44' }}
+        >
+          {b.varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(b.varPctVsSemAnt)}%
+        </span>
+      </div>
+    </div>
+    <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+      <AnimatedBar pct={(Math.abs(b.varPctVsSemAnt) / maxAbs) * 100} color={color} />
+    </div>
+  </div>
+);
+
 export const ScreenVariacion: React.FC<Props> = ({ data }) => {
   const { positive, negative, maxAbs } = useMemo(() => {
     const withVar = data.branches
@@ -17,25 +36,6 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
       maxAbs: Math.max(...withVar.map(b => Math.abs(b.varPctVsSemAnt)), 1),
     };
   }, [data.branches]);
-
-  const Row: React.FC<{ b: BranchData; color: string }> = ({ b, color }) => (
-    <div className="flex flex-col gap-1 py-1.5">
-      <div className="flex justify-between items-center">
-        <span className="text-white font-bold text-base uppercase tracking-wide truncate mr-3">{b.name}</span>
-        <div className="flex items-center gap-3 shrink-0">
-          <span
-            className="font-mono font-black text-base px-3 py-0.5 rounded"
-            style={{ color, background: color + '44' }}
-          >
-            {b.varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(b.varPctVsSemAnt)}%
-          </span>
-        </div>
-      </div>
-      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-        <AnimatedBar pct={(Math.abs(b.varPctVsSemAnt) / maxAbs) * 100} color={color} />
-      </div>
-    </div>
-  );
 
   const redTotal = data.branches.reduce((s, b) => s + b.semAntNeto, 0);
   const varRed = redTotal > 0 ? ((data.totalNeto - redTotal) / redTotal) * 100 : 0;
@@ -72,7 +72,7 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
             <AutoScrollList
               items={positive}
               itemHeight={52}
-              renderItem={(b) => <Row key={b.id} b={b} color="#01B693" />}
+              renderItem={(b) => <VariacionRow key={b.id} b={b} color="#01B693" maxAbs={maxAbs} />}
             />
           </div>
         </div>
@@ -82,7 +82,7 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
             <AutoScrollList
               items={negative}
               itemHeight={52}
-              renderItem={(b) => <Row key={b.id} b={b} color="#C8102E" />}
+              renderItem={(b) => <VariacionRow key={b.id} b={b} color="#C8102E" maxAbs={maxAbs} />}
             />
           </div>
         </div>

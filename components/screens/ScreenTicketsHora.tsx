@@ -14,7 +14,7 @@ interface Props { data: DashboardData; }
 export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
   const { hourlyTicketsTotalsHoy, ultimaFranjaHora } = data;
 
-  const startIndex = 9;
+  const startIndex = 7;
   const rawEnd = Math.min(ultimaFranjaHora, 19);
   let endIndex = startIndex;
   for (let h = startIndex; h <= rawEnd; h++) {
