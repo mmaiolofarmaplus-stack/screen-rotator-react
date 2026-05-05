@@ -4,60 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FarmaPlus Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/pedidosfarma-favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'system-ui', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #0b0e14; /* Premium Dark Base */
+        background-color: #0b0e14;
         color: #F5F5F5;
-        overflow: hidden; /* Full screen requirement */
+        overflow: hidden;
       }
-      /* Scrollbar Global */
       ::-webkit-scrollbar { width: 8px; height: 8px; }
       ::-webkit-scrollbar-track { background: #0b0e14; }
       ::-webkit-scrollbar-thumb { background: #325795; border-radius: 4px; }
       ::-webkit-scrollbar-thumb:hover { background: #4770b3; }
-
-      /* Micro-scroll para listas internas */
       .custom-scrollbar::-webkit-scrollbar { width: 4px; }
       .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
       .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-      /* Scroll fantasma — desliza sin mostrar barra */
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react-chartjs-2": "https://esm.sh/react-chartjs-2@^5.3.1",
-    "chart.js": "https://esm.sh/chart.js@^4.5.1"
-  }
-}
-</script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

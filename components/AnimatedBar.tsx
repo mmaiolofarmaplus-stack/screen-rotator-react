@@ -12,7 +12,7 @@ export const AnimatedBar: React.FC<Props> = ({ pct, color, className = '', delay
 
   useEffect(() => {
     const t = setTimeout(() => {
-      requestAnimationFrame(() => requestAnimationFrame(() => setWidth(Math.min(pct, 100))));
+      requestAnimationFrame(() => requestAnimationFrame(() => setWidth(Math.max(0, Math.min(pct, 100)))));
     }, delay);
     return () => clearTimeout(t);
   }, [pct, delay]);

@@ -27,7 +27,7 @@ export function AutoScrollList<T extends { id: string }>({
   }
 
   const totalH = items.length * itemHeight;
-  const duration = items.length * 2;
+  const duration = items.length * 4;
 
   return (
     <div className={`overflow-hidden h-full ${className}`}>

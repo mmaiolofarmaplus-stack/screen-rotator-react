@@ -15,7 +15,11 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
   const { hourlyTicketsTotalsHoy, ultimaFranjaHora } = data;
 
   const startIndex = 9;
-  const endIndex = Math.min(ultimaFranjaHora, 19);
+  const rawEnd = Math.min(ultimaFranjaHora, 19);
+  let endIndex = startIndex;
+  for (let h = startIndex; h <= rawEnd; h++) {
+    if (hourlyTicketsTotalsHoy[h] > 0) endIndex = h;
+  }
 
   const { labels, ticketsHoy, ticketsSemAnt, semAntTotal, hoyTotal, varPct, peakIdx } = useMemo(() => {
     const labels: string[] = [];
@@ -64,7 +68,7 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
         display: true,
         position: 'top',
         align: 'end',
-        labels: { color: '#9ca3af', usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 20, font: { size: 13, weight: 500 as const } },
+        labels: { color: '#9ca3af', usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 20, font: { size: 15, weight: 500 as const } },
       },
       tooltip: {
         backgroundColor: 'rgba(0,0,0,0.9)',
@@ -78,10 +82,10 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
       },
     },
     scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#9ca3af', font: { size: 12, weight: 600 as const } } },
+      x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#9ca3af', font: { size: 14, weight: 600 as const } } },
       y: {
         grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { color: '#9ca3af', font: { size: 11 }, callback: (v: any) => Math.round(v) },
+        ticks: { color: '#9ca3af', font: { size: 13 }, callback: (v: any) => Math.round(v) },
       },
     },
   };
@@ -90,27 +94,27 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
     <div className="w-screen h-screen bg-[#0b0e14] text-white flex flex-col p-8 overflow-hidden">
       <div className="mb-6 shrink-0 flex items-end justify-between border-b border-white/5 pb-4">
         <div>
-          <p className="text-[#325795] text-xs font-bold tracking-[0.3em] uppercase mb-1">Red total · franja {startIndex}–{endIndex}hs</p>
+          <p className="text-[#325795] text-sm font-bold tracking-[0.3em] uppercase mb-1">Red total · franja {startIndex}–{endIndex}hs</p>
           <h1 className="text-4xl font-black uppercase tracking-wider">Tickets por Hora</h1>
         </div>
         <div className="flex gap-8">
           <div className="text-right">
-            <p className="text-gray-500 text-xs font-bold tracking-widest">TICKETS HOY</p>
-            <p className="text-white font-mono font-black text-2xl">{data.totalTickets.toLocaleString('es-AR')}</p>
+            <p className="text-gray-400 text-sm font-bold tracking-widest">TICKETS HOY</p>
+            <p className="text-white font-mono font-black text-3xl">{data.totalTickets.toLocaleString('es-AR')}</p>
           </div>
           <div className="text-right">
-            <p className="text-gray-500 text-xs font-bold tracking-widest">VS SEM. ANT.</p>
-            <p className={`font-mono font-black text-2xl ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+            <p className="text-gray-400 text-sm font-bold tracking-widest">VS SEM. ANT.</p>
+            <p className={`font-mono font-black text-3xl ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
               {varPct >= 0 ? '+' : ''}{formatPct(varPct)}%
             </p>
           </div>
           <div className="text-right">
-            <p className="text-gray-500 text-xs font-bold tracking-widest">SEM. ANT.</p>
-            <p className="text-white font-mono font-black text-2xl">{semAntTotal.toLocaleString('es-AR')}</p>
+            <p className="text-gray-400 text-sm font-bold tracking-widest">SEM. ANT.</p>
+            <p className="text-white font-mono font-black text-3xl">{semAntTotal.toLocaleString('es-AR')}</p>
           </div>
           <div className="text-right">
-            <p className="text-gray-500 text-xs font-bold tracking-widest">HORA PICO</p>
-            <p className="text-white font-mono font-black text-2xl">{startIndex + peakIdx}:00hs</p>
+            <p className="text-gray-400 text-sm font-bold tracking-widest">HORA PICO</p>
+            <p className="text-white font-mono font-black text-3xl">{startIndex + peakIdx}:00hs</p>
           </div>
         </div>
       </div>

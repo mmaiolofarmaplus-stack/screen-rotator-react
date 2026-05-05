@@ -1,14 +1,13 @@
+import Papa from 'papaparse';
 import { DashboardData, BranchData } from '../types';
-
-declare const Papa: any;
 
 const CACHE_KEY = 'farmaplus_v5_cache';
 
 const SHEET_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4';
 const SHEETS = {
   base_conocimiento:     '1016914412',
-  horas_hoy:             '944190076',
-  horas_semana_anterior: '1264963191',
+  horas_hoy:             '1209004727',
+  horas_semana_anterior: '2088265702',
   clientes:              '1855567166',
   nominados:             '1235412273',
   meta_diaria:           '1440527970',
@@ -28,7 +27,7 @@ export const getCachedData = (): DashboardData | null => {
       altaClientes:           parsed.altaClientes           ?? 0,
       promedioDiarioClientes: parsed.promedioDiarioClientes ?? 0,
       pctNominados:           parsed.pctNominados           ?? 0,
-      metaPctNominados:       parsed.metaPctNominados       ?? 35,
+      metaPctNominados:       parsed.metaPctNominados       ?? 12,
       ticketsNominados:       parsed.ticketsNominados       ?? 0,
       ticketsNominadosBase:   parsed.ticketsNominadosBase   ?? 0,
     };
@@ -44,16 +43,34 @@ const setCachedData = (data: DashboardData): void => {
 };
 
 const fetchSheet = async (gid: string, skipRows = 0): Promise<any[]> => {
-  const res = await fetch(sheetUrl(gid));
-  if (!res.ok) throw new Error(`HTTP ${res.status} fetching gid=${gid}`);
-  let text = await res.text();
-  if (skipRows > 0) text = text.split('\n').slice(skipRows).join('\n');
-  return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+  try {
+    const res = await fetch(sheetUrl(gid), { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status} fetching gid=${gid}`);
+    let text = await res.text();
+    if (skipRows > 0) text = text.split('\n').slice(skipRows).join('\n');
+    return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 };
 
 const n = (v: any): number => {
   if (v === undefined || v === null || v === '') return 0;
-  const parsed = parseFloat(String(v).replace(',', '.'));
+  let s = String(v).trim();
+  const lastDot   = s.lastIndexOf('.');
+  const lastComma = s.lastIndexOf(',');
+  if (lastComma > -1 && lastComma > lastDot) {
+    // AR/EU format "1.234,56": comma = decimal, dots = thousands
+    s = s.replace(/\./g, '').replace(',', '.');
+  } else if (lastDot > -1 && s.indexOf('.') !== lastDot) {
+    // Multiple dots, no comma "1.234.567": dots = thousands
+    s = s.replace(/\./g, '');
+  } else {
+    s = s.replace(/,/g, '');
+  }
+  const parsed = parseFloat(s);
   return isNaN(parsed) ? 0 : parsed;
 };
 
@@ -71,14 +88,18 @@ const calcInactiveMinutes = (ultimaHoraTicket: string, ultimaFranjaHora: number)
   }
 };
 
+const settled = async <T>(p: Promise<T>, fallback: T): Promise<T> => {
+  try { return await p; } catch { return fallback; }
+};
+
 export const fetchDashboardData = async (): Promise<DashboardData> => {
   const [baseRows, horaRows, semRows, cliRows, nomRows, metaRows] = await Promise.all([
     fetchSheet(SHEETS.base_conocimiento),
-    fetchSheet(SHEETS.horas_hoy),
-    fetchSheet(SHEETS.horas_semana_anterior),
-    fetchSheet(SHEETS.clientes),
-    fetchSheet(SHEETS.nominados),
-    fetchSheet(SHEETS.meta_diaria, 2),
+    settled(fetchSheet(SHEETS.horas_hoy), []),
+    settled(fetchSheet(SHEETS.horas_semana_anterior), []),
+    settled(fetchSheet(SHEETS.clientes), []),
+    settled(fetchSheet(SHEETS.nominados), []),
+    settled(fetchSheet(SHEETS.meta_diaria), []),
   ]);
 
   // Hourly maps: sucursal -> number[24]
@@ -128,16 +149,23 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
   });
 
   const ctx               = baseRows[0] || {};
-  const diaActual         = parseInt(ctx.Ctx_Dia_Del_Mes, 10) || 1;
-  const diasMes           = parseInt(ctx.Ctx_Dias_Totales_Mes, 10) || 30;
-  const diasRestantes     = parseInt(ctx.Ctx_Dias_Restantes, 10) || 0;
-  const pctMesTranscurrido = n(ctx.Ctx_Pct_Mes_Transcurrido);
+  const diaActual         = today.getDate();
+  const diasMes           = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const diasRestantes     = diasMes - diaActual;
+  const pctMesTranscurrido = Math.round(diaActual / diasMes * 1000) / 10;
+  const fechaHoy          = `${diaActual}/${today.getMonth() + 1}/${today.getFullYear()}`;
   const ultimaFranjaHora  = parseInt(ctx.Ctx_Ultima_Franja_Hora, 10) || 0;
-  const fechaHoy          = String(ctx.Ctx_Fecha_Hoy || '');
 
   const branches: BranchData[] = baseRows.map((row: any) => {
     const sucursal         = String(row.Sucursal || '').trim().toUpperCase();
     const ultimaHoraTicket = String(row.Ultima_Hora_Ticket || '');
+    // Hoy_* is 0 in the morning (daily source not yet refreshed).
+    // Hora_*_Total is the intraday hourly sum — use it as fallback.
+    const hoyNeto      = n(row.Hoy_Neto)      || n(row.Hora_Neto_Total);
+    const hoyTickets   = n(row.Hoy_Tickets)    || n(row.Hora_Tickets_Total);
+    const hoyUnidades  = n(row.Hoy_Unidades)   || n(row.Hora_Unidades_Total);
+    const semAntNetoH  = n(row.SemAnt_Neto_HastaAhora);
+    const metaDiaria   = metaMap.get(sucursal) ?? 0;
 
     return {
       id:   String(row.ID_Sucursal || ''),
@@ -149,9 +177,9 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
       acumCobertura: n(row.Acum_Cobertura),
       acumCliente:   n(row.Acum_Cliente),
 
-      hoyNeto:      n(row.Hoy_Neto),
-      hoyTickets:   n(row.Hoy_Tickets),
-      hoyUnidades:  n(row.Hoy_Unidades),
+      hoyNeto,
+      hoyTickets,
+      hoyUnidades,
       hoyCobertura: n(row.Hoy_Cobertura),
       hoyCliente:   n(row.Hoy_Cliente),
 
@@ -162,17 +190,15 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
       alertaInactividad:     String(row.Alerta_Inactividad || ''),
       inactiveMinutes:       calcInactiveMinutes(ultimaHoraTicket, ultimaFranjaHora),
 
-      semAntNeto:              n(row.SemAnt_Neto_HastaAhora),
+      semAntNeto:              semAntNetoH,
       semAntTickets:           n(row.SemAnt_Tickets_HastaAhora),
       semAntUnidades:          n(row.SemAnt_Unidades_HastaAhora),
       semAntNetoDiaCompleto:   n(row.SemAnt_Neto_DiaCompleto),
-      varPctVsSemAnt:          n(row.Var_Pct_vs_SemAnt_HastaAhora),
+      varPctVsSemAnt:          semAntNetoH > 0 ? ((hoyNeto - semAntNetoH) / semAntNetoH) * 100 : 0,
 
-      metaDiaria:       metaMap.get(sucursal) ?? 0,
-      avancePctDiario:  (metaMap.get(sucursal) ?? 0) > 0
-                          ? (n(row.Hoy_Neto) / metaMap.get(sucursal)!) * 100
-                          : 0,
-      faltaMetaDiaria:  (metaMap.get(sucursal) ?? 0) - n(row.Hoy_Neto),
+      metaDiaria,
+      avancePctDiario:  metaDiaria > 0 ? (hoyNeto / metaDiaria) * 100 : 0,
+      faltaMetaDiaria:  metaDiaria - hoyNeto,
 
       hourlySales:         hoySalesMap.get(sucursal)    ?? Array(24).fill(0),
       hourlyTickets:       hoyTicketsMap.get(sucursal)  ?? Array(24).fill(0),
@@ -211,7 +237,7 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
   const ticketsNominados       = n(nom.TicketsNominados);
   const ticketsNominadosBase   = n(nom.TotalTickets);
   const promedioDiarioClientes = diaActual > 0 ? Math.round(altaClientes / diaActual) : 0;
-  const metaPctNominados       = 35;
+  const metaPctNominados       = 12;
 
   const data: DashboardData = {
     branches,

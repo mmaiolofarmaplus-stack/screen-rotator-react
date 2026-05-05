@@ -8,8 +8,11 @@ import { ScreenTicketsHora } from '../screens/ScreenTicketsHora';
 import { ScreenVariacion } from '../screens/ScreenVariacion';
 import { ScreenAlertas } from '../screens/ScreenAlertas';
 import { ScreenBeneficios } from '../screens/ScreenBeneficios';
+import { ScreenAcumMes } from '../screens/ScreenAcumMes';
+import { ScreenTicketPromedio } from '../screens/ScreenTicketPromedio';
+import { ScreenProyeccionDia } from '../screens/ScreenProyeccionDia';
 
-type ScreenId = 'ranking' | 'meta-diaria' | 'facturacion-hora' | 'tickets-hora' | 'variacion' | 'alertas' | 'beneficios';
+type ScreenId = 'ranking' | 'acum-mes' | 'meta-diaria' | 'proyeccion-dia' | 'facturacion-hora' | 'tickets-hora' | 'ticket-promedio' | 'variacion' | 'alertas' | 'beneficios';
 
 interface ScreenDef {
   id: ScreenId;
@@ -20,13 +23,16 @@ interface ScreenDef {
 }
 
 const SCREENS: ScreenDef[] = [
-  { id: 'ranking',         label: 'Ranking',              sublabel: 'Acumulado del mes',              accent: '#325795', component: ScreenRanking },
-  { id: 'meta-diaria',     label: 'Meta Diaria',          sublabel: 'Hoy vs meta por sucursal',       accent: '#01B693', component: ScreenMetaDiaria },
-  { id: 'facturacion-hora',label: 'Facturación x Hora',   sublabel: 'Hoy vs semana anterior',         accent: '#C8102E', component: ScreenFacturacionHora },
-  { id: 'tickets-hora',    label: 'Tickets x Hora',       sublabel: 'Ranking del día',                accent: '#C8102E', component: ScreenTicketsHora },
-  { id: 'variacion',       label: 'Variación %',          sublabel: 'Vs semana anterior',             accent: '#01B693', component: ScreenVariacion },
-  { id: 'alertas',         label: 'Alertas',              sublabel: 'Inactividad por sucursal',       accent: '#ef4444', component: ScreenAlertas },
-  { id: 'beneficios',      label: 'Beneficios',           sublabel: 'Alta clientes & nominados',      accent: '#01B693', component: ScreenBeneficios },
+  { id: 'ranking',          label: 'Ranking',              sublabel: 'Ventas del día por sucursal',    accent: '#325795', component: ScreenRanking },
+  { id: 'acum-mes',         label: 'Acumulado Mes',        sublabel: 'Avance mensual por sucursal',    accent: '#325795', component: ScreenAcumMes },
+  { id: 'meta-diaria',      label: 'Meta Diaria',          sublabel: 'Hoy vs meta por sucursal',       accent: '#01B693', component: ScreenMetaDiaria },
+  { id: 'proyeccion-dia',   label: 'Proyección Día',       sublabel: 'Estimación fin de jornada',      accent: '#f59e0b', component: ScreenProyeccionDia },
+  { id: 'facturacion-hora', label: 'Facturación x Hora',   sublabel: 'Hoy vs semana anterior',         accent: '#C8102E', component: ScreenFacturacionHora },
+  { id: 'tickets-hora',     label: 'Tickets x Hora',       sublabel: 'Hoy vs semana anterior',         accent: '#C8102E', component: ScreenTicketsHora },
+  { id: 'ticket-promedio',  label: 'Ticket Promedio',      sublabel: 'Valor promedio por ticket',      accent: '#325795', component: ScreenTicketPromedio },
+  { id: 'variacion',        label: 'Variación %',          sublabel: 'Vs semana anterior',             accent: '#01B693', component: ScreenVariacion },
+  { id: 'alertas',          label: 'Alertas',              sublabel: 'Inactividad por sucursal',       accent: '#ef4444', component: ScreenAlertas },
+  { id: 'beneficios',       label: 'Beneficios',           sublabel: 'Alta clientes & nominados',      accent: '#01B693', component: ScreenBeneficios },
 ];
 
 // Scale factor for the live previews
@@ -112,7 +118,7 @@ export const DebugLauncher: React.FC = () => {
 
       {/* Grid */}
       <div className="flex-1 min-h-0 flex items-center justify-center p-6">
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-5 gap-4">
           {SCREENS.map((screen) => {
             const ScreenComponent = screen.component;
             return (

@@ -4,26 +4,26 @@ import { DebugLauncher } from './components/debug/DebugLauncher';
 import { fetchDashboardData, getCachedData } from './services/csvService';
 import { DashboardData } from './types';
 import { ScreenRanking } from './components/screens/ScreenRanking';
-import { ScreenMetaDiaria } from './components/screens/ScreenMetaDiaria';
-import { ScreenFacturacionHora } from './components/screens/ScreenFacturacionHora';
-import { ScreenTicketsHora } from './components/screens/ScreenTicketsHora';
-import { ScreenVariacion } from './components/screens/ScreenVariacion';
-import { ScreenAlertas } from './components/screens/ScreenAlertas';
 import { ScreenBeneficios } from './components/screens/ScreenBeneficios';
+import { ScreenAcumMes } from './components/screens/ScreenAcumMes';
+import { ScreenFacturacionHora } from './components/screens/ScreenFacturacionHora';
+import { ScreenMetaDiaria } from './components/screens/ScreenMetaDiaria';
+import { ScreenTicketPromedio } from './components/screens/ScreenTicketPromedio';
+import { ScreenAlertas } from './components/screens/ScreenAlertas';
 import { ROTATOR_CONFIG } from './constants';
 
-const SCREEN_MS  = 3 * 60 * 1000;
+const SCREEN_MS  = ROTATOR_CONFIG.dashboardDuration * 1000;
 const VIDEO_MS   = ROTATOR_CONFIG.videoDuration * ROTATOR_CONFIG.videoLoopsBeforeDashboard * 1000;
 const REFRESH_MS = 5 * 60 * 1000;
 
 const SCREENS: { id: string; component: React.FC<{ data: DashboardData }> }[] = [
   { id: 'ranking',          component: ScreenRanking },
-  { id: 'meta-diaria',      component: ScreenMetaDiaria },
-  { id: 'facturacion-hora', component: ScreenFacturacionHora },
-  { id: 'tickets-hora',     component: ScreenTicketsHora },
-  { id: 'variacion',        component: ScreenVariacion },
-  { id: 'alertas',          component: ScreenAlertas },
   { id: 'beneficios',       component: ScreenBeneficios },
+  { id: 'acum-mes',         component: ScreenAcumMes },
+  { id: 'facturacion-hora', component: ScreenFacturacionHora },
+  { id: 'meta-diaria',      component: ScreenMetaDiaria },
+  { id: 'ticket-promedio',  component: ScreenTicketPromedio },
+  { id: 'alertas',          component: ScreenAlertas },
 ];
 
 // Playlist: screen → video → screen → video → ... repeat
@@ -39,7 +39,7 @@ const App: React.FC = () => {
   const [data, setData]         = useState<DashboardData | null>(() => getCachedData());
   const [slotIndex, setSlotIndex] = useState(0);
 
-  // Data fetch on mount + refresh every 30 min
+  // Data fetch on mount + refresh every 5 min
   useEffect(() => {
     const load = () => fetchDashboardData().then(setData).catch(console.error);
     load();
@@ -70,7 +70,7 @@ const App: React.FC = () => {
   const slot = PLAYLIST[slotIndex];
 
   return (
-    <div className="w-screen h-screen bg-black overflow-hidden">
+    <div className="w-screen h-screen bg-black overflow-hidden relative">
       <AnimatePresence mode="wait">
         {slot.type === 'video' ? (
           <motion.div
@@ -94,6 +94,11 @@ const App: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      {slot.type !== 'video' && (
+        <div className="absolute bottom-3 right-5 text-gray-600 text-sm font-mono pointer-events-none z-50">
+          Act. {data.lastUpdated.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+        </div>
+      )}
     </div>
   );
 };
