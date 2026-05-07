@@ -1,5 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+:root {
+  --hs-orange:     #FF6B1A;
+  --hs-orange-dark:#E55A0A;
+  --hs-lime:       #C5E84D;
+  --hs-green:      #2D5016;
+  --hs-green-dark: #1B3A0A;
+  --hs-cream:      #FFF8EE;
+  --hs-cream-dark: #FAEBD7;
 }

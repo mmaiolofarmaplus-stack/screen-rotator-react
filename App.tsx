@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DebugLauncher } from './components/debug/DebugLauncher';
+import { DebugHotSale } from './components/debug/DebugHotSale';
 import { fetchDashboardData, getCachedData } from './services/csvService';
 import { DashboardData } from './types';
 import { ScreenRanking } from './components/screens/ScreenRanking';
@@ -33,7 +34,9 @@ const PLAYLIST = SCREENS.flatMap((_, i) => [
   VIDEO_SLOT,
 ]);
 
-const isDebug = new URLSearchParams(window.location.search).has('debug');
+const params   = new URLSearchParams(window.location.search);
+const isDebug  = params.has('debug');
+const isScreens = params.has('screens');
 
 const App: React.FC = () => {
   const [data, setData]         = useState<DashboardData | null>(() => getCachedData());
@@ -55,7 +58,8 @@ const App: React.FC = () => {
     return () => clearTimeout(id);
   }, [slotIndex]);
 
-  if (isDebug) return <DebugLauncher />;
+  if (isDebug)   return <DebugHotSale />;
+  if (isScreens) return <DebugLauncher />;
 
   if (!data) {
     return (
