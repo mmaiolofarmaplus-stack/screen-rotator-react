@@ -1,0 +1,635 @@
+Fecha,Hora,Origen,Deposito,Canal,Universo,Tickets,Unidades,Venta_Neta
+01-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,24,31,"888405,93"
+01-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,10,"118370,93"
+01-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,24,26,921023
+01-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,28,41,574730
+01-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,16,"274434,5"
+01-05-2026 12:00:00 a.â¯m.,1,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,4,2,25280
+01-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"85724,1"
+01-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,33,47,584459
+01-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,18,20,515821
+01-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,16,17,"334608,35"
+01-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"36638,96"
+01-05-2026 12:00:00 a.â¯m.,2,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,57445
+01-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,25,33,817480
+01-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,42,57,711316
+01-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,25,"349230,6"
+01-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Vtex,Ecommerce,2,2,23117
+01-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Vtex,Ecommerce,1,1,57418
+01-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,31920
+01-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"19547,57"
+01-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,4,5,184272
+01-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,3,3,60631
+01-05-2026 12:00:00 a.â¯m.,6,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,1,"17340,69"
+01-05-2026 12:00:00 a.â¯m.,7,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,3,4,184493
+01-05-2026 12:00:00 a.â¯m.,7,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,0,0
+01-05-2026 12:00:00 a.â¯m.,7,Producteca,Barracas,Vtex,Ecommerce,1,1,85125
+01-05-2026 12:00:00 a.â¯m.,8,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,2,2,"31760,5"
+01-05-2026 12:00:00 a.â¯m.,9,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,9,19,371097
+01-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"38835,33"
+01-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Vtex,Ecommerce,2,3,39476
+01-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,6,7,"190287,9"
+01-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,9,"203996,02"
+01-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,12,13,343863
+01-05-2026 12:00:00 a.â¯m.,12,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,3,"53238,42"
+01-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,2,"93899,31"
+01-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Vtex,Ecommerce,3,5,173956
+01-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Vtex,Ecommerce,4,10,122304
+01-05-2026 12:00:00 a.â¯m.,13,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+01-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,16,21,"338697,75"
+01-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,7,"174489,94"
+01-05-2026 12:00:00 a.â¯m.,13,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,0,0
+01-05-2026 12:00:00 a.â¯m.,14,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,2,138968
+01-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,18,34,"678467,6"
+01-05-2026 12:00:00 a.â¯m.,14,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+01-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,3,"70566,68"
+01-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Vtex,Ecommerce,3,8,153518
+01-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Vtex,Ecommerce,1,3,117753
+01-05-2026 12:00:00 a.â¯m.,15,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,2,150634
+01-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,9,13,"467502,2"
+01-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"123373,32"
+01-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Vtex,Ecommerce,7,8,267575
+01-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Vtex,Ecommerce,21,41,512188
+01-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,23,486258
+01-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,3,"51865,71"
+01-05-2026 12:00:00 a.â¯m.,16,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,2,"27227,96"
+01-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Vtex,Ecommerce,4,4,115233
+01-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Vtex,Ecommerce,19,29,217078
+01-05-2026 12:00:00 a.â¯m.,17,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+01-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,8,12,238073
+01-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,5,"171786,71"
+01-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Vtex,Ecommerce,5,53,125195
+01-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Vtex,Ecommerce,3,3,111799
+01-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,15,19,316179
+01-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,7,"251719,87"
+01-05-2026 12:00:00 a.â¯m.,18,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+01-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Vtex,Ecommerce,8,8,310434
+01-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Vtex,Ecommerce,13,15,142613
+01-05-2026 12:00:00 a.â¯m.,19,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,1,65771
+01-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,16,"340808,4"
+01-05-2026 12:00:00 a.â¯m.,19,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,2,"27227,96"
+01-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,6,"143896,43"
+01-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Vtex,Ecommerce,7,7,229663
+01-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Vtex,Ecommerce,12,18,192812
+01-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,17,19,"456866,3"
+01-05-2026 12:00:00 a.â¯m.,20,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+01-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,6,"179464,87"
+01-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Vtex,Ecommerce,23,30,397174
+01-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Vtex,Ecommerce,4,4,287332
+01-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,24,37,"708581,2"
+01-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"163085,5"
+01-05-2026 12:00:00 a.â¯m.,21,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,3,3,"34205,08"
+01-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Vtex,Ecommerce,1,1,21450
+01-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Vtex,Ecommerce,5,9,104026
+01-05-2026 12:00:00 a.â¯m.,22,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,2,148157
+01-05-2026 12:00:00 a.â¯m.,22,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+01-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,12,38,382283
+01-05-2026 12:00:00 a.â¯m.,22,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"26346,6"
+01-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,7,"369893,27"
+01-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Vtex,Ecommerce,5,10,166839
+01-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,24,42,"684562,2"
+01-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,5,357438
+01-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Vtex,Ecommerce,3,3,119978
+01-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Vtex,Ecommerce,10,33,171086
+02-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,26,33,"733661,13"
+02-05-2026 12:00:00 a.â¯m.,0,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+02-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,3,"94631,79"
+02-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,7,12,111316
+02-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,12,15,427969
+02-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+02-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,15,21,"365542,1"
+02-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,6,"257101,2"
+02-05-2026 12:00:00 a.â¯m.,1,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"12732,62"
+02-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,3,3,68439
+02-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,8,9,105165
+02-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,62,"371425,2"
+02-05-2026 12:00:00 a.â¯m.,2,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"12732,62"
+02-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,4,"110447,15"
+02-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,4,5,90288
+02-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,1,1,39150
+02-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,15,21,"506050,6"
+02-05-2026 12:00:00 a.â¯m.,3,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,3,"40841,94"
+02-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"21692,97"
+02-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Vtex,Ecommerce,5,8,62474
+02-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Vtex,Ecommerce,1,1,13927
+02-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,8,10,"121632,65"
+02-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,2,"67781,12"
+02-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Vtex,Ecommerce,3,4,50725
+02-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Vtex,Ecommerce,2,2,35350
+02-05-2026 12:00:00 a.â¯m.,5,Producteca,Barracas,Vtex,Ecommerce,6,6,112686
+02-05-2026 12:00:00 a.â¯m.,7,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"53993,35"
+02-05-2026 12:00:00 a.â¯m.,7,Producteca,Barracas,Vtex,Ecommerce,1,1,22574
+02-05-2026 12:00:00 a.â¯m.,8,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,3,98997
+02-05-2026 12:00:00 a.â¯m.,8,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"26689,98"
+02-05-2026 12:00:00 a.â¯m.,9,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,2,2,"15095,6"
+02-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,5,5,218215
+02-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,20,22,"294911,25"
+02-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"46079,25"
+02-05-2026 12:00:00 a.â¯m.,11,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"26346,6"
+02-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Vtex,Ecommerce,1,1,85125
+02-05-2026 12:00:00 a.â¯m.,12,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,83612
+02-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,17,23,"542096,4"
+02-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"121006,81"
+02-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Vtex,Ecommerce,2,2,150061
+02-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Vtex,Ecommerce,4,6,106689
+02-05-2026 12:00:00 a.â¯m.,13,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,2,170250
+02-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,10,11,"415526,69"
+02-05-2026 12:00:00 a.â¯m.,13,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+02-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,1,"23290,38"
+02-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Vtex,Ecommerce,7,8,210908
+02-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Vtex,Ecommerce,8,8,520051
+02-05-2026 12:00:00 a.â¯m.,14,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,134902
+02-05-2026 12:00:00 a.â¯m.,14,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,85125
+02-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,38,427259
+02-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"69111,11"
+02-05-2026 12:00:00 a.â¯m.,14,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"34303,94"
+02-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Vtex,Ecommerce,1,1,38250
+02-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Vtex,Ecommerce,5,6,93078
+02-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,20,27,"527979,3"
+02-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,9,"416580,88"
+02-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Vtex,Ecommerce,6,6,178642
+02-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Vtex,Ecommerce,10,17,150624
+02-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,23,74,"406750,09"
+02-05-2026 12:00:00 a.â¯m.,16,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"54455,92"
+02-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"132788,99"
+02-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Vtex,Ecommerce,13,14,112175
+02-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Vtex,Ecommerce,8,10,205402
+02-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,23,28,"519706,9"
+02-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,5,"137134,01"
+02-05-2026 12:00:00 a.â¯m.,17,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,0,0
+02-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Vtex,Ecommerce,2,2,115390
+02-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Vtex,Ecommerce,5,9,162360
+02-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,16,23,"415523,4"
+02-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,9,"305126,93"
+02-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Vtex,Ecommerce,16,17,162296
+02-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Vtex,Ecommerce,4,4,93229
+02-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,26,"431088,8"
+02-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,3,"135956,54"
+02-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Vtex,Ecommerce,8,15,153053
+02-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Vtex,Ecommerce,12,12,601975
+02-05-2026 12:00:00 a.â¯m.,20,ProductecaApiMELI,Barracas,La Roche,Ecommerce,4,4,255913
+02-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,13,"286068,65"
+02-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,6,"112876,07"
+02-05-2026 12:00:00 a.â¯m.,20,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"20689,96"
+02-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Vtex,Ecommerce,4,6,175951
+02-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Vtex,Ecommerce,18,25,258874
+02-05-2026 12:00:00 a.â¯m.,21,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,86116
+02-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,16,20,"710754,69"
+02-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,11,"415488,98"
+02-05-2026 12:00:00 a.â¯m.,21,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+02-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Vtex,Ecommerce,8,19,77778
+02-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Vtex,Ecommerce,3,3,281381
+02-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,24,34,"740227,3"
+02-05-2026 12:00:00 a.â¯m.,22,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+02-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,6,"300448,22"
+02-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Vtex,Ecommerce,9,9,334343
+02-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Vtex,Ecommerce,13,20,275300
+02-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,18,22,"434287,68"
+02-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,8,"266275,16"
+02-05-2026 12:00:00 a.â¯m.,23,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+02-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Vtex,Ecommerce,10,10,223359
+02-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Vtex,Ecommerce,23,32,336108
+03-05-2026 12:00:00 a.â¯m.,0,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,119275
+03-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,4,4,"118930,8"
+03-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,4,"85710,2"
+03-05-2026 12:00:00 a.â¯m.,0,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,3,4,"54455,92"
+03-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,7,7,398156
+03-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,11,15,138685
+03-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,17,22,"346130,6"
+03-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"68409,4"
+03-05-2026 12:00:00 a.â¯m.,1,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"54455,92"
+03-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,5,8,105346
+03-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,16,19,182068
+03-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,8,8,202032
+03-05-2026 12:00:00 a.â¯m.,2,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+03-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,4,"140755,36"
+03-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,13,18,169180
+03-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,1,1,19794
+03-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,7,11,"232417,75"
+03-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"131398,21"
+03-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Vtex,Ecommerce,1,2,87383
+03-05-2026 12:00:00 a.â¯m.,4,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+03-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,2,1,"16507,5"
+03-05-2026 12:00:00 a.â¯m.,4,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,3,3,"40841,94"
+03-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Vtex,Ecommerce,7,7,80230
+03-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,"16938,4"
+03-05-2026 12:00:00 a.â¯m.,5,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,3,"77980,5"
+03-05-2026 12:00:00 a.â¯m.,6,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,134902
+03-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,3,3,"41213,1"
+03-05-2026 12:00:00 a.â¯m.,6,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"8290,52"
+03-05-2026 12:00:00 a.â¯m.,7,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,39944
+03-05-2026 12:00:00 a.â¯m.,8,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"33890,56"
+03-05-2026 12:00:00 a.â¯m.,8,Producteca,Barracas,Vtex,Ecommerce,1,1,44115
+03-05-2026 12:00:00 a.â¯m.,9,Producteca,DDS,Vtex,Ecommerce,5,6,26064
+03-05-2026 12:00:00 a.â¯m.,10,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,0,0
+03-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,3,5,"85476,9"
+03-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,6,10,"145184,5"
+03-05-2026 12:00:00 a.â¯m.,11,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,5,"68069,9"
+03-05-2026 12:00:00 a.â¯m.,12,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+03-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,25,29,608930
+03-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"47307,47"
+03-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Vtex,Ecommerce,8,9,41564
+03-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,17,20,"593539,1"
+03-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,7,8,"338993,63"
+03-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Vtex,Ecommerce,4,5,213407
+03-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Vtex,Ecommerce,11,15,186880
+03-05-2026 12:00:00 a.â¯m.,14,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,83612
+03-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,32,47,"1061788,9"
+03-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"38508,99"
+03-05-2026 12:00:00 a.â¯m.,14,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+03-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Vtex,Ecommerce,10,11,225869
+03-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Vtex,Ecommerce,21,73,358516
+03-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,21,34,"563203,1"
+03-05-2026 12:00:00 a.â¯m.,15,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+03-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,7,"394844,74"
+03-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Vtex,Ecommerce,33,91,506939
+03-05-2026 12:00:00 a.â¯m.,16,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,77610
+03-05-2026 12:00:00 a.â¯m.,16,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+03-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,33,48,1058278
+03-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"238237,12"
+03-05-2026 12:00:00 a.â¯m.,16,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+03-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Vtex,Ecommerce,6,7,166014
+03-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Vtex,Ecommerce,16,23,213586
+03-05-2026 12:00:00 a.â¯m.,17,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,78177
+03-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,38,54,"917689,66"
+03-05-2026 12:00:00 a.â¯m.,17,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"39565,75"
+03-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,6,"153008,36"
+03-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Vtex,Ecommerce,6,6,157536
+03-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Vtex,Ecommerce,6,9,94257
+03-05-2026 12:00:00 a.â¯m.,18,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,21150
+03-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,21,"479106,39"
+03-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,8,"282115,09"
+03-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Vtex,Ecommerce,13,15,359320
+03-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Vtex,Ecommerce,5,5,149589
+03-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,32,37,"660503,03"
+03-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,3,"133034,1"
+03-05-2026 12:00:00 a.â¯m.,19,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+03-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Vtex,Ecommerce,10,11,276527
+03-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Vtex,Ecommerce,36,55,429727
+03-05-2026 12:00:00 a.â¯m.,20,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,21150
+03-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,26,36,"826340,03"
+03-05-2026 12:00:00 a.â¯m.,20,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"19178,13"
+03-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,10,12,"376549,73"
+03-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Vtex,Ecommerce,5,5,397881
+03-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Vtex,Ecommerce,15,113,474243
+03-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,40,43,"923673,78"
+03-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,7,"261868,43"
+03-05-2026 12:00:00 a.â¯m.,21,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"21472,46"
+03-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Vtex,Ecommerce,11,11,317867
+03-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Vtex,Ecommerce,7,10,88265
+03-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,24,"436482,3"
+03-05-2026 12:00:00 a.â¯m.,22,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,2,"27227,96"
+03-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,7,"229178,53"
+03-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Vtex,Ecommerce,16,17,518536
+03-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Vtex,Ecommerce,31,38,403624
+03-05-2026 12:00:00 a.â¯m.,23,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,21150
+03-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,26,28,"668644,64"
+03-05-2026 12:00:00 a.â¯m.,23,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+03-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,10,"257807,44"
+03-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Vtex,Ecommerce,14,15,545601
+03-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Vtex,Ecommerce,19,27,265136
+04-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,32,41,"837010,43"
+04-05-2026 12:00:00 a.â¯m.,0,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+04-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,8,"284547,82"
+04-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,8,15,123331
+04-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,9,9,447599
+04-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,ICBC Store,Ecommerce,1,1,69426
+04-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,134902
+04-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,30,56,"717229,1"
+04-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,3,"62288,78"
+04-05-2026 12:00:00 a.â¯m.,1,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"21052,53"
+04-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,11,11,406289
+04-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,21,29,233367
+04-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,16,20,"411745,45"
+04-05-2026 12:00:00 a.â¯m.,2,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"27227,96"
+04-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,12,"359286,04"
+04-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,9,9,260873
+04-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,28,45,471296
+04-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,24,"474966,8"
+04-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,8,"396823,24"
+04-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Vtex,Ecommerce,4,4,85262
+04-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Vtex,Ecommerce,2,2,30239
+04-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,13,224449
+04-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,8,"319869,35"
+04-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Vtex,Ecommerce,1,1,20000
+04-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,7,8,"186115,8"
+04-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,4,5,108633
+04-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Vtex,Ecommerce,4,4,127225
+04-05-2026 12:00:00 a.â¯m.,8,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,45645
+04-05-2026 12:00:00 a.â¯m.,9,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"32812,95"
+04-05-2026 12:00:00 a.â¯m.,10,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,0,0
+04-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,2,75200
+04-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,3,"103455,56"
+04-05-2026 12:00:00 a.â¯m.,10,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"7858,48"
+04-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Vtex,Ecommerce,5,5,129288
+04-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Vtex,Ecommerce,2,2,10438
+04-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,9,14,"357454,7"
+04-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,5,"206276,77"
+04-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Vtex,Ecommerce,11,12,604728
+04-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Vtex,Ecommerce,10,16,107067
+04-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,17,20,"489733,5"
+04-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"23290,38"
+04-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Vtex,Ecommerce,9,9,148377
+04-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Vtex,Ecommerce,9,12,162587
+04-05-2026 12:00:00 a.â¯m.,13,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,47709
+04-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,7,9,"310424,42"
+04-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,8,"387441,12"
+04-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Vtex,Ecommerce,1,1,40050
+04-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Vtex,Ecommerce,8,11,115198
+04-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,34,117,"1381263,59"
+04-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,7,"359438,24"
+04-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Vtex,Ecommerce,6,8,220670
+04-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Vtex,Ecommerce,7,8,143424
+04-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,22,68,"802278,02"
+04-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"136184,58"
+04-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Vtex,Ecommerce,8,9,320625
+04-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Vtex,Ecommerce,17,19,362021
+04-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,24,33,"866460,95"
+04-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,17,19,"526042,46"
+04-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Vtex,Ecommerce,8,8,131173
+04-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Vtex,Ecommerce,6,6,245061
+04-05-2026 12:00:00 a.â¯m.,17,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,83612
+04-05-2026 12:00:00 a.â¯m.,17,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,21150
+04-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,12,15,"341867,5"
+04-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,9,"196421,97"
+04-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Vtex,Ecommerce,9,9,431872
+04-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Vtex,Ecommerce,11,17,246099
+04-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,12,61,"431514,6"
+04-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,13,13,"299467,68"
+04-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Vtex,Ecommerce,9,10,324523
+04-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Vtex,Ecommerce,12,16,125333
+04-05-2026 12:00:00 a.â¯m.,19,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,69484
+04-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,22,29,"584264,32"
+04-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,12,21,"513589,07"
+04-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Vtex,Ecommerce,2,11,228352
+04-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Vtex,Ecommerce,14,15,582817
+04-05-2026 12:00:00 a.â¯m.,20,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,85125
+04-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,20,42,"696011,35"
+04-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,10,"563273,11"
+04-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Vtex,Ecommerce,8,8,404727
+04-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Vtex,Ecommerce,12,15,215288
+04-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,30,"793759,38"
+04-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,9,"398536,19"
+04-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Vtex,Ecommerce,10,11,215585
+04-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Vtex,Ecommerce,20,22,326079
+04-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,22,62,"1035725,05"
+04-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,10,"255799,73"
+04-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Vtex,Ecommerce,16,40,298038
+04-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Vtex,Ecommerce,13,13,481506
+04-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,ICBC Store,Ecommerce,2,2,"48839,5"
+04-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,15,"338409,25"
+04-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,10,"282736,86"
+04-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Vtex,Ecommerce,5,5,89348
+04-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Vtex,Ecommerce,7,7,90076
+05-05-2026 12:00:00 a.â¯m.,0,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,86125
+05-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,17,"243716,8"
+05-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,10,10,"408428,25"
+05-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,10,17,351908
+05-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,16,16,692533
+05-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,75716
+05-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,12,14,"401924,6"
+05-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,8,"295230,62"
+05-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,9,10,301777
+05-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,19,20,206616
+05-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,29,56,"663787,19"
+05-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,13,14,"350790,54"
+05-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,8,12,212123
+05-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,14,18,219939
+05-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,12,17,"269448,65"
+05-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"108130,83"
+05-05-2026 12:00:00 a.â¯m.,3,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"76059,9"
+05-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Vtex,Ecommerce,4,4,125813
+05-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Vtex,Ecommerce,4,5,62187
+05-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,5,5,35117
+05-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Vtex,Ecommerce,4,4,47396
+05-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Vtex,Ecommerce,5,5,94158
+05-05-2026 12:00:00 a.â¯m.,5,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"75077,39"
+05-05-2026 12:00:00 a.â¯m.,5,Producteca,Barracas,Vtex,Ecommerce,2,2,29529
+05-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Vtex,Ecommerce,6,8,107363
+05-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,2,2,29839
+05-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Vtex,Ecommerce,1,5,11315
+05-05-2026 12:00:00 a.â¯m.,6,Producteca,Barracas,Vtex,Ecommerce,1,1,42500
+05-05-2026 12:00:00 a.â¯m.,7,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,3,3,"75935,2"
+05-05-2026 12:00:00 a.â¯m.,7,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"17207,99"
+05-05-2026 12:00:00 a.â¯m.,7,Producteca,DDS,Vtex,Ecommerce,3,3,25683
+05-05-2026 12:00:00 a.â¯m.,8,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,64430
+05-05-2026 12:00:00 a.â¯m.,8,Producteca,Barracas,Vtex,Ecommerce,1,1,66100
+05-05-2026 12:00:00 a.â¯m.,9,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,4,5,"149857,94"
+05-05-2026 12:00:00 a.â¯m.,9,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,0,0
+05-05-2026 12:00:00 a.â¯m.,9,Producteca,Barracas,Vtex,Ecommerce,3,6,103524
+05-05-2026 12:00:00 a.â¯m.,9,Producteca,DDS,Vtex,Ecommerce,3,3,19765
+05-05-2026 12:00:00 a.â¯m.,10,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,66251
+05-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,8,14,"170158,85"
+05-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,6,"152729,13"
+05-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Vtex,Ecommerce,10,11,200464
+05-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Vtex,Ecommerce,11,13,369410
+05-05-2026 12:00:00 a.â¯m.,11,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,66251
+05-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,11,13,260567
+05-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,3,4,"215878,6"
+05-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Vtex,Ecommerce,2,3,52673
+05-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Vtex,Ecommerce,14,22,246031
+05-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,18,21,"476710,05"
+05-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,12,14,"477661,05"
+05-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Vtex,Ecommerce,9,9,391106
+05-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Vtex,Ecommerce,23,44,309773
+05-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,ICBC Store,Ecommerce,1,1,"53828,94"
+05-05-2026 12:00:00 a.â¯m.,13,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,2,202615
+05-05-2026 12:00:00 a.â¯m.,13,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,2,138968
+05-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,29,41,"788206,7"
+05-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,8,"126908,25"
+05-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Vtex,Ecommerce,20,23,388629
+05-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Vtex,Ecommerce,22,26,820027
+05-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,ICBC Store,Ecommerce,1,1,"88875,38"
+05-05-2026 12:00:00 a.â¯m.,14,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,119128
+05-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,26,59,"1091454,9"
+05-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,9,"335958,41"
+05-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Vtex,Ecommerce,14,16,697330
+05-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Vtex,Ecommerce,47,156,853528
+05-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,28,"523362,2"
+05-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"105391,15"
+05-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Vtex,Ecommerce,12,12,418045
+05-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Vtex,Ecommerce,30,42,350817
+05-05-2026 12:00:00 a.â¯m.,16,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,103840
+05-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,24,"543744,5"
+05-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,7,"193350,65"
+05-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Vtex,Ecommerce,35,52,379398
+05-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Vtex,Ecommerce,6,7,303119
+05-05-2026 12:00:00 a.â¯m.,17,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,134902
+05-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,20,30,"558121,15"
+05-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,9,9,"414978,31"
+05-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Vtex,Ecommerce,3,3,127020
+05-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Vtex,Ecommerce,11,22,383485
+05-05-2026 12:00:00 a.â¯m.,18,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,119128
+05-05-2026 12:00:00 a.â¯m.,18,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,116893
+05-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,30,46,"764709,43"
+05-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,10,"272178,18"
+05-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Vtex,Ecommerce,14,15,364902
+05-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Vtex,Ecommerce,14,17,225445
+05-05-2026 12:00:00 a.â¯m.,19,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,187452
+05-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,21,"537649,02"
+05-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"101994,3"
+05-05-2026 12:00:00 a.â¯m.,19,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"7858,48"
+05-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Vtex,Ecommerce,14,18,487029
+05-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Vtex,Ecommerce,22,38,446772
+05-05-2026 12:00:00 a.â¯m.,20,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,83487
+05-05-2026 12:00:00 a.â¯m.,20,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,85125
+05-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,23,83,"939954,9"
+05-05-2026 12:00:00 a.â¯m.,20,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+05-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,4,"67693,01"
+05-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Vtex,Ecommerce,13,14,393113
+05-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Vtex,Ecommerce,19,20,163367
+05-05-2026 12:00:00 a.â¯m.,21,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,119128
+05-05-2026 12:00:00 a.â¯m.,21,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,165963
+05-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,28,39,"763943,7"
+05-05-2026 12:00:00 a.â¯m.,21,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"21472,46"
+05-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,8,"395070,42"
+05-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Vtex,Ecommerce,8,8,420213
+05-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Vtex,Ecommerce,28,39,287583
+05-05-2026 12:00:00 a.â¯m.,22,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,119275
+05-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,20,22,"360540,7"
+05-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,14,16,"523757,41"
+05-05-2026 12:00:00 a.â¯m.,22,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+05-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Vtex,Ecommerce,20,22,694943
+05-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Vtex,Ecommerce,36,46,547232
+05-05-2026 12:00:00 a.â¯m.,23,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,21150
+05-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,27,41,"797073,9"
+05-05-2026 12:00:00 a.â¯m.,23,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"13613,98"
+05-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"122562,38"
+05-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Vtex,Ecommerce,28,44,452386
+05-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Vtex,Ecommerce,19,19,486945
+06-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,ICBC Store,Ecommerce,1,1,"115999,9"
+06-05-2026 12:00:00 a.â¯m.,0,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,135735
+06-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,21,57,"719806,02"
+06-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,10,13,"255593,76"
+06-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,18,18,491386
+06-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,27,49,429374
+06-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,ICBC Store,Ecommerce,1,1,52490
+06-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,2,175759
+06-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,134902
+06-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,34,65,"682755,85"
+06-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,6,"312554,93"
+06-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,34,48,494497
+06-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,11,13,212864
+06-05-2026 12:00:00 a.â¯m.,2,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,254859
+06-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,15,16,"272496,2"
+06-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,17,26,"646230,69"
+06-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,20,20,638427
+06-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,30,52,366124
+06-05-2026 12:00:00 a.â¯m.,3,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,69484
+06-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,13,16,"428929,9"
+06-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,12,15,"298536,03"
+06-05-2026 12:00:00 a.â¯m.,3,Producteca,Barracas,Vtex,Ecommerce,5,5,159346
+06-05-2026 12:00:00 a.â¯m.,3,Producteca,DDS,Vtex,Ecommerce,12,15,98477
+06-05-2026 12:00:00 a.â¯m.,4,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,100448
+06-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,2,5,"50245,8"
+06-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"25549,1"
+06-05-2026 12:00:00 a.â¯m.,4,Producteca,DDS,Vtex,Ecommerce,2,2,17637
+06-05-2026 12:00:00 a.â¯m.,4,Producteca,Barracas,Vtex,Ecommerce,4,4,206653
+06-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,5,5,"167033,8"
+06-05-2026 12:00:00 a.â¯m.,5,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"16999,7"
+06-05-2026 12:00:00 a.â¯m.,5,Producteca,DDS,Vtex,Ecommerce,2,2,20492
+06-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,"18397,2"
+06-05-2026 12:00:00 a.â¯m.,6,Producteca,DDS,Vtex,Ecommerce,2,2,10921
+06-05-2026 12:00:00 a.â¯m.,6,Producteca,Barracas,Vtex,Ecommerce,1,1,11693
+06-05-2026 12:00:00 a.â¯m.,7,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,1,1,26347
+06-05-2026 12:00:00 a.â¯m.,7,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,15590
+06-05-2026 12:00:00 a.â¯m.,7,Producteca,Barracas,Vtex,Ecommerce,1,1,29573
+06-05-2026 12:00:00 a.â¯m.,8,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,4,4,"53490,7"
+06-05-2026 12:00:00 a.â¯m.,8,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"53500,14"
+06-05-2026 12:00:00 a.â¯m.,9,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,4,36,139392
+06-05-2026 12:00:00 a.â¯m.,9,Producteca,Barracas,Vtex,Ecommerce,1,1,41400
+06-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,2,3,50667
+06-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,4,"200617,85"
+06-05-2026 12:00:00 a.â¯m.,10,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"21472,46"
+06-05-2026 12:00:00 a.â¯m.,10,Producteca,Barracas,Vtex,Ecommerce,3,3,88427
+06-05-2026 12:00:00 a.â¯m.,10,Producteca,DDS,Vtex,Ecommerce,3,5,134667
+06-05-2026 12:00:00 a.â¯m.,11,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,83612
+06-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,8,7,"322601,2"
+06-05-2026 12:00:00 a.â¯m.,11,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,0,0
+06-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,6,5,"198734,92"
+06-05-2026 12:00:00 a.â¯m.,11,Producteca,Barracas,Vtex,Ecommerce,4,4,125588
+06-05-2026 12:00:00 a.â¯m.,11,Producteca,DDS,Vtex,Ecommerce,3,6,113664
+06-05-2026 12:00:00 a.â¯m.,12,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,83612
+06-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,31,36,"602904,34"
+06-05-2026 12:00:00 a.â¯m.,12,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"21472,46"
+06-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"198291,8"
+06-05-2026 12:00:00 a.â¯m.,12,Producteca,DDS,Vtex,Ecommerce,15,18,163203
+06-05-2026 12:00:00 a.â¯m.,12,Producteca,Barracas,Vtex,Ecommerce,17,4,152426
+06-05-2026 12:00:00 a.â¯m.,13,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,3,3,333206
+06-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,31,674338
+06-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,7,10,"306914,52"
+06-05-2026 12:00:00 a.â¯m.,13,Producteca,Barracas,Vtex,Ecommerce,170,17,484102
+06-05-2026 12:00:00 a.â¯m.,13,Producteca,DDS,Vtex,Ecommerce,28,66,365267
+06-05-2026 12:00:00 a.â¯m.,14,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,297977
+06-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,22,33,"582514,8"
+06-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,8,11,"258511,91"
+06-05-2026 12:00:00 a.â¯m.,14,Producteca,DDS,Vtex,Ecommerce,19,28,423658
+06-05-2026 12:00:00 a.â¯m.,14,Producteca,Barracas,Vtex,Ecommerce,13,16,472808
+06-05-2026 12:00:00 a.â¯m.,15,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,150062
+06-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,11,20,"336147,4"
+06-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"92276,4"
+06-05-2026 12:00:00 a.â¯m.,15,Producteca,DDS,Vtex,Ecommerce,6,6,100582
+06-05-2026 12:00:00 a.â¯m.,15,Producteca,Barracas,Vtex,Ecommerce,1,2,16159
+06-05-2026 12:00:00 a.â¯m.,16,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,165963
+06-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,16,51,342697
+06-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,5,5,"248817,08"
+06-05-2026 12:00:00 a.â¯m.,16,Producteca,Barracas,Vtex,Ecommerce,3,3,192333
+06-05-2026 12:00:00 a.â¯m.,16,Producteca,DDS,Vtex,Ecommerce,6,8,122961
+06-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,15,18,"540506,84"
+06-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,12,15,"595230,25"
+06-05-2026 12:00:00 a.â¯m.,17,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"26753,97"
+06-05-2026 12:00:00 a.â¯m.,17,Producteca,DDS,Vtex,Ecommerce,14,28,198594
+06-05-2026 12:00:00 a.â¯m.,17,Producteca,Barracas,Vtex,Ecommerce,8,9,357581
+06-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,ICBC Store,Ecommerce,1,1,"84880,74"
+06-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,15,20,"378066,8"
+06-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,11,11,"410179,01"
+06-05-2026 12:00:00 a.â¯m.,18,Producteca,Barracas,Vtex,Ecommerce,11,14,417256
+06-05-2026 12:00:00 a.â¯m.,18,Producteca,DDS,Vtex,Ecommerce,18,21,277664
+06-05-2026 12:00:00 a.â¯m.,19,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,1,66251
+06-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,5,8,"152615,8"
+06-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"32151,67"
+06-05-2026 12:00:00 a.â¯m.,19,Producteca,Barracas,Vtex,Ecommerce,6,7,192810
+06-05-2026 12:00:00 a.â¯m.,19,Producteca,DDS,Vtex,Ecommerce,8,9,56731
+06-05-2026 12:00:00 a.â¯m.,20,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,142463
+06-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,31,"597943,39"
+06-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,4,7,"155578,95"
+06-05-2026 12:00:00 a.â¯m.,20,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,"7858,48"
+06-05-2026 12:00:00 a.â¯m.,20,Producteca,DDS,Vtex,Ecommerce,6,7,97045
+06-05-2026 12:00:00 a.â¯m.,20,Producteca,Barracas,Vtex,Ecommerce,6,8,178456
+06-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,50,"552327,5"
+06-05-2026 12:00:00 a.â¯m.,21,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,1,43820
+06-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,12,14,"501338,74"
+06-05-2026 12:00:00 a.â¯m.,21,Producteca,Barracas,Vtex,Ecommerce,5,8,277498
+06-05-2026 12:00:00 a.â¯m.,21,Producteca,DDS,Vtex,Ecommerce,9,14,243733
+06-05-2026 12:00:00 a.â¯m.,22,ProductecaApiMELI,Barracas,La Roche,Ecommerce,2,1,"89279,25"
+06-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,23,"401417,6"
+06-05-2026 12:00:00 a.â¯m.,22,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,1,2,"50217,14"
+06-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,14,15,"470135,42"
+06-05-2026 12:00:00 a.â¯m.,22,Producteca,DDS,Vtex,Ecommerce,11,16,432689
+06-05-2026 12:00:00 a.â¯m.,22,Producteca,Barracas,Vtex,Ecommerce,3,3,81779
+06-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,ICBC Store,Ecommerce,4,4,"115828,3"
+06-05-2026 12:00:00 a.â¯m.,23,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,3,4,274703
+06-05-2026 12:00:00 a.â¯m.,23,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,"89279,25"
+06-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,22,28,"560487,14"
+06-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,13,16,"787722,62"
+06-05-2026 12:00:00 a.â¯m.,23,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,5,"45047,9"
+06-05-2026 12:00:00 a.â¯m.,23,Producteca,Barracas,Vtex,Ecommerce,7,10,277522
+06-05-2026 12:00:00 a.â¯m.,23,Producteca,DDS,Vtex,Ecommerce,13,16,197724
+07-05-2026 12:00:00 a.â¯m.,0,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,1,0,0
+07-05-2026 12:00:00 a.â¯m.,0,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,"89279,25"
+07-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,19,24,"470623,55"
+07-05-2026 12:00:00 a.â¯m.,0,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,3,3,"65476,52"
+07-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,16,18,"628191,71"
+07-05-2026 12:00:00 a.â¯m.,0,Producteca,Barracas,Vtex,Ecommerce,5,7,129118
+07-05-2026 12:00:00 a.â¯m.,0,Producteca,DDS,Vtex,Ecommerce,11,13,299602
+07-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,Barracas,La Roche,Ecommerce,1,1,66251
+07-05-2026 12:00:00 a.â¯m.,1,ProductecaApiMELI,MercadoEnvios Full,La Roche,Ecommerce,2,2,154609
+07-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,10,20,"325014,29"
+07-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,16,21,"552728,92"
+07-05-2026 12:00:00 a.â¯m.,1,Producteca,MercadoEnvios Full,Mercadolibre 2 - Cuenta 2,Ecommerce,2,2,"59752,97"
+07-05-2026 12:00:00 a.â¯m.,1,Producteca,Barracas,Vtex,Ecommerce,14,14,352653
+07-05-2026 12:00:00 a.â¯m.,1,Producteca,DDS,Vtex,Ecommerce,13,24,232652
+07-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Mercadolibre 1 - Cuenta 1,Ecommerce,14,19,"410091,8"
+07-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Mercadolibre 2 - Cuenta 2,Ecommerce,10,10,"273844,45"
+07-05-2026 12:00:00 a.â¯m.,2,Producteca,Barracas,Vtex,Ecommerce,23,26,683379
+07-05-2026 12:00:00 a.â¯m.,2,Producteca,DDS,Vtex,Ecommerce,14,25,200156

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DebugLauncher } from './components/debug/DebugLauncher';
-import { DebugHotSale } from './components/debug/DebugHotSale';
+import { DebugHub } from './components/debug/DebugHub';
 import { fetchDashboardData, getCachedData } from './services/csvService';
 import { DashboardData } from './types';
 import { ScreenRanking } from './components/screens/ScreenRanking';
@@ -58,7 +58,7 @@ const App: React.FC = () => {
     return () => clearTimeout(id);
   }, [slotIndex]);
 
-  if (isDebug)   return <DebugHotSale />;
+  if (isDebug)   return <DebugHub />;
   if (isScreens) return <DebugLauncher />;
 
   if (!data) {
