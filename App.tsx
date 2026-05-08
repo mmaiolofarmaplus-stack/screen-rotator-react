@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DebugLauncher } from './components/debug/DebugLauncher';
 import { DebugHub } from './components/debug/DebugHub';
+import { HotSaleRotator } from './components/HotSaleRotator';
 import { fetchDashboardData, getCachedData } from './services/csvService';
 import { DashboardData } from './types';
 import { ScreenRanking } from './components/screens/ScreenRanking';
@@ -34,9 +35,10 @@ const PLAYLIST = SCREENS.flatMap((_, i) => [
   VIDEO_SLOT,
 ]);
 
-const params   = new URLSearchParams(window.location.search);
-const isDebug  = params.has('debug');
-const isScreens = params.has('screens');
+const params     = new URLSearchParams(window.location.search);
+const isDebug    = params.has('debug');
+const isScreens  = params.has('screens');
+const isHotSale  = window.location.pathname === '/hot-sale';
 
 const App: React.FC = () => {
   const [data, setData]         = useState<DashboardData | null>(() => getCachedData());
@@ -58,6 +60,7 @@ const App: React.FC = () => {
     return () => clearTimeout(id);
   }, [slotIndex]);
 
+  if (isHotSale) return <HotSaleRotator />;
   if (isDebug)   return <DebugHub />;
   if (isScreens) return <DebugLauncher />;
 
