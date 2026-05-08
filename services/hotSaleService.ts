@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 
 const HS_SHEET_ID = '1n-hOdYJlztQZlaTRK-l5j0qJOvZCLPHu-tRXqIVojEU';
-const CACHE_KEY   = 'farmaplus_hs_v3';
+const CACHE_KEY   = 'farmaplus_hs_v4';
 const SHEETS      = { objetivo: '0', facturacion: '74084248', productos: '1247183190' } as const;
 
 export interface HotSaleMeta     { venta: number; tickets: number; unidades: number; }

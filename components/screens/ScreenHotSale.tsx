@@ -233,18 +233,29 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       <div style={{ display: 'flex', gap: 12, flex: 2, minHeight: 0 }}>
         {stats.map(s => (
           <div key={s.label} style={{
-            flex: 1, background: T.surfaceDark, borderRadius: 12, padding: '18px 22px',
-            border: `1px solid ${T.borderSub}`,
+            flex: 1,
+            background: `linear-gradient(160deg, ${s.accent}14 0%, rgba(255,255,255,0.04) 100%)`,
+            borderRadius: 14, padding: '18px 24px',
+            border: `1px solid ${s.accent}44`,
             borderTop: `3px solid ${s.accent}`,
+            boxShadow: `0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 ${s.accent}22`,
             display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
           }}>
-            <p style={{ fontSize: 13, color: T.creamDim, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            <p style={{
+              fontSize: 12, color: T.creamDim, fontWeight: 700,
+              textTransform: 'uppercase', letterSpacing: '0.13em',
+            }}>
               {s.label}
             </p>
-            <p style={{ fontFamily: "'Manrope',sans-serif", fontSize: 'clamp(28px, 2.8vw, 46px)', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
+            <p style={{
+              fontFamily: "'Manrope',sans-serif",
+              fontSize: 'clamp(28px, 2.8vw, 46px)',
+              fontWeight: 900, color: s.accent, lineHeight: 1,
+              textShadow: `0 0 28px ${s.accent}66`,
+            }}>
               {s.value}
             </p>
-            <p style={{ fontSize: 15, color: T.creamDim }}>{s.sub}</p>
+            <p style={{ fontSize: 14, color: T.creamDim }}>{s.sub}</p>
           </div>
         ))}
       </div>
