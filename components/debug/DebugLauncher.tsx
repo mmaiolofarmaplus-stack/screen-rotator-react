@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchDashboardData, getCachedData } from '../../services/csvService';
+import { fetchHotSaleData, getCachedHotSaleData, HotSaleData } from '../../services/hotSaleService';
 import { DashboardData } from '../../types';
 import { ScreenRanking } from '../screens/ScreenRanking';
 import { ScreenMetaDiaria } from '../screens/ScreenMetaDiaria';
@@ -11,8 +12,11 @@ import { ScreenBeneficios } from '../screens/ScreenBeneficios';
 import { ScreenAcumMes } from '../screens/ScreenAcumMes';
 import { ScreenTicketPromedio } from '../screens/ScreenTicketPromedio';
 import { ScreenProyeccionDia } from '../screens/ScreenProyeccionDia';
+import { ScreenHotSale } from '../screens/ScreenHotSale';
+import { ScreenHotSale2 } from '../screens/ScreenHotSale2';
+import { ScreenHotSale3 } from '../screens/ScreenHotSale3';
 
-type ScreenId = 'ranking' | 'acum-mes' | 'meta-diaria' | 'proyeccion-dia' | 'facturacion-hora' | 'tickets-hora' | 'ticket-promedio' | 'variacion' | 'alertas' | 'beneficios';
+type ScreenId = 'ranking' | 'acum-mes' | 'meta-diaria' | 'proyeccion-dia' | 'facturacion-hora' | 'tickets-hora' | 'ticket-promedio' | 'variacion' | 'alertas' | 'beneficios' | 'hs-kpis' | 'hs-hora' | 'hs-evol';
 
 interface ScreenDef {
   id: ScreenId;
@@ -20,6 +24,14 @@ interface ScreenDef {
   sublabel: string;
   accent: string;
   component: React.FC<{ data: DashboardData }>;
+}
+
+interface HotSaleDef {
+  id: ScreenId;
+  label: string;
+  sublabel: string;
+  accent: string;
+  component: React.FC<{ data: HotSaleData }>;
 }
 
 const SCREENS: ScreenDef[] = [
@@ -35,11 +47,18 @@ const SCREENS: ScreenDef[] = [
   { id: 'beneficios',       label: 'Beneficios',           sublabel: 'Alta clientes & nominados',      accent: '#01B693', component: ScreenBeneficios },
 ];
 
+const HS_SCREENS: HotSaleDef[] = [
+  { id: 'hs-kpis', label: 'KPIs · Tablero',       sublabel: 'Hot Sale — resumen',         accent: '#DDED59', component: ScreenHotSale },
+  { id: 'hs-hora', label: 'Hora · Canales',        sublabel: 'Hot Sale — por hora',        accent: '#FC5B31', component: ScreenHotSale2 },
+  { id: 'hs-evol', label: 'Evolución · Productos', sublabel: 'Hot Sale — evolución/prod.', accent: '#FC5B31', component: ScreenHotSale3 },
+];
+
 // Scale factor for the live previews
 const SCALE = 0.22;
 
 export const DebugLauncher: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(() => getCachedData());
+  const [hsData, setHsData] = useState<HotSaleData | null>(() => getCachedHotSaleData());
   const [loading, setLoading] = useState(!getCachedData());
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<ScreenId | null>(null);
@@ -48,6 +67,7 @@ export const DebugLauncher: React.FC = () => {
     fetchDashboardData()
       .then(d => { setData(d); setLoading(false); })
       .catch(e => { setError(String(e)); setLoading(false); });
+    fetchHotSaleData().then(setHsData).catch(console.error);
   }, []);
 
   // Keyboard escape to close fullscreen
@@ -74,25 +94,30 @@ export const DebugLauncher: React.FC = () => {
   }
 
   // --- Fullscreen view ---
-  if (selected && data) {
-    const def = SCREENS.find(s => s.id === selected)!;
-    const ScreenComponent = def.component;
-    return (
-      <div className="relative w-screen h-screen">
-        <ScreenComponent data={data} />
+  if (selected) {
+    const hsDef = HS_SCREENS.find(s => s.id === selected);
+    const def   = SCREENS.find(s => s.id === selected);
+    const back = (
+      <>
         <button
           onClick={() => setSelected(null)}
           className="absolute top-4 left-4 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-black/70 border border-white/20 text-white text-sm font-bold tracking-wider hover:bg-black/90 transition-all backdrop-blur-sm cursor-pointer"
         >
           ← VOLVER
         </button>
-        <div
-          className="absolute top-4 right-4 z-50 px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold tracking-widest text-gray-400 backdrop-blur-sm"
-        >
+        <div className="absolute top-4 right-4 z-50 px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold tracking-widest text-gray-400 backdrop-blur-sm">
           ESC para cerrar
         </div>
-      </div>
+      </>
     );
+    if (hsDef && hsData) {
+      const HS = hsDef.component;
+      return <div className="relative w-screen h-screen"><HS data={hsData} />{back}</div>;
+    }
+    if (def && data) {
+      const ScreenComponent = def.component;
+      return <div className="relative w-screen h-screen"><ScreenComponent data={data} />{back}</div>;
+    }
   }
 
   // --- Grid launcher ---
@@ -117,7 +142,9 @@ export const DebugLauncher: React.FC = () => {
       </div>
 
       {/* Grid */}
-      <div className="flex-1 min-h-0 flex items-center justify-center p-6">
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center gap-6 p-6">
+
+        {/* Regular screens */}
         <div className="grid grid-cols-5 gap-4">
           {SCREENS.map((screen) => {
             const ScreenComponent = screen.component;
@@ -130,29 +157,9 @@ export const DebugLauncher: React.FC = () => {
                 onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 20px 2px ${screen.accent}44`)}
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 0 0 0 transparent')}
               >
-                {/* Live preview */}
-                <div
-                  style={{
-                    width: `${SCALE * 100}vw`,
-                    height: `${SCALE * 100}vh`,
-                    overflow: 'hidden',
-                    position: 'relative',
-                    flexShrink: 0,
-                  }}
-                >
+                <div style={{ width: `${SCALE * 100}vw`, height: `${SCALE * 100}vh`, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
                   {data ? (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
-                        transform: `scale(${SCALE})`,
-                        transformOrigin: 'top left',
-                        pointerEvents: 'none',
-                      }}
-                    >
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', transform: `scale(${SCALE})`, transformOrigin: 'top left', pointerEvents: 'none' }}>
                       <ScreenComponent data={data} />
                     </div>
                   ) : (
@@ -161,24 +168,61 @@ export const DebugLauncher: React.FC = () => {
                     </div>
                   )}
                 </div>
-
-                {/* Label */}
-                <div
-                  className="px-3 py-2 flex items-center justify-between bg-[#0d1119] border-t border-white/5 group-hover:bg-[#111827] transition-colors"
-                >
+                <div className="px-3 py-2 flex items-center justify-between bg-[#0d1119] border-t border-white/5 group-hover:bg-[#111827] transition-colors">
                   <div className="text-left">
                     <p className="text-white font-bold text-xs uppercase tracking-wide leading-tight">{screen.label}</p>
                     <p className="text-gray-500 text-[10px] font-medium leading-tight mt-0.5">{screen.sublabel}</p>
                   </div>
-                  <div
-                    className="w-1.5 h-1.5 rounded-full shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
-                    style={{ backgroundColor: screen.accent }}
-                  />
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: screen.accent }} />
                 </div>
               </button>
             );
           })}
         </div>
+
+        {/* Hot Sale separator */}
+        <div className="w-full flex items-center gap-4 px-1">
+          <div className="flex-1 h-px bg-[#DDED59]/20" />
+          <span className="text-[#DDED59] text-xs font-black tracking-[0.35em] uppercase shrink-0">Hot Sale</span>
+          <div className="flex-1 h-px bg-[#DDED59]/20" />
+        </div>
+
+        {/* Hot Sale screens */}
+        <div className="grid grid-cols-5 gap-4 w-full">
+          {HS_SCREENS.map((screen) => {
+            const ScreenComponent = screen.component;
+            return (
+              <button
+                key={screen.id}
+                onClick={() => setSelected(screen.id)}
+                className="group flex flex-col gap-0 rounded-xl overflow-hidden border border-white/8 hover:border-white/25 transition-all duration-200 cursor-pointer focus:outline-none hover:scale-[1.02] active:scale-[0.99]"
+                style={{ boxShadow: '0 0 0 0 transparent', transition: 'border-color 200ms, transform 200ms, box-shadow 200ms' }}
+                onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 20px 2px ${screen.accent}44`)}
+                onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 0 0 0 transparent')}
+              >
+                <div style={{ width: `${SCALE * 100}vw`, height: `${SCALE * 100}vh`, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+                  {hsData ? (
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', transform: `scale(${SCALE})`, transformOrigin: 'top left', pointerEvents: 'none' }}>
+                      <ScreenComponent data={hsData} />
+                    </div>
+                  ) : (
+                    <div className="w-full h-full bg-[#09091e] flex items-center justify-center">
+                      <div className="w-4 h-4 border-2 border-[#DDED59]/20 border-t-[#DDED59] rounded-full animate-spin" />
+                    </div>
+                  )}
+                </div>
+                <div className="px-3 py-2 flex items-center justify-between bg-[#09091e] border-t border-[#DDED59]/10 group-hover:bg-[#0e0e25] transition-colors">
+                  <div className="text-left">
+                    <p className="text-white font-bold text-xs uppercase tracking-wide leading-tight">{screen.label}</p>
+                    <p className="text-gray-500 text-[10px] font-medium leading-tight mt-0.5">{screen.sublabel}</p>
+                  </div>
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: screen.accent }} />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
       </div>
     </div>
   );
