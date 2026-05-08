@@ -59,13 +59,14 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
       display: 'flex', flexDirection: 'column', gap: 10,
       position: 'relative', overflow: 'hidden',
     }}>
-      {isHero && (
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'url(/pattern-crosses-orange.png)',
-          backgroundSize: '80px 80px', opacity: 0.12, pointerEvents: 'none',
-        }} />
-      )}
+      {/* Pattern overlay */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: isHero ? 'url(/pattern-crosses-orange.png)' : 'url(/pattern-crosses-blue.png)',
+        backgroundSize: '80px 80px',
+        opacity: isHero ? 0.12 : 0.05,
+        pointerEvents: 'none',
+      }} />
       {decoSrc && (
         <img src={decoSrc} alt="" style={{
           position: 'absolute', right: -10, bottom: -8,
@@ -77,12 +78,12 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
         <p style={{
-          fontSize: 12, fontWeight: 700, letterSpacing: '0.13em',
+          fontSize: 15, fontWeight: 700, letterSpacing: '0.13em',
           textTransform: 'uppercase',
           color: isHero ? 'rgba(255,255,255,0.70)' : T.creamDim,
         }}>{label}</p>
         <span style={{
-          fontFamily: "'Manrope',sans-serif", fontSize: 28, fontWeight: 900, lineHeight: 1,
+          fontFamily: "'Manrope',sans-serif", fontSize: 34, fontWeight: 900, lineHeight: 1,
           color: accentColor,
           textShadow: `0 0 20px ${accentColor}88`,
         }}>{fmtPt(pct)}%</span>
@@ -90,19 +91,19 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
 
       <p style={{
         fontFamily: "'Manrope','Inter',sans-serif",
-        fontSize: 'clamp(38px, 4.2vw, 68px)',
+        fontSize: 'clamp(44px, 4.8vw, 76px)',
         fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em',
         color: isHero ? '#FFFFFF' : color,
         position: 'relative',
       }}>{value}</p>
 
-      <p style={{ fontSize: 13, color: isHero ? 'rgba(255,255,255,0.60)' : T.creamDim, position: 'relative' }}>
+      <p style={{ fontSize: 16, color: isHero ? 'rgba(255,255,255,0.60)' : T.creamDim, position: 'relative' }}>
         Meta: {metaStr}
         <span style={{ opacity: 0.55 }}> · </span>
         Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
       </p>
 
-      <div style={{ height: 8, background: 'rgba(255,255,255,0.18)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
+      <div style={{ height: 10, background: 'rgba(255,255,255,0.18)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
         <div style={{
           height: '100%', width: `${bar}%`, borderRadius: 99,
           background: accentColor,
@@ -138,9 +139,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       borderRadius: 10, padding: '10px 16px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
     }}>
-      <p style={{ color: T.tickColor, fontSize: 12, fontWeight: 700, marginBottom: 6 }}>{label}</p>
+      <p style={{ color: T.tickColor, fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{label}</p>
       {payload.map((p: any) => p.value !== null && (
-        <p key={p.dataKey} style={{ color: p.color, fontSize: 13, fontWeight: 800 }}>
+        <p key={p.dataKey} style={{ color: p.color, fontSize: 16, fontWeight: 800 }}>
           {p.name === 'sales' ? 'Ventas' : 'Target'}: {fmtM(p.value)}
         </p>
       ))}
@@ -215,28 +216,31 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       {/* Header */}
       <header style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'rgba(0, 16, 50, 0.80)', borderRadius: 14, padding: '10px 20px',
+        background: 'rgba(0, 16, 50, 0.90)', borderRadius: 16, padding: '10px 22px',
         border: `1px solid ${T.borderBlue}`, borderBottom: `3px solid ${T.lime}`,
-        flexShrink: 0, position: 'relative',
+        flexShrink: 0, position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: T.lime, borderRadius: 99, padding: '5px 13px 5px 10px' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: T.blue, display: 'inline-block' }} />
-            <span style={{ color: T.blue, fontSize: 13, fontWeight: 900, letterSpacing: '0.12em' }}>EN VIVO</span>
+        {/* Header pattern */}
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-crosses-blue.png)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10, position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: T.lime, borderRadius: 99, padding: '6px 16px 6px 12px' }}>
+            <span style={{ width: 9, height: 9, borderRadius: '50%', background: T.blue, display: 'inline-block' }} />
+            <span style={{ color: T.blue, fontSize: 15, fontWeight: 900, letterSpacing: '0.12em' }}>EN VIVO</span>
           </div>
-          <div style={{ background: 'rgba(221,237,89,0.15)', border: `1px solid ${T.lime}44`, borderRadius: 99, padding: '5px 13px' }}>
-            <span style={{ color: T.lime, fontSize: 13, fontWeight: 700 }}>{pillLabel}</span>
+          <div style={{ background: 'rgba(221,237,89,0.15)', border: `1px solid ${T.lime}44`, borderRadius: 99, padding: '6px 16px' }}>
+            <span style={{ color: T.lime, fontSize: 15, fontWeight: 700 }}>{pillLabel}</span>
           </div>
         </div>
 
         <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 70, objectFit: 'contain', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
 
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', textAlign: 'right' }}>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', textAlign: 'right', position: 'relative' }}>
           <div>
-            <p style={{ fontFamily: "'Manrope',monospace", fontSize: 42, fontWeight: 800, color: T.lime, lineHeight: 1 }}>
+            <p style={{ fontFamily: "'Manrope',monospace", fontSize: 48, fontWeight: 800, color: T.lime, lineHeight: 1 }}>
               {clock.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </p>
-            <p style={{ color: T.creamDim, fontSize: 15, marginTop: 3 }}>
+            <p style={{ color: T.creamDim, fontSize: 18, marginTop: 4 }}>
               {clock.toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: '2-digit' }).toUpperCase()}
             </p>
           </div>
@@ -266,14 +270,19 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
       {/* Hourly chart */}
       <div style={{
-        flex: 72, minHeight: 0, background: 'rgba(10,12,30,0.85)', borderRadius: 20,
-        padding: '16px 12px 12px 4px', border: `1px solid ${T.border}`,
+        flex: 72, minHeight: 0, background: 'rgba(0,53,166,0.28)', borderRadius: 22,
+        padding: '16px 12px 12px 4px', border: `1.5px solid ${T.border}`,
         display: 'flex', flexDirection: 'column',
+        position: 'relative', overflow: 'hidden',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.45)',
       }}>
-        <p style={{ fontSize: 12, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 8, paddingLeft: 16 }}>
+        {/* Chart pattern */}
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
+
+        <p style={{ fontSize: 15, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 8, paddingLeft: 16, position: 'relative' }}>
           Venta acumulada por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' })}
         </p>
-        <div style={{ flex: 1, minHeight: 0 }}>
+        <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 10, right: 24, left: 10, bottom: 0 }}>
               <defs>
@@ -292,16 +301,16 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
               <XAxis
                 dataKey="time"
                 stroke="transparent"
-                tick={{ fill: T.tickColor, fontSize: 12, fontWeight: 600 }}
+                tick={{ fill: T.tickColor, fontSize: 15, fontWeight: 700 }}
                 axisLine={false} tickLine={false}
-                dy={8}
+                dy={10}
               />
               <YAxis
                 stroke="transparent"
-                tick={{ fill: T.tickColor, fontSize: 12 }}
+                tick={{ fill: T.tickColor, fontSize: 15, fontWeight: 600 }}
                 tickFormatter={formatYAxis}
                 axisLine={false} tickLine={false}
-                width={62}
+                width={72}
               />
 
               <Tooltip content={<CustomTooltip />} />
