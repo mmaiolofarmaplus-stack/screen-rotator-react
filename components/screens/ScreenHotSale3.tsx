@@ -1,126 +1,59 @@
-import React, { useMemo } from 'react';
-import {
-  Chart as ChartJS, CategoryScale, LinearScale, BarElement,
-  Tooltip, ChartOptions, Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import React, { useEffect, useState } from 'react';
 import { HotSaleData } from '../../services/hotSaleService';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const T = {
   bg:         '#09091e',
-  surfaceBlue:'rgba(0, 53, 166, 0.55)',
-  surfaceDark:'rgba(255,255,255,0.09)',
-  border:     'rgba(252, 91, 49, 0.35)',
-  borderBlue: 'rgba(0, 83, 166, 0.6)',
-  borderSub:  'rgba(255,255,255,0.12)',
+  cardBlue:   'rgba(0,53,166,0.50)',
+  cardDark:   'rgba(14,20,48,0.85)',
+  border:     'rgba(252,91,49,0.35)',
+  borderBlue: 'rgba(0,83,166,0.60)',
+  borderSub:  'rgba(255,255,255,0.10)',
   orange:     '#FC5B31',
-  orangeDark: '#D94820',
   lime:       '#DDED59',
-  limeDark:   '#B8C82A',
   cyan:       '#3EC7F4',
   blue:       '#0053A6',
   cream:      '#FCECD5',
   creamDim:   'rgba(252,236,213,0.75)',
-  creamFaint: 'rgba(252,236,213,0.20)',
-  gridLine:   'rgba(252,236,213,0.10)',
-  tickColor:  'rgba(252,236,213,0.60)',
+  creamFaint: 'rgba(252,236,213,0.22)',
+  track:      'rgba(255,255,255,0.14)',
 };
 
-const HS_START_MS = new Date('2026-05-11').getTime();
-const HS_END_MS   = new Date('2026-05-18').getTime();
+const PROD_COLORS = [
+  '#FF6B00', '#FF8C33', '#FFAA66',
+  '#0053A6', '#1A5BBF',
+  'rgba(180,178,169,0.55)', 'rgba(180,178,169,0.50)',
+  'rgba(180,178,169,0.45)', 'rgba(180,178,169,0.40)',
+  'rgba(180,178,169,0.35)',
+];
 
-const isHSDay = (fecha: string): boolean => {
-  const p = fecha.split('/');
-  if (p.length < 2) return false;
-  const t = new Date(+(p[2] || 2026), +p[1] - 1, +p[0]).getTime();
-  return t >= HS_START_MS && t <= HS_END_MS;
-};
+const ROW_BG = [
+  'rgba(252,91,49,0.12)', 'rgba(252,91,49,0.09)', 'rgba(252,91,49,0.06)',
+  'rgba(0,83,166,0.15)',  'rgba(0,83,166,0.10)',
+];
 
-const fmtM = (v: number): string => {
-  if (v >= 1e9) return `$${(v/1e9).toLocaleString('es-AR',{minimumFractionDigits:1,maximumFractionDigits:1})}B`;
-  if (v >= 1e6) return `$${(v/1e6).toLocaleString('es-AR',{minimumFractionDigits:1,maximumFractionDigits:1})}M`;
-  if (v >= 1e3) return `$${(v/1e3).toLocaleString('es-AR',{maximumFractionDigits:0})}K`;
-  return `$${new Intl.NumberFormat('es-AR').format(Math.round(v))}`;
-};
-const fmtN = (v: number) => new Intl.NumberFormat('es-AR').format(v);
+const fmtFull = (v: number) =>
+  '$ ' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(v));
+
+const fmtNum = (v: number) =>
+  new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(v));
+
+const fmtPct = (v: number) =>
+  v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
 
 export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
-  const { daily, products, acum, meta } = data;
+  const { products, lastUpdated } = data;
+  const top = products.slice(0, 10);
+  const maxVenta  = top[0]?.venta ?? 1;
+  const totalVenta = top.reduce((s, p) => s + p.venta, 0);
 
-  const todayIdx     = daily.length - 1;
-  const maxProd      = products[0]?.venta ?? 1;
-  const dailyTarget  = meta.venta > 0 ? meta.venta / 8 : 0;
-
-  const barData = useMemo(() => ({
-    labels: daily.map(d => d.short),
-    datasets: [
-      {
-        label: 'Real',
-        data: daily.map(d => d.venta),
-        backgroundColor: daily.map(d =>
-          isHSDay(d.fecha) ? T.orange : 'rgba(252,236,213,0.18)'
-        ),
-        borderColor: daily.map(d =>
-          isHSDay(d.fecha) ? T.orangeDark : 'transparent'
-        ),
-        borderWidth: 1,
-        borderRadius: 6,
-        barPercentage: 0.45,
-      },
-      {
-        label: 'Objetivo',
-        data: daily.map(d => isHSDay(d.fecha) ? dailyTarget : null),
-        backgroundColor: daily.map(d =>
-          isHSDay(d.fecha) ? 'rgba(0, 83, 166, 0.50)' : 'transparent'
-        ),
-        borderColor: daily.map(d =>
-          isHSDay(d.fecha) ? 'rgba(0, 83, 166, 0.85)' : 'transparent'
-        ),
-        borderWidth: 1,
-        borderRadius: 6,
-        barPercentage: 0.45,
-      },
-    ],
-  }), [daily, todayIdx, dailyTarget]);
-
-  const barOpts: ChartOptions<'bar'> = {
-    responsive: true, maintainAspectRatio: false,
-    animation: { duration: 700 },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-        align: 'end',
-        labels: {
-          color: T.tickColor,
-          font: { size: 13, weight: 'bold' },
-          boxWidth: 12,
-          boxHeight: 12,
-          padding: 16,
-        },
-      },
-      tooltip: {
-        backgroundColor: '#0d1428',
-        borderColor: T.lime, borderWidth: 1,
-        titleColor: T.lime, bodyColor: T.creamDim, padding: 12,
-        titleFont: { size: 14, weight: 'bold' },
-        bodyFont: { size: 13 },
-        callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtM(ctx.raw as number)}` },
-      },
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        ticks: { color: T.tickColor, font: { size: 15, weight: 'bold' } },
-      },
-      y: {
-        grid: { color: T.gridLine },
-        ticks: { color: T.tickColor, font: { size: 13 }, callback: v => fmtM(v as number) },
-      },
-    },
-  };
+  const [logoPulse, setLogoPulse] = useState(false);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setLogoPulse(true);
+      setTimeout(() => setLogoPulse(false), 600);
+    }, 2200);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div style={{
@@ -131,163 +64,147 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
       {/* Header */}
       <header style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'rgba(0, 16, 50, 0.80)', borderRadius: 14, padding: '10px 20px',
-        border: `1px solid ${T.borderBlue}`, borderBottom: `3px solid ${T.lime}`,
         flexShrink: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: 'rgba(0,16,50,0.90)', borderRadius: 16, padding: '10px 22px',
+        border: `1px solid ${T.borderBlue}`, borderBottom: `3px solid ${T.lime}`,
+        position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 54, objectFit: 'contain' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, background: T.lime, borderRadius: 99, padding: '4px 12px 4px 9px' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: T.blue, display: 'inline-block' }} />
-            <span style={{ color: T.blue, fontSize: 13, fontWeight: 900, letterSpacing: '0.12em' }}>LIVE</span>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-crosses-blue.png)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
+          <div style={{ background: `${T.orange}22`, border: `1px solid ${T.orange}55`, borderRadius: 10, padding: '6px 16px' }}>
+            <span style={{ color: T.orange, fontSize: 14, fontWeight: 800, letterSpacing: '0.06em' }}>TOP PRODUCTOS</span>
           </div>
-          <span style={{ color: T.creamDim, fontSize: 20, fontWeight: 500 }}>Evolución Diaria</span>
-          <span style={{ color: T.creamFaint, fontSize: 18 }}>·</span>
-          <span style={{ color: 'rgba(252,236,213,0.5)', fontSize: 15 }}>
-            Top Productos · {daily[0]?.fecha ?? '–'} – {daily[daily.length - 1]?.fecha ?? '–'}
-          </span>
+          <div style={{ background: `${T.blue}44`, border: `1px solid ${T.cyan}44`, borderRadius: 10, padding: '6px 16px' }}>
+            <span style={{ color: T.cyan, fontSize: 14, fontWeight: 800, letterSpacing: '0.06em' }}>HOT SALE 2026</span>
+          </div>
         </div>
+
         <div style={{
-          background: `${T.orange}28`, border: `1px solid ${T.orange}55`,
-          borderRadius: 10, padding: '6px 16px',
+          position: 'absolute', left: '50%',
+          transform: `translateX(-50%) scale(${logoPulse ? 1.12 : 1.0})`,
+          transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1)',
         }}>
-          <span style={{ fontFamily: "'Manrope',sans-serif", fontWeight: 800, fontSize: 18, color: T.orange }}>
-            Total campaña: {fmtM(acum.venta)}
-          </span>
+          <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 68, objectFit: 'contain', display: 'block' }} />
+        </div>
+
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
+          <p style={{ color: T.creamDim, fontSize: 14, fontWeight: 600 }}>
+            Actualizado: {lastUpdated.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+          </p>
         </div>
       </header>
 
       {/* Main */}
       <div style={{ flex: 1, minHeight: 0, display: 'flex', gap: 12 }}>
 
-        {/* Left: daily chart */}
+        {/* Left: product table */}
         <div style={{
-          flex: 55, background: T.surfaceBlue, borderRadius: 16,
-          padding: '18px 20px', border: `1px solid ${T.border}`,
+          flex: 1, background: T.cardBlue, borderRadius: 22,
+          border: `1.5px solid ${T.border}`,
+          padding: '20px 24px',
           display: 'flex', flexDirection: 'column',
+          position: 'relative', overflow: 'hidden',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.45)',
         }}>
-          <div style={{ flexShrink: 0, marginBottom: 14 }}>
-            <p style={{ fontSize: 14, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Progreso Diario
-            </p>
-            <p style={{ fontFamily: "'Manrope',sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', marginTop: 4 }}>
-              Ventas por día · Real vs Objetivo
-            </p>
-          </div>
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.07, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
+          <img src="/Carrito de compras colorido y estilizado.png" alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '40%', opacity: 0.09, pointerEvents: 'none', objectFit: 'contain', transform: 'rotate(-8deg)' }} />
 
-          {/* Day strip */}
-          <div style={{ display: 'flex', gap: 6, flexShrink: 0, marginBottom: 12 }}>
-            {daily.map((d, i) => (
-              <div key={i} style={{
-                flex: 1, textAlign: 'center',
-                background: i === todayIdx
-                  ? `${T.orange}28`
-                  : isHSDay(d.fecha)
-                    ? 'rgba(0,53,166,0.25)'
-                    : 'rgba(255,255,255,0.05)',
-                border: `1px solid ${i === todayIdx ? T.orange + '66' : isHSDay(d.fecha) ? T.blue + '55' : T.borderSub}`,
-                borderRadius: 8, padding: '6px 4px',
-              }}>
-                <p style={{ fontSize: 15, color: i === todayIdx ? T.orange : isHSDay(d.fecha) ? T.creamDim : 'rgba(252,236,213,0.40)', fontWeight: 700 }}>
-                  {d.short}
-                </p>
-                <p style={{
-                  fontFamily: "'Manrope',sans-serif", fontSize: 14, fontWeight: 800, lineHeight: 1,
-                  color: i === todayIdx ? T.lime : isHSDay(d.fecha) ? '#fff' : 'rgba(252,236,213,0.40)',
-                  marginTop: 3,
-                }}>{fmtM(d.venta)}</p>
-              </div>
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
+            Top productos · Venta neta
+          </p>
+
+          {/* Column headers */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: '30px 1fr 80px 80px 160px',
+            gap: '0 10px', padding: '6px 8px',
+            borderBottom: `1px solid ${T.borderSub}`,
+            flexShrink: 0, position: 'relative',
+          }}>
+            {['#', 'PRODUCTO', 'TKT', 'UDS', '$ NETO'].map((h, i) => (
+              <span key={i} style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.10em',
+                color: T.creamFaint, textAlign: i >= 2 ? 'right' : 'left',
+              }}>{h}</span>
             ))}
           </div>
 
-          {/* Hot Sale badge */}
-          <div style={{
-            flexShrink: 0, marginBottom: 10,
-            background: `${T.orange}18`, border: `1px dashed ${T.orange}55`,
-            borderRadius: 6, padding: '4px 12px', alignSelf: 'flex-start',
-          }}>
-            <span style={{ color: T.orange, fontSize: 13, fontWeight: 700 }}>
-              🔥 Hot Sale: 11 al 18 de mayo
-            </span>
-          </div>
-
-          <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
-            <img
-              src="/Calendario de notas con detalles vibrantes.png"
-              alt=""
-              style={{
-                position: 'absolute', right: 0, top: 0,
-                height: '100%', opacity: 0.05,
-                pointerEvents: 'none', objectFit: 'contain',
-              }}
-            />
-            <Bar data={barData} options={barOpts} />
+          {/* Rows */}
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', position: 'relative' }}>
+            {top.map((prod, i) => (
+              <div key={i} style={{
+                display: 'grid', gridTemplateColumns: '30px 1fr 80px 80px 160px',
+                gap: '0 10px', padding: '5px 8px',
+                borderRadius: 8, background: ROW_BG[i] ?? 'transparent',
+                alignItems: 'center',
+              }}>
+                <span style={{ fontSize: 'clamp(14px,1.5vw,20px)', fontWeight: 900, color: PROD_COLORS[i] }}>{i + 1}</span>
+                <span style={{ fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 600, color: '#fff', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                  {prod.name}
+                </span>
+                <span style={{ fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 700, color: T.creamDim, textAlign: 'right' }}>
+                  {fmtNum(prod.tickets)}
+                </span>
+                <span style={{ fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 700, color: T.creamDim, textAlign: 'right' }}>
+                  {fmtNum(prod.unidades)}
+                </span>
+                <span style={{ fontSize: 'clamp(14px,1.5vw,20px)', fontWeight: 800, color: PROD_COLORS[i], textAlign: 'right', fontFamily: "'Manrope',monospace" }}>
+                  {fmtFull(prod.venta)}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Right: top products */}
+        {/* Right: contribution bars */}
         <div style={{
-          flex: 45, background: T.surfaceDark, borderRadius: 16,
-          padding: '18px 20px', border: `1px solid ${T.borderSub}`,
-          display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden',
+          flex: 1, background: T.cardDark, borderRadius: 22,
+          border: `1px solid ${T.borderSub}`,
+          padding: '20px 24px',
+          display: 'flex', flexDirection: 'column',
+          position: 'relative', overflow: 'hidden',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.30)',
         }}>
-          <img
-            src="/Dispenser y cepillo de colores neón.png"
-            alt=""
-            style={{
-              position: 'absolute', right: -10, bottom: -10,
-              height: '45%', opacity: 0.06,
-              pointerEvents: 'none', objectFit: 'contain',
-            }}
-          />
+          <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-icons-lime.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
+          <img src="/Tarro de crema en dibujo plano.png" alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '40%', opacity: 0.09, pointerEvents: 'none', objectFit: 'contain' }} />
 
-          <div style={{ flexShrink: 0, marginBottom: 16 }}>
-            <p style={{ fontSize: 14, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Top Productos
-            </p>
-            <p style={{ fontFamily: "'Manrope',sans-serif", fontSize: 22, fontWeight: 700, color: '#fff', marginTop: 4 }}>
-              Ranking por Venta Neta
-            </p>
-          </div>
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
+            % Contribución · Venta neta
+          </p>
 
-          <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: 11 }}>
-            {products.map((prod, i) => {
-              const pct = (prod.venta / maxProd) * 100;
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', position: 'relative' }}>
+            {top.map((prod, i) => {
+              const pct = totalVenta > 0 ? (prod.venta / totalVenta) * 100 : 0;
+              const barW = maxVenta > 0 ? (prod.venta / maxVenta) * 100 : 0;
+              const color = PROD_COLORS[i];
+              const shortName = prod.name.length > 24 ? prod.name.slice(0, 23) + '…' : prod.name;
               return (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-                      <span style={{
-                        fontFamily: "'Manrope',sans-serif", fontSize: 22, fontWeight: 900, flexShrink: 0,
-                        color: i === 0 ? T.lime : i === 1 ? T.orange : T.creamDim, width: 26,
-                      }}>{i + 1}</span>
-                      <span style={{
-                        fontSize: 17, color: '#fff',
-                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                      }}>{prod.name}</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: 14, flexShrink: 0, marginLeft: 10, alignItems: 'center' }}>
-                      <span style={{ fontSize: 15, color: T.creamDim }}>{fmtN(prod.unidades)} u</span>
-                      <span style={{ fontFamily: "'Manrope',sans-serif", fontSize: 20, fontWeight: 800, color: i === 0 ? T.lime : T.orange }}>
-                        {fmtM(prod.venta)}
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{
+                    width: 'clamp(90px,8.5vw,130px)', flexShrink: 0,
+                    fontSize: 'clamp(11px,1.1vw,15px)', fontWeight: 600, color: T.creamDim,
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>{shortName}</span>
+                  <div style={{ flex: 1, height: 'clamp(20px,2.4vh,32px)', background: T.track, borderRadius: 99, overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${barW}%`, height: '100%', borderRadius: 99,
+                      background: color,
+                      boxShadow: `0 0 10px ${color}66`,
+                      transition: 'width 1.3s ease',
+                      display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 10,
+                    }}>
+                      <span style={{ fontSize: 'clamp(10px,1.0vw,14px)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
+                        {fmtPct(pct)}
                       </span>
                     </div>
-                  </div>
-                  <div style={{ height: 5, background: 'rgba(255,255,255,0.10)', borderRadius: 99 }}>
-                    <div style={{
-                      width: `${pct}%`, height: '100%',
-                      background: i === 0
-                        ? `linear-gradient(90deg, ${T.lime}, ${T.limeDark})`
-                        : `linear-gradient(90deg, ${T.orange}CC, ${T.orange}77)`,
-                      borderRadius: 99, transition: 'width 1.2s ease',
-                    }} />
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
+
       </div>
     </div>
   );

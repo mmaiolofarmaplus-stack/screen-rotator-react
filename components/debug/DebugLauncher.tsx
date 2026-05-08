@@ -50,7 +50,7 @@ const SCREENS: ScreenDef[] = [
 const HS_SCREENS: HotSaleDef[] = [
   { id: 'hs-kpis', label: 'KPIs · Tablero',       sublabel: 'Hot Sale — resumen',         accent: '#DDED59', component: ScreenHotSale },
   { id: 'hs-hora', label: 'Hora · Canales',        sublabel: 'Hot Sale — por hora',        accent: '#FC5B31', component: ScreenHotSale2 },
-  { id: 'hs-evol', label: 'Evolución · Productos', sublabel: 'Hot Sale — evolución/prod.', accent: '#FC5B31', component: ScreenHotSale3 },
+  { id: 'hs-evol', label: 'Top · Productos',       sublabel: 'Hot Sale — ranking prod.',   accent: '#FF6B00', component: ScreenHotSale3 },
 ];
 
 // Scale factor for the live previews

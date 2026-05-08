@@ -48,10 +48,11 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
   useEffect(() => { const t = setTimeout(() => setBar(Math.min(pct, 100)), 500); return () => clearTimeout(t); }, [pct]);
 
   const pctColor = pct >= 100 ? T.lime : pct >= 80 ? T.cyan : T.orange;
+  const accentColor = isHero ? T.lime : pctColor;
 
   return (
     <div style={{
-      flex: 1, borderRadius: 20, padding: '18px 24px',
+      flex: 1, borderRadius: 20, padding: '16px 22px',
       background: isHero
         ? `linear-gradient(145deg, ${T.orange} 0%, ${T.orangeDark} 100%)`
         : T.surfaceBlue,
@@ -59,7 +60,7 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
       boxShadow: isHero
         ? `0 20px 60px -10px rgba(252,91,49,0.50), 0 0 0 1px rgba(252,91,49,0.35)`
         : `0 4px 24px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)`,
-      display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+      display: 'flex', flexDirection: 'column', gap: 10,
       position: 'relative', overflow: 'hidden',
     }}>
       {isHero && (
@@ -72,52 +73,50 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
       {decoSrc && (
         <img src={decoSrc} alt="" style={{
           position: 'absolute', right: -10, bottom: -8,
-          height: '55%', opacity: isHero ? 0.15 : 0.08,
+          height: '70%', opacity: isHero ? 0.13 : 0.07,
           pointerEvents: 'none', objectFit: 'contain',
           transform: 'rotate(-8deg)',
         }} />
       )}
 
-      <div style={{ position: 'relative' }}>
+      {/* Label row + % badge */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
         <p style={{
-          fontSize: 13, fontWeight: 700, letterSpacing: '0.12em',
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.13em',
           textTransform: 'uppercase',
-          color: isHero ? 'rgba(255,255,255,0.75)' : T.creamDim,
-          marginBottom: 6,
+          color: isHero ? 'rgba(255,255,255,0.70)' : T.creamDim,
         }}>{label}</p>
-
-        <p style={{
-          fontFamily: "'Manrope','Inter',sans-serif",
-          fontSize: 'clamp(40px, 4.5vw, 74px)',
-          fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em',
-          color: isHero ? '#FFFFFF' : color,
-        }}>{value}</p>
-
-        <p style={{ fontSize: 14, color: isHero ? 'rgba(255,255,255,0.65)' : T.creamDim, marginTop: 8 }}>
-          Meta: {metaStr}
-          <span style={{ opacity: 0.6 }}> · </span>
-          Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
-        </p>
+        <span style={{
+          fontFamily: "'Manrope',sans-serif", fontSize: 28, fontWeight: 900, lineHeight: 1,
+          color: accentColor,
+          textShadow: `0 0 20px ${accentColor}88`,
+        }}>{fmtPt(pct)}%</span>
       </div>
 
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-          <span style={{ fontSize: 13, color: isHero ? 'rgba(255,255,255,0.50)' : T.creamFaint }}>
-            % de la meta
-          </span>
-          <span style={{
-            fontFamily: "'Manrope',sans-serif", fontSize: 36, fontWeight: 900, lineHeight: 1,
-            color: isHero ? T.lime : pctColor,
-          }}>{fmtPt(pct)}%</span>
-        </div>
-        <div style={{ height: 10, background: 'rgba(255,255,255,0.18)', borderRadius: 99, overflow: 'hidden' }}>
-          <div style={{
-            height: '100%', width: `${bar}%`, borderRadius: 99,
-            background: isHero ? T.lime : pctColor,
-            boxShadow: `0 0 12px ${isHero ? T.lime : pctColor}99`,
-            transition: 'width 1.4s cubic-bezier(0.4,0,0.2,1)',
-          }} />
-        </div>
+      {/* Big value */}
+      <p style={{
+        fontFamily: "'Manrope','Inter',sans-serif",
+        fontSize: 'clamp(38px, 4.2vw, 68px)',
+        fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em',
+        color: isHero ? '#FFFFFF' : color,
+        position: 'relative',
+      }}>{value}</p>
+
+      {/* Meta / Hoy */}
+      <p style={{ fontSize: 13, color: isHero ? 'rgba(255,255,255,0.60)' : T.creamDim, position: 'relative' }}>
+        Meta: {metaStr}
+        <span style={{ opacity: 0.55 }}> · </span>
+        Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
+      </p>
+
+      {/* Progress bar */}
+      <div style={{ height: 8, background: 'rgba(255,255,255,0.18)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
+        <div style={{
+          height: '100%', width: `${bar}%`, borderRadius: 99,
+          background: accentColor,
+          boxShadow: `0 0 14px ${accentColor}BB`,
+          transition: 'width 1.4s cubic-bezier(0.4,0,0.2,1)',
+        }} />
       </div>
     </div>
   );
@@ -274,7 +273,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       </header>
 
       {/* KPI Cards */}
-      <div style={{ display: 'flex', gap: 14, flex: 3, minHeight: 0 }}>
+      <div style={{ display: 'flex', gap: 14, flex: 28, minHeight: 0 }}>
         <KpiCard
           label="$ Venta neta" value={fmtM(acum.venta)}
           metaStr={fmtM(meta.venta)} hoyStr={fmtM(todayVenta)}
@@ -296,7 +295,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
       {/* Hourly chart */}
       <div style={{
-        flex: 2, minHeight: 0, background: T.surfaceBlue, borderRadius: 16,
+        flex: 72, minHeight: 0, background: T.surfaceBlue, borderRadius: 16,
         padding: '12px 18px', border: `1px solid ${T.border}`,
         display: 'flex', flexDirection: 'column',
       }}>

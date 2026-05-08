@@ -7,7 +7,7 @@ import { ScreenHotSale3 } from '../screens/ScreenHotSale3';
 const SCREENS = [
   { id: 'kpis',     label: 'KPIs · Tablero',           component: ScreenHotSale  },
   { id: 'hora',     label: 'Hora · Canales',            component: ScreenHotSale2 },
-  { id: 'evol',     label: 'Evolución · Productos',     component: ScreenHotSale3 },
+  { id: 'top-prod', label: 'Top · Productos',            component: ScreenHotSale3 },
 ];
 
 const CYCLE_MS   = 12_000;
