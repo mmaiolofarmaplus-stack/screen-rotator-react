@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import {
+  Chart as ChartJS, CategoryScale, LinearScale, PointElement,
+  LineElement, Tooltip, Filler, ScriptableContext, ChartOptions,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 import { HotSaleData } from '../../services/hotSaleService';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler);
 
 const T = {
   bg:          '#09091e',
@@ -17,6 +24,8 @@ const T = {
   cream:       '#FCECD5',
   creamDim:    'rgba(252,236,213,0.75)',
   creamFaint:  'rgba(252,236,213,0.25)',
+  gridLine:    'rgba(252,236,213,0.10)',
+  tickColor:   'rgba(252,236,213,0.60)',
 };
 
 const fmtM = (v: number): string => {
@@ -118,6 +127,14 @@ const HS_START = new Date('2026-05-11');
 const HS_END   = new Date('2026-05-18');
 const CAMPAIGN_DAYS = 8;
 
+const cumsum = (arr: (number | null)[]): (number | null)[] => {
+  let acc = 0;
+  return arr.map(v => { if (v === null) return null; acc += v; return acc; });
+};
+
+const CANAL_LINE_COLORS: Record<string, string> = { MercadoLibre: '#3EC7F4', Vtex: '#B066FF' };
+const CANAL_FALLBACK = ['#DDED59', '#FF8C33', '#0053A6', '#FF6B9D'];
+
 export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const [clock, setClock] = useState(new Date());
   useEffect(() => {
@@ -125,46 +142,88 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const { meta, acum, daily, hourlyHoy, lastSlotIdx } = data;
+  const { meta, acum, daily, hourlyHoy, hourlyLabels, hourlyCanales } = data;
 
   const pctVenta    = meta.venta    > 0 ? (acum.venta    / meta.venta)    * 100 : 0;
   const pctTickets  = meta.tickets  > 0 ? (acum.tickets  / meta.tickets)  * 100 : 0;
   const pctUnidades = meta.unidades > 0 ? (acum.unidades / meta.unidades) * 100 : 0;
 
-  const todayData   = daily.length ? daily[daily.length - 1] : null;
-  const todayVenta  = todayData?.venta    ?? 0;
-  const todayTix    = todayData?.tickets  ?? 0;
-  const todayUds    = todayData?.unidades ?? 0;
+  const todayData  = daily.length ? daily[daily.length - 1] : null;
+  const todayVenta = todayData?.venta    ?? 0;
+  const todayTix   = todayData?.tickets  ?? 0;
+  const todayUds   = todayData?.unidades ?? 0;
 
-  const ticketProm  = acum.tickets  > 0 ? acum.venta    / acum.tickets  : 0;
-  const udsTicket   = acum.tickets  > 0 ? acum.unidades / acum.tickets  : 0;
-
-  // Hourly rhythm from today's slots
-  const slotsElapsed = lastSlotIdx > 0 ? lastSlotIdx + 1 : 1;
-  const todayHourlySum = hourlyHoy.slice(0, lastSlotIdx + 1).reduce((s, v) => s + (v ?? 0), 0);
-  const ritmoHoy = slotsElapsed > 0 && todayHourlySum > 0 ? todayHourlySum / slotsElapsed : 0;
-
-  // Campaign projection: extrapolate today to full day, add prev days
-  const prevDays       = acum.venta - todayVenta;
-  const todayProjected = ritmoHoy > 0 ? ritmoHoy * 24 : todayVenta;
-  const proyeccion     = prevDays + todayProjected;
-  const proyPct        = meta.venta > 0 ? (proyeccion / meta.venta) * 100 : 0;
-
-  // Days remaining in campaign
-  const nowMs          = clock.getTime();
-  const diasRestantes  = Math.max(0, Math.ceil((HS_END.getTime() - nowMs) / 86_400_000));
-  const diasParaStart  = Math.max(0, Math.ceil((HS_START.getTime() - nowMs) / 86_400_000));
-  const enCurso        = nowMs >= HS_START.getTime() && nowMs <= HS_END.getTime() + 86_400_000;
-  const pillLabel      = enCurso
+  const nowMs         = clock.getTime();
+  const diasRestantes = Math.max(0, Math.ceil((HS_END.getTime() - nowMs) / 86_400_000));
+  const diasParaStart = Math.max(0, Math.ceil((HS_START.getTime() - nowMs) / 86_400_000));
+  const enCurso       = nowMs >= HS_START.getTime() && nowMs <= HS_END.getTime() + 86_400_000;
+  const pillLabel     = enCurso
     ? `🗓 ${diasRestantes} día${diasRestantes !== 1 ? 's' : ''} restantes`
     : diasParaStart > 0 ? `🗓 Inicia en ${diasParaStart} día${diasParaStart !== 1 ? 's' : ''}` : '🗓 Finalizado';
 
-  const stats: { label: string; value: string; sub: string; accent: string }[] = [
-    { label: 'Ticket promedio', value: fmtM(ticketProm),      sub: `hoy ${fmtM(todayTix > 0 ? todayVenta / todayTix : 0)}`,      accent: T.cyan },
-    { label: 'Uds / ticket',   value: fmtUds(udsTicket),      sub: `objetivo ${fmtUds(meta.unidades / Math.max(meta.tickets,1))}`, accent: T.lime },
-    { label: 'Ritmo hoy',      value: fmtM(ritmoHoy) + '/h',  sub: `objetivo ${fmtM(meta.venta / CAMPAIGN_DAYS / 24)}/h`,         accent: T.orange },
-    { label: 'Proyección cierre', value: fmtM(proyeccion),    sub: `${fmtPt(proyPct)}% meta total`,                               accent: proyPct >= 100 ? T.lime : proyPct >= 80 ? T.cyan : T.orange },
-  ];
+  const slots = hourlyLabels.length;
+  const startSlot = slots === 48 ? 14 : 7;
+
+  const lineData = useMemo(() => {
+    const visibleLabels = hourlyLabels.slice(startSlot);
+    const dailyMeta = meta.venta / CAMPAIGN_DAYS;
+    const visHoy   = cumsum(hourlyHoy).slice(startSlot).map(v => v ?? 0);
+    const visTarget = visibleLabels.map((_, i) => dailyMeta * (startSlot + i + 1) / slots);
+    const canalDatasets = (Object.entries(hourlyCanales ?? {}) as [string, (number | null)[]][])
+      .sort(([, a], [, b]) => b.reduce((s, v) => s + (v ?? 0), 0) - a.reduce((s, v) => s + (v ?? 0), 0))
+      .map(([name, arr], i) => ({
+        label: name === 'MercadoLibre' ? 'ML' : name,
+        data: cumsum(arr).slice(startSlot).map(v => v ?? null),
+        borderColor: CANAL_LINE_COLORS[name] ?? CANAL_FALLBACK[i % CANAL_FALLBACK.length],
+        backgroundColor: 'transparent',
+        fill: false, tension: 0.42, borderWidth: 2, pointRadius: 0, spanGaps: true,
+      }));
+    return {
+      labels: visibleLabels,
+      datasets: [
+        {
+          label: 'Hoy (real)', data: visHoy,
+          borderColor: T.orange,
+          backgroundColor: (ctx: ScriptableContext<'line'>) => {
+            const { chart } = ctx; const { ctx: c, chartArea } = chart;
+            if (!chartArea) return `${T.orange}22`;
+            const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            g.addColorStop(0, `${T.orange}44`); g.addColorStop(1, `${T.orange}00`); return g;
+          },
+          fill: true, tension: 0.42, borderWidth: 2.5,
+          pointRadius: 3, pointBackgroundColor: T.orange,
+          pointBorderColor: T.bg, pointBorderWidth: 1.5, spanGaps: false,
+        },
+        {
+          label: 'Target', data: visTarget,
+          borderColor: T.lime, backgroundColor: 'transparent',
+          fill: false, tension: 0, borderWidth: 1.5,
+          borderDash: [6, 4], pointRadius: 0, spanGaps: true,
+        },
+        ...canalDatasets,
+      ],
+    };
+  }, [hourlyHoy, hourlyLabels, hourlyCanales, meta, slots, startSlot]);
+
+  const lineOpts: ChartOptions<'line'> = {
+    responsive: true, maintainAspectRatio: false,
+    animation: { duration: 600 },
+    plugins: {
+      legend: {
+        display: true, position: 'top', align: 'end',
+        labels: { color: T.tickColor, font: { size: 11, weight: 'bold' }, boxWidth: 20, padding: 12, usePointStyle: true, pointStyle: 'line' as const },
+      },
+      tooltip: {
+        backgroundColor: '#0d1428', borderColor: T.orange, borderWidth: 1,
+        titleColor: T.orange, bodyColor: T.creamDim, padding: 10,
+        callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtM(ctx.raw as number)}` },
+      },
+    },
+    scales: {
+      x: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 11, weight: 'bold' }, maxRotation: 0, maxTicksLimit: 10 } },
+      y: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 11 }, callback: v => fmtM(v as number) } },
+    },
+  };
 
   return (
     <div style={{
@@ -229,35 +288,18 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         />
       </div>
 
-      {/* Bottom stats row */}
-      <div style={{ display: 'flex', gap: 12, flex: 2, minHeight: 0 }}>
-        {stats.map(s => (
-          <div key={s.label} style={{
-            flex: 1,
-            background: `linear-gradient(160deg, ${s.accent}14 0%, rgba(255,255,255,0.04) 100%)`,
-            borderRadius: 14, padding: '18px 24px',
-            border: `1px solid ${s.accent}44`,
-            borderTop: `3px solid ${s.accent}`,
-            boxShadow: `0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 ${s.accent}22`,
-            display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-          }}>
-            <p style={{
-              fontSize: 12, color: T.creamDim, fontWeight: 700,
-              textTransform: 'uppercase', letterSpacing: '0.13em',
-            }}>
-              {s.label}
-            </p>
-            <p style={{
-              fontFamily: "'Manrope',sans-serif",
-              fontSize: 'clamp(28px, 2.8vw, 46px)',
-              fontWeight: 900, color: s.accent, lineHeight: 1,
-              textShadow: `0 0 28px ${s.accent}66`,
-            }}>
-              {s.value}
-            </p>
-            <p style={{ fontSize: 14, color: T.creamDim }}>{s.sub}</p>
-          </div>
-        ))}
+      {/* Hourly chart */}
+      <div style={{
+        flex: 2, minHeight: 0, background: T.surfaceBlue, borderRadius: 16,
+        padding: '12px 18px', border: `1px solid ${T.border}`,
+        display: 'flex', flexDirection: 'column',
+      }}>
+        <p style={{ fontSize: 12, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 4 }}>
+          Venta acumulada por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' })}
+        </p>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <Line data={lineData} options={lineOpts} />
+        </div>
       </div>
     </div>
   );

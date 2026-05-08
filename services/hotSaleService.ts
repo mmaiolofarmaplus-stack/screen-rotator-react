@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 
 const HS_SHEET_ID = '1n-hOdYJlztQZlaTRK-l5j0qJOvZCLPHu-tRXqIVojEU';
-const CACHE_KEY   = 'farmaplus_hs_v4';
+const CACHE_KEY   = 'farmaplus_hs_v5';
 const SHEETS      = { objetivo: '0', facturacion: '74084248', productos: '1247183190' } as const;
 
 export interface HotSaleMeta     { venta: number; tickets: number; unidades: number; }
@@ -21,6 +21,7 @@ export interface HotSaleData {
   canales:   HotSaleCanal[];
   depositos: HotSaleDeposito[];
   products:  HotSaleProduct[];
+  hourlyCanales: Record<string, (number | null)[]>;
   lastUpdated: Date;
 }
 
@@ -41,6 +42,12 @@ const g = (row: any, ...keys: string[]): number => {
     }
   }
   return 0;
+};
+
+const normalizeCanal = (name: string): string => {
+  const l = name.toLowerCase();
+  if (l.includes('mercado') || l.includes('meli') || /\bml\b/.test(l) || l.includes('roche')) return 'MercadoLibre';
+  return name;
 };
 
 const sheetUrl = (gid: string) =>
@@ -119,12 +126,14 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
       .map((r: any) => String(r.Fecha ?? r.fecha ?? r.FECHA ?? '').trim())
       .filter(Boolean)
   )].sort((a, b) => parseDateMs(a) - parseDateMs(b));
-  const todayMs  = allDates.length ? parseDateMs(allDates[allDates.length - 1]) : 0;
-  const yesterMs = allDates.length > 1 ? parseDateMs(allDates[allDates.length - 2]) : -1;
+  const _now = new Date();
+  const todayMs  = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
+  const yesterMs = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate() - 1).getTime();
 
   const hourlyHoy:  (number | null)[] = Array(SLOTS).fill(null);
   const hourlyAyer: (number | null)[] = Array(SLOTS).fill(null);
   let lastSlotIdx = 0;
+  const hourlyCanalMap = new Map<string, (number | null)[]>();
 
   factRows.forEach((row: any) => {
     const fechaStr = String(row.Fecha ?? row.fecha ?? row.FECHA ?? '').trim();
@@ -156,11 +165,11 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
 
     // Canal
     if (canal) {
-      if (!canalMap.has(canal)) {
-        const short = canal.replace('MercadoLibre', 'ML').replace('Mercado Libre', 'ML');
-        canalMap.set(canal, { name: canal, short, venta: 0, tickets: 0, unidades: 0 });
+      const nc = normalizeCanal(canal);
+      if (!canalMap.has(nc)) {
+        canalMap.set(nc, { name: nc, short: nc === 'MercadoLibre' ? 'ML' : nc, venta: 0, tickets: 0, unidades: 0 });
       }
-      const c = canalMap.get(canal)!;
+      const c = canalMap.get(nc)!;
       c.venta += neto; c.tickets += tickets; c.unidades += unidades;
     }
 
@@ -177,6 +186,12 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
       if (dateMs === todayMs) {
         hourlyHoy[slot] = (hourlyHoy[slot] ?? 0) + neto;
         if (neto > 0) lastSlotIdx = Math.max(lastSlotIdx, slot);
+        if (canal) {
+          const nc = normalizeCanal(canal);
+          if (!hourlyCanalMap.has(nc)) hourlyCanalMap.set(nc, Array(SLOTS).fill(null));
+          const cArr = hourlyCanalMap.get(nc)!;
+          cArr[slot] = (cArr[slot] ?? 0) + neto;
+        }
       } else if (dateMs === yesterMs) {
         hourlyAyer[slot] = (hourlyAyer[slot] ?? 0) + neto;
       }
@@ -210,9 +225,13 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     .sort((a: HotSaleProduct, b: HotSaleProduct) => b.venta - a.venta)
     .slice(0, 10);
 
+  const hourlyCanales: Record<string, (number | null)[]> = {};
+  hourlyCanalMap.forEach((arr, name) => { hourlyCanales[name] = arr; });
+
   const data: HotSaleData = {
     meta, acum, daily,
     hourlyHoy, hourlyAyer, hourlyLabels, lastSlotIdx,
+    hourlyCanales,
     canales, depositos, products,
     lastUpdated: new Date(),
   };
