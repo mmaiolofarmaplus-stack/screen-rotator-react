@@ -5,7 +5,7 @@ import { DebugLauncher } from './DebugLauncher';
 type Mode = 'hs' | 'fp';
 
 export const DebugHub: React.FC = () => {
-  const [mode, setMode] = useState<Mode>('hs');
+  const [mode, setMode] = useState<Mode>('fp');
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
@@ -15,7 +15,7 @@ export const DebugHub: React.FC = () => {
       <button
         onClick={() => setMode(m => m === 'hs' ? 'fp' : 'hs')}
         style={{
-          position: 'absolute', bottom: 24, left: 24, zIndex: 9999,
+          position: 'fixed', bottom: 24, left: 24, zIndex: 9999,
           display: 'flex', alignItems: 'center', gap: 8,
           background: mode === 'hs'
             ? 'rgba(0,53,166,0.85)'
