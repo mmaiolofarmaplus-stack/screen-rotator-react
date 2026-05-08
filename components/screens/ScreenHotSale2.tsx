@@ -60,9 +60,9 @@ const makeDonutOpts = (total: number): any => ({
       borderWidth: 1,
       titleColor: T.lime,
       bodyColor: T.creamDim,
-      padding: 14,
-      titleFont: { size: 13, weight: 'bold' },
-      bodyFont: { size: 13 },
+      padding: 16,
+      titleFont: { size: 15, weight: 'bold' },
+      bodyFont: { size: 15 },
       callbacks: {
         label: (ctx: any) => {
           const pct = total > 0 ? (ctx.raw / total) * 100 : 0;
@@ -73,7 +73,7 @@ const makeDonutOpts = (total: number): any => ({
   },
 });
 
-/* ── Donut card: donut + %-only legend ──────────────────────── */
+/* ── Donut card ─────────────────────────────────────────────── */
 const DonutCard: React.FC<{
   title: string;
   items: { name: string; short: string; venta: number }[];
@@ -93,12 +93,10 @@ const DonutCard: React.FC<{
     position: 'relative', overflow: 'hidden',
     boxShadow: '0 8px 40px rgba(0,0,0,0.45)',
   }}>
-    {/* Pattern */}
     <div style={{ position: 'absolute', inset: 0, opacity: 0.07, backgroundImage: `url(${pattern})`, backgroundSize: '70px 70px', pointerEvents: 'none' }} />
-    {/* Deco */}
     {deco && <img src={deco} alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '48%', opacity: 0.10, pointerEvents: 'none', objectFit: 'contain', transform: 'rotate(-8deg)' }} />}
 
-    <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 16, flexShrink: 0, position: 'relative' }}>
+    <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 16, flexShrink: 0, position: 'relative' }}>
       {title}
     </p>
 
@@ -107,29 +105,29 @@ const DonutCard: React.FC<{
       <div style={{ flex: '0 0 52%', height: '100%', position: 'relative' }}>
         <Doughnut key={animKey} data={makeDonutData(items, colors)} options={makeDonutOpts(total)} />
         {/* Center label */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', gap: 2 }}>
-          <span style={{ fontSize: 10, color: T.creamFaint, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Ventas</span>
-          <span style={{ fontSize: 'clamp(12px,1.2vw,17px)', fontWeight: 900, color: '#fff', lineHeight: 1.2, textAlign: 'center', padding: '0 6%' }}>{fmtFull(total)}</span>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', gap: 3 }}>
+          <span style={{ fontSize: 13, color: T.creamFaint, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Ventas</span>
+          <span style={{ fontSize: 'clamp(14px,1.4vw,20px)', fontWeight: 900, color: '#fff', lineHeight: 1.2, textAlign: 'center', padding: '0 6%' }}>{fmtFull(total)}</span>
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-            <span style={{ fontSize: 'clamp(9px,0.85vw,12px)', fontWeight: 700, color: T.cyan, background: `${T.cyan}18`, borderRadius: 99, padding: '2px 7px', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 'clamp(11px,1.0vw,15px)', fontWeight: 700, color: T.cyan, background: `${T.cyan}18`, borderRadius: 99, padding: '3px 9px', whiteSpace: 'nowrap' }}>
               {fmtNum(totalTickets)} tkt
             </span>
-            <span style={{ fontSize: 'clamp(9px,0.85vw,12px)', fontWeight: 700, color: T.lime, background: `${T.lime}18`, borderRadius: 99, padding: '2px 7px', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 'clamp(11px,1.0vw,15px)', fontWeight: 700, color: T.lime, background: `${T.lime}18`, borderRadius: 99, padding: '3px 9px', whiteSpace: 'nowrap' }}>
               {fmtNum(totalUnidades)} uds
             </span>
           </div>
         </div>
       </div>
 
-      {/* % legend only */}
+      {/* % legend */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(10px,1.5vh,20px)' }}>
         {items.map((item, i) => {
           const pct = total > 0 ? (item.venta / total) * 100 : 0;
           return (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 13, height: 13, borderRadius: '50%', background: colors[i], flexShrink: 0, boxShadow: `0 0 10px ${colors[i]}BB` }} />
-              <span style={{ fontSize: 'clamp(14px,1.5vw,20px)', fontWeight: 600, color: '#fff', flex: 1 }}>{item.name}</span>
-              <span style={{ fontSize: 'clamp(18px,2vw,28px)', fontWeight: 900, color: colors[i], fontFamily: "'Manrope',sans-serif" }}>{fmtPct(pct)}</span>
+              <span style={{ width: 14, height: 14, borderRadius: '50%', background: colors[i], flexShrink: 0, boxShadow: `0 0 10px ${colors[i]}BB` }} />
+              <span style={{ fontSize: 'clamp(16px,1.7vw,22px)', fontWeight: 600, color: '#fff', flex: 1 }}>{item.name}</span>
+              <span style={{ fontSize: 'clamp(20px,2.2vw,30px)', fontWeight: 900, color: colors[i], fontFamily: "'Manrope',sans-serif" }}>{fmtPct(pct)}</span>
             </div>
           );
         })}
@@ -138,38 +136,41 @@ const DonutCard: React.FC<{
   </div>
 );
 
-/* ── Bar list: name + amount + bar ──────────────────────────── */
+/* ── Bar list ────────────────────────────────────────────────── */
 const BarList: React.FC<{
   title: string;
   items: { name: string; venta: number }[];
   colors: string[];
   total: number;
-}> = ({ title, items, colors, total }) => (
+  pattern: string;
+}> = ({ title, items, colors, total, pattern }) => (
   <div style={{
     flex: 1, background: T.cardDark, borderRadius: 18,
     border: `1px solid ${T.borderSub}`,
     padding: '20px 28px',
     display: 'flex', flexDirection: 'column',
     boxShadow: '0 4px 20px rgba(0,0,0,0.30)',
+    position: 'relative', overflow: 'hidden',
   }}>
-    <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 18, flexShrink: 0 }}>
+    <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: `url(${pattern})`, backgroundSize: '70px 70px', pointerEvents: 'none' }} />
+    <p style={{ fontSize: 14, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 18, flexShrink: 0, position: 'relative' }}>
       {title}
     </p>
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', position: 'relative' }}>
       {items.map((item, i) => {
         const pct = total > 0 ? (item.venta / total) * 100 : 0;
         return (
           <div key={i}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: 11, height: 11, borderRadius: '50%', background: colors[i], flexShrink: 0, boxShadow: `0 0 8px ${colors[i]}99` }} />
-                <span style={{ fontSize: 'clamp(16px,1.7vw,24px)', fontWeight: 600, color: '#fff' }}>{item.name}</span>
+                <span style={{ width: 12, height: 12, borderRadius: '50%', background: colors[i], flexShrink: 0, boxShadow: `0 0 8px ${colors[i]}99` }} />
+                <span style={{ fontSize: 'clamp(17px,1.8vw,25px)', fontWeight: 600, color: '#fff' }}>{item.name}</span>
               </div>
-              <span style={{ fontSize: 'clamp(18px,1.9vw,26px)', fontWeight: 800, color: T.cream, fontFamily: "'Manrope',monospace", letterSpacing: '-0.01em' }}>
+              <span style={{ fontSize: 'clamp(19px,2.0vw,28px)', fontWeight: 800, color: T.cream, fontFamily: "'Manrope',monospace", letterSpacing: '-0.01em' }}>
                 {fmtFull(item.venta)}
               </span>
             </div>
-            <div style={{ height: 10, background: T.track, borderRadius: 99 }}>
+            <div style={{ height: 11, background: T.track, borderRadius: 99 }}>
               <div style={{
                 width: `${pct}%`, height: '100%', borderRadius: 99,
                 background: colors[i],
@@ -188,7 +189,6 @@ const BarList: React.FC<{
 export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const { canales, depositos, lastUpdated } = data;
 
-  /* animKey forces donut re-mount (re-animation) on data refresh */
   const [animKey, setAnimKey] = useState(0);
   useEffect(() => { setAnimKey(k => k + 1); }, [lastUpdated]);
 
@@ -226,10 +226,10 @@ export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
           <div style={{ background: `${T.orange}22`, border: `1px solid ${T.orange}55`, borderRadius: 10, padding: '6px 16px' }}>
-            <span style={{ color: T.orange, fontSize: 14, fontWeight: 800, letterSpacing: '0.06em' }}>MIX DE CANALES</span>
+            <span style={{ color: T.orange, fontSize: 16, fontWeight: 800, letterSpacing: '0.06em' }}>MIX DE CANALES</span>
           </div>
           <div style={{ background: `${T.blue}44`, border: `1px solid ${T.cyan}44`, borderRadius: 10, padding: '6px 16px' }}>
-            <span style={{ color: T.cyan, fontSize: 14, fontWeight: 800, letterSpacing: '0.06em' }}>DEPÓSITOS</span>
+            <span style={{ color: T.cyan, fontSize: 16, fontWeight: 800, letterSpacing: '0.06em' }}>DEPÓSITOS</span>
           </div>
         </div>
 
@@ -243,7 +243,7 @@ export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
         </div>
 
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
-          <p style={{ color: T.creamDim, fontSize: 14, fontWeight: 600 }}>
+          <p style={{ color: T.creamDim, fontSize: 16, fontWeight: 600 }}>
             Actualizado: {lastUpdated.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
@@ -271,8 +271,8 @@ export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
       {/* Bottom row: 2 bar lists */}
       <div style={{ flex: 42, minHeight: 0, display: 'flex', gap: 12 }}>
-        <BarList title="Canales" items={topC} colors={CANAL_COLORS} total={totalCanal} />
-        <BarList title="Depósitos" items={topD} colors={DEP_COLORS} total={totalDep} />
+        <BarList title="Canales" items={topC} colors={CANAL_COLORS} total={totalCanal} pattern="/pattern-crosses-orange.png" />
+        <BarList title="Depósitos" items={topD} colors={DEP_COLORS} total={totalDep} pattern="/pattern-icons-lime.png" />
       </div>
     </div>
   );

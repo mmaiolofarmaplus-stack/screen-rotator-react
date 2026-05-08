@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 
 const HS_SHEET_ID = '1n-hOdYJlztQZlaTRK-l5j0qJOvZCLPHu-tRXqIVojEU';
-const CACHE_KEY   = 'farmaplus_hs_v5';
+const CACHE_KEY   = 'farmaplus_hs_v6';
 const SHEETS      = { objetivo: '0', facturacion: '74084248', productos: '1247183190' } as const;
 
 export interface HotSaleMeta     { venta: number; tickets: number; unidades: number; }
@@ -63,12 +63,29 @@ const settle = <T>(p: Promise<T>, fb: T): Promise<T> => p.catch(() => fb);
 
 const DOW = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
 
+// Returns [year, month (1-12), day] or null
+// Handles: DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD, and timestamps like "01-05-2026 12:00:00 a. m."
+const parseDateParts = (raw: string): [number, number, number] | null => {
+  const s = raw.trim().split(/\s+/)[0]; // strip time component
+  const slash = s.split('/');
+  if (slash.length === 3) {
+    const d = +slash[0], m = +slash[1], y = +(slash[2] || 2026);
+    if (!isNaN(d) && !isNaN(m) && !isNaN(y) && y > 1000) return [y, m, d];
+  }
+  const dash = s.split('-');
+  if (dash.length === 3) {
+    const a = +dash[0], b = +dash[1], c = +dash[2];
+    if (!isNaN(a) && !isNaN(b) && !isNaN(c)) {
+      if (c > 1000) return [c, b, a]; // DD-MM-YYYY
+      if (a > 1000) return [a, b, c]; // YYYY-MM-DD
+    }
+  }
+  return null;
+};
+
 const parseDateMs = (s: string): number => {
-  const p = s.split('/');
-  if (p.length >= 2) return new Date(+(p[2] || 2026), +p[1] - 1, +p[0]).getTime();
-  const p2 = s.split('-');
-  if (p2.length === 3) return new Date(+p2[0], +p2[1] - 1, +p2[2]).getTime();
-  return 0;
+  const p = parseDateParts(s);
+  return p ? new Date(p[0], p[1] - 1, p[2]).getTime() : 0;
 };
 
 export const getCachedHotSaleData = (): HotSaleData | null => {
@@ -87,15 +104,22 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     settle(fetchSheet(SHEETS.productos),   []),
   ]);
 
-  // ── Meta ────────────────────────────────────────────────────────────────────
-  const obj0 = objRows[0] ?? {};
+  // ── Meta ─────────────────────────────────────────────────────────────────────
+  // objetivo sheet has one row per day; sum all rows.
+  // Column names from the sheet pivot: "Suma de Meta 1 $" and "Suma de Meta 1 Unis"
+  let metaVenta = 0, metaUnidades = 0, metaTickets = 0;
+  objRows.forEach((r: any) => {
+    metaVenta    += g(r, 'Suma de Meta 1 $',    'Meta_Venta',    'meta_venta',    'Meta Venta',    'Objetivo_Venta');
+    metaUnidades += g(r, 'Suma de Meta 1 Unis',  'Meta_Unidades', 'meta_unidades', 'Meta Unidades', 'Objetivo_Unidades');
+    metaTickets  += g(r, 'Suma de Meta 1 Tkt',   'Meta_Tickets',  'meta_tickets',  'Meta Tickets',  'Objetivo_Tickets');
+  });
   const meta: HotSaleMeta = {
-    venta:    g(obj0, 'Meta_Venta','meta_venta','Venta_Meta','Meta Venta','META_VENTA','Objetivo_Venta','objetivo_venta') || 1_179_149_656,
-    tickets:  g(obj0, 'Meta_Tickets','meta_tickets','Tickets_Meta','Meta Tickets','Objetivo_Tickets')                    || 26_293,
-    unidades: g(obj0, 'Meta_Unidades','meta_unidades','Unidades_Meta','Meta Unidades','Objetivo_Unidades')               || 98_372,
+    venta:    metaVenta    || 1_179_149_656,
+    tickets:  metaTickets  || 26_293,
+    unidades: metaUnidades || 98_372,
   };
 
-  // ── Facturacion rows ─────────────────────────────────────────────────────────
+  // ── Facturacion rows ──────────────────────────────────────────────────────────
   const dailyMap = new Map<string, HotSaleDaily>();
   const canalMap = new Map<string, HotSaleCanal>();
   const depMap   = new Map<string, HotSaleDeposito>();
@@ -120,12 +144,6 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     return parseInt(clean, 10) || 0;
   };
 
-  // Find latest two dates for today/yesterday hourly
-  const allDates = [...new Set(
-    factRows
-      .map((r: any) => String(r.Fecha ?? r.fecha ?? r.FECHA ?? '').trim())
-      .filter(Boolean)
-  )].sort((a, b) => parseDateMs(a) - parseDateMs(b));
   const _now = new Date();
   const todayMs  = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
   const yesterMs = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate() - 1).getTime();
@@ -139,19 +157,20 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     const fechaStr = String(row.Fecha ?? row.fecha ?? row.FECHA ?? '').trim();
     if (!fechaStr) return;
 
-    const dateMs   = parseDateMs(fechaStr);
-    const parts    = fechaStr.split('/');
+    // Robust date parsing — handles "01-05-2026 12:00:00 a. m.", "01/05/2026", etc.
+    const dc = parseDateParts(fechaStr);
     let dayDate: Date | null = null;
     let dayKey = fechaStr;
-    if (parts.length >= 2) {
-      dayDate = new Date(+(parts[2] || 2026), +parts[1] - 1, +parts[0]);
-      dayKey  = `${String(dayDate.getDate()).padStart(2,'0')}/${String(dayDate.getMonth() + 1).padStart(2,'0')}`;
+    if (dc) {
+      dayDate = new Date(dc[0], dc[1] - 1, dc[2]);
+      dayKey  = `${String(dc[2]).padStart(2,'0')}/${String(dc[1]).padStart(2,'0')}`;
     }
+    const dateMs = dayDate ? dayDate.getTime() : 0;
 
     const canal    = String(row.Canal    ?? row.canal    ?? row.CANAL    ?? '').trim();
     const deposito = String(row.Deposito ?? row.deposito ?? row.DEPOSITO ?? row.Deposito_Origen ?? '').trim();
     const horaStr  = String(row.Hora     ?? row.hora     ?? row.HORA     ?? '0');
-    const neto     = n(row.Neto ?? row.neto ?? row.NETO ?? row.Venta ?? row.venta ?? row.VENTA ?? row.Ventas ?? row.ventas ?? row.VentaNeta ?? row.venta_neta ?? row.Venta_Neta ?? row.Importe ?? row.importe ?? row.Monto ?? row.monto ?? 0);
+    const neto     = n(row.Venta_Neta ?? row.venta_neta ?? row.VentaNeta ?? row.Neto ?? row.neto ?? row.NETO ?? row.Venta ?? row.venta ?? row.Ventas ?? row.Importe ?? row.Monto ?? 0);
     const tickets  = n(row.Tickets ?? row.tickets ?? 0);
     const unidades = n(row.Unidades ?? row.unidades ?? 0);
 
@@ -180,7 +199,7 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
       d.venta += neto; d.tickets += tickets; d.unidades += unidades;
     }
 
-    // Hourly
+    // Hourly (only for today / yesterday)
     const slot = parseSlot(horaStr);
     if (slot >= 0 && slot < SLOTS) {
       if (dateMs === todayMs) {

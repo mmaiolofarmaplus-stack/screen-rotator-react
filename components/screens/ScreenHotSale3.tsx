@@ -21,9 +21,9 @@ const T = {
 const PROD_COLORS = [
   '#FF6B00', '#FF8C33', '#FFAA66',
   '#0053A6', '#1A5BBF',
+  'rgba(180,178,169,0.65)', 'rgba(180,178,169,0.60)',
   'rgba(180,178,169,0.55)', 'rgba(180,178,169,0.50)',
-  'rgba(180,178,169,0.45)', 'rgba(180,178,169,0.40)',
-  'rgba(180,178,169,0.35)',
+  'rgba(180,178,169,0.45)',
 ];
 
 const ROW_BG = [
@@ -43,7 +43,7 @@ const fmtPct = (v: number) =>
 export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const { products, lastUpdated } = data;
   const top = products.slice(0, 10);
-  const maxVenta  = top[0]?.venta ?? 1;
+  const maxVenta   = top[0]?.venta ?? 1;
   const totalVenta = top.reduce((s, p) => s + p.venta, 0);
 
   const [logoPulse, setLogoPulse] = useState(false);
@@ -74,10 +74,10 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, position: 'relative' }}>
           <div style={{ background: `${T.orange}22`, border: `1px solid ${T.orange}55`, borderRadius: 10, padding: '6px 16px' }}>
-            <span style={{ color: T.orange, fontSize: 14, fontWeight: 800, letterSpacing: '0.06em' }}>TOP PRODUCTOS</span>
+            <span style={{ color: T.orange, fontSize: 16, fontWeight: 800, letterSpacing: '0.06em' }}>TOP PRODUCTOS</span>
           </div>
           <div style={{ background: `${T.blue}44`, border: `1px solid ${T.cyan}44`, borderRadius: 10, padding: '6px 16px' }}>
-            <span style={{ color: T.cyan, fontSize: 14, fontWeight: 800, letterSpacing: '0.06em' }}>HOT SALE 2026</span>
+            <span style={{ color: T.cyan, fontSize: 16, fontWeight: 800, letterSpacing: '0.06em' }}>HOT SALE 2026</span>
           </div>
         </div>
 
@@ -90,7 +90,7 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
         </div>
 
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', position: 'relative' }}>
-          <p style={{ color: T.creamDim, fontSize: 14, fontWeight: 600 }}>
+          <p style={{ color: T.creamDim, fontSize: 16, fontWeight: 600 }}>
             Actualizado: {lastUpdated.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
@@ -111,20 +111,20 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
           <div style={{ position: 'absolute', inset: 0, opacity: 0.07, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
           <img src="/Carrito de compras colorido y estilizado.png" alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '40%', opacity: 0.09, pointerEvents: 'none', objectFit: 'contain', transform: 'rotate(-8deg)' }} />
 
-          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
+          <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
             Top productos · Venta neta
           </p>
 
           {/* Column headers */}
           <div style={{
-            display: 'grid', gridTemplateColumns: '30px 1fr 80px 80px 160px',
-            gap: '0 10px', padding: '6px 8px',
+            display: 'grid', gridTemplateColumns: '34px 1fr 90px 90px 1fr',
+            gap: '0 12px', padding: '6px 8px',
             borderBottom: `1px solid ${T.borderSub}`,
             flexShrink: 0, position: 'relative',
           }}>
             {['#', 'PRODUCTO', 'TKT', 'UDS', '$ NETO'].map((h, i) => (
               <span key={i} style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.10em',
+                fontSize: 13, fontWeight: 700, letterSpacing: '0.10em',
                 color: T.creamFaint, textAlign: i >= 2 ? 'right' : 'left',
               }}>{h}</span>
             ))}
@@ -134,22 +134,22 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
           <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', position: 'relative' }}>
             {top.map((prod, i) => (
               <div key={i} style={{
-                display: 'grid', gridTemplateColumns: '30px 1fr 80px 80px 160px',
-                gap: '0 10px', padding: '5px 8px',
+                display: 'grid', gridTemplateColumns: '34px 1fr 90px 90px 1fr',
+                gap: '0 12px', padding: '5px 8px',
                 borderRadius: 8, background: ROW_BG[i] ?? 'transparent',
                 alignItems: 'center',
               }}>
-                <span style={{ fontSize: 'clamp(14px,1.5vw,20px)', fontWeight: 900, color: PROD_COLORS[i] }}>{i + 1}</span>
-                <span style={{ fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 600, color: '#fff', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                <span style={{ fontSize: 'clamp(16px,1.7vw,22px)', fontWeight: 900, color: PROD_COLORS[i] }}>{i + 1}</span>
+                <span style={{ fontSize: 'clamp(14px,1.4vw,19px)', fontWeight: 600, color: '#fff', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                   {prod.name}
                 </span>
-                <span style={{ fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 700, color: T.creamDim, textAlign: 'right' }}>
+                <span style={{ fontSize: 'clamp(14px,1.4vw,19px)', fontWeight: 700, color: T.creamDim, textAlign: 'right' }}>
                   {fmtNum(prod.tickets)}
                 </span>
-                <span style={{ fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 700, color: T.creamDim, textAlign: 'right' }}>
+                <span style={{ fontSize: 'clamp(14px,1.4vw,19px)', fontWeight: 700, color: T.creamDim, textAlign: 'right' }}>
                   {fmtNum(prod.unidades)}
                 </span>
-                <span style={{ fontSize: 'clamp(14px,1.5vw,20px)', fontWeight: 800, color: PROD_COLORS[i], textAlign: 'right', fontFamily: "'Manrope',monospace" }}>
+                <span style={{ fontSize: 'clamp(15px,1.6vw,22px)', fontWeight: 800, color: PROD_COLORS[i], textAlign: 'right', fontFamily: "'Manrope',monospace" }}>
                   {fmtFull(prod.venta)}
                 </span>
               </div>
@@ -169,7 +169,7 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
           <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-icons-lime.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
           <img src="/Tarro de crema en dibujo plano.png" alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '40%', opacity: 0.09, pointerEvents: 'none', objectFit: 'contain' }} />
 
-          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
+          <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
             % Contribución · Venta neta
           </p>
 
@@ -178,23 +178,23 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
               const pct = totalVenta > 0 ? (prod.venta / totalVenta) * 100 : 0;
               const barW = maxVenta > 0 ? (prod.venta / maxVenta) * 100 : 0;
               const color = PROD_COLORS[i];
-              const shortName = prod.name.length > 24 ? prod.name.slice(0, 23) + '…' : prod.name;
+              const shortName = prod.name.length > 26 ? prod.name.slice(0, 25) + '…' : prod.name;
               return (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                   <span style={{
-                    width: 'clamp(90px,8.5vw,130px)', flexShrink: 0,
-                    fontSize: 'clamp(11px,1.1vw,15px)', fontWeight: 600, color: T.creamDim,
+                    width: 'clamp(100px,9vw,145px)', flexShrink: 0,
+                    fontSize: 'clamp(13px,1.3vw,17px)', fontWeight: 600, color: T.creamDim,
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                   }}>{shortName}</span>
-                  <div style={{ flex: 1, height: 'clamp(20px,2.4vh,32px)', background: T.track, borderRadius: 99, overflow: 'hidden' }}>
+                  <div style={{ flex: 1, height: 'clamp(22px,2.6vh,34px)', background: T.track, borderRadius: 99, overflow: 'hidden' }}>
                     <div style={{
                       width: `${barW}%`, height: '100%', borderRadius: 99,
                       background: color,
                       boxShadow: `0 0 10px ${color}66`,
                       transition: 'width 1.3s ease',
-                      display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 10,
+                      display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 12,
                     }}>
-                      <span style={{ fontSize: 'clamp(10px,1.0vw,14px)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: 'clamp(12px,1.2vw,16px)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
                         {fmtPct(pct)}
                       </span>
                     </div>
