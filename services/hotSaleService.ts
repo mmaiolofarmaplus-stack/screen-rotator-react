@@ -213,16 +213,20 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
   const canales   = Array.from(canalMap.values()).sort((a, b) => b.venta - a.venta);
   const depositos = Array.from(depMap.values()).sort((a, b) => b.venta - a.venta);
 
-  // Products
-  const products: HotSaleProduct[] = prodRows
-    .map((r: any) => ({
-      name:     String(r.Producto ?? r.producto ?? r.Nombre_Producto ?? r.nombre ?? r.SKU ?? '').trim(),
-      venta:    n(r.Venta ?? r.venta ?? r.Neto ?? r.neto ?? r.Ventas ?? 0),
-      tickets:  n(r.Tickets ?? r.tickets ?? 0),
-      unidades: n(r.Unidades ?? r.unidades ?? 0),
-    }))
-    .filter((p: HotSaleProduct) => p.name && p.venta > 0)
-    .sort((a: HotSaleProduct, b: HotSaleProduct) => b.venta - a.venta)
+  // Products — rows are per-transaction; aggregate by product name
+  const prodAgg = new Map<string, HotSaleProduct>();
+  prodRows.forEach((r: any) => {
+    const name = String(r.Detalle ?? r.detalle ?? r.Producto ?? r.producto ?? r.Nombre_Producto ?? r.nombre ?? r.SKU ?? '').trim();
+    const venta = n(r.Venta_Neta ?? r.venta_neta ?? r.VentaNeta ?? r.Venta ?? r.venta ?? r.Neto ?? r.neto ?? r.Ventas ?? 0);
+    if (!name || venta <= 0) return;
+    if (!prodAgg.has(name)) prodAgg.set(name, { name, venta: 0, tickets: 0, unidades: 0 });
+    const p = prodAgg.get(name)!;
+    p.venta    += venta;
+    p.tickets  += n(r.Tickets  ?? r.tickets  ?? 0);
+    p.unidades += n(r.Unidades ?? r.unidades ?? 0);
+  });
+  const products: HotSaleProduct[] = Array.from(prodAgg.values())
+    .sort((a, b) => b.venta - a.venta)
     .slice(0, 10);
 
   const hourlyCanales: Record<string, (number | null)[]> = {};
