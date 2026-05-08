@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import {
-  Chart as ChartJS, CategoryScale, LinearScale, PointElement,
-  LineElement, Tooltip, Filler, ScriptableContext, ChartOptions,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, ReferenceLine,
+} from 'recharts';
 import { HotSaleData } from '../../services/hotSaleService';
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler);
 
 const T = {
   bg:          '#09091e',
@@ -24,8 +21,8 @@ const T = {
   cream:       '#FCECD5',
   creamDim:    'rgba(252,236,213,0.75)',
   creamFaint:  'rgba(252,236,213,0.25)',
-  gridLine:    'rgba(252,236,213,0.10)',
-  tickColor:   'rgba(252,236,213,0.60)',
+  gridLine:    'rgba(252,236,213,0.06)',
+  tickColor:   'rgba(252,236,213,0.55)',
 };
 
 const fmtM = (v: number): string => {
@@ -36,7 +33,6 @@ const fmtM = (v: number): string => {
 };
 const fmtN  = (v: number) => new Intl.NumberFormat('es-AR').format(v);
 const fmtPt = (v: number) => v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const fmtUds = (v: number) => v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 interface KpiProps {
   label: string; value: string; metaStr: string; hoyStr: string; pct: number;
@@ -79,7 +75,6 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
         }} />
       )}
 
-      {/* Label row + % badge */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
         <p style={{
           fontSize: 12, fontWeight: 700, letterSpacing: '0.13em',
@@ -93,7 +88,6 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
         }}>{fmtPt(pct)}%</span>
       </div>
 
-      {/* Big value */}
       <p style={{
         fontFamily: "'Manrope','Inter',sans-serif",
         fontSize: 'clamp(38px, 4.2vw, 68px)',
@@ -102,14 +96,12 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
         position: 'relative',
       }}>{value}</p>
 
-      {/* Meta / Hoy */}
       <p style={{ fontSize: 13, color: isHero ? 'rgba(255,255,255,0.60)' : T.creamDim, position: 'relative' }}>
         Meta: {metaStr}
         <span style={{ opacity: 0.55 }}> · </span>
         Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
       </p>
 
-      {/* Progress bar */}
       <div style={{ height: 8, background: 'rgba(255,255,255,0.18)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
         <div style={{
           height: '100%', width: `${bar}%`, borderRadius: 99,
@@ -131,8 +123,39 @@ const cumsum = (arr: (number | null)[]): (number | null)[] => {
   return arr.map(v => { if (v === null) return null; acc += v; return acc; });
 };
 
-const CANAL_LINE_COLORS: Record<string, string> = { MercadoLibre: '#3EC7F4', Vtex: '#B066FF' };
-const CANAL_FALLBACK = ['#DDED59', '#FF8C33', '#0053A6', '#FF6B9D'];
+const formatYAxis = (v: number) => {
+  if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
+  if (v >= 1e6) return `$${(v / 1e6).toFixed(0)}M`;
+  if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}k`;
+  return v === 0 ? '$0' : `$${v}`;
+};
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{
+      background: 'rgba(9,9,30,0.97)', border: '1px solid rgba(255,255,255,0.12)',
+      borderRadius: 10, padding: '10px 16px',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+    }}>
+      <p style={{ color: T.tickColor, fontSize: 12, fontWeight: 700, marginBottom: 6 }}>{label}</p>
+      {payload.map((p: any) => p.value !== null && (
+        <p key={p.dataKey} style={{ color: p.color, fontSize: 13, fontWeight: 800 }}>
+          {p.name === 'sales' ? 'Ventas' : 'Target'}: {fmtM(p.value)}
+        </p>
+      ))}
+    </div>
+  );
+};
+
+/* Custom dot: renders only at the last non-null point */
+const CustomDot = (props: any) => {
+  const { cx, cy, index, payload, data } = props;
+  if (payload.sales === null) return null;
+  const next = data?.[index + 1];
+  if (next && next.sales !== null) return null;
+  return <circle cx={cx} cy={cy} r={7} fill="#fff" stroke={T.orange} strokeWidth={2.5} />;
+};
 
 export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const [clock, setClock] = useState(new Date());
@@ -141,7 +164,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const { meta, acum, daily, hourlyHoy, hourlyLabels, hourlyCanales } = data;
+  const { meta, acum, daily, hourlyHoy, hourlyLabels, lastSlotIdx } = data;
 
   const pctVenta    = meta.venta    > 0 ? (acum.venta    / meta.venta)    * 100 : 0;
   const pctTickets  = meta.tickets  > 0 ? (acum.tickets  / meta.tickets)  * 100 : 0;
@@ -163,72 +186,24 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const slots = hourlyLabels.length;
   const startSlot = slots === 48 ? 14 : 7;
 
-  const lineData = useMemo(() => {
-    const visibleLabels = hourlyLabels.slice(startSlot);
+  const chartData = useMemo(() => {
+    const cumHoy = cumsum(hourlyHoy);
     const dailyMeta = meta.venta / CAMPAIGN_DAYS;
-    const visHoy   = cumsum(hourlyHoy).slice(startSlot).map(v => v ?? 0);
-    const visTarget = visibleLabels.map((_, i) => dailyMeta * (startSlot + i + 1) / slots);
-    const canalDatasets = (Object.entries(hourlyCanales ?? {}) as [string, (number | null)[]][])
-      .sort(([, a], [, b]) => b.reduce((s, v) => s + (v ?? 0), 0) - a.reduce((s, v) => s + (v ?? 0), 0))
-      .map(([name, arr], i) => ({
-        label: name === 'MercadoLibre' ? 'ML' : name,
-        data: cumsum(arr).slice(startSlot).map(v => v ?? null),
-        borderColor: CANAL_LINE_COLORS[name] ?? CANAL_FALLBACK[i % CANAL_FALLBACK.length],
-        backgroundColor: 'transparent',
-        fill: false, tension: 0.42, borderWidth: 2, pointRadius: 0, spanGaps: true,
-      }));
-    return {
-      labels: visibleLabels,
-      datasets: [
-        {
-          label: 'Hoy (real)', data: visHoy,
-          borderColor: T.orange,
-          backgroundColor: (ctx: ScriptableContext<'line'>) => {
-            const { chart } = ctx; const { ctx: c, chartArea } = chart;
-            if (!chartArea) return `${T.orange}22`;
-            const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-            g.addColorStop(0, `${T.orange}44`); g.addColorStop(1, `${T.orange}00`); return g;
-          },
-          fill: true, tension: 0.42, borderWidth: 2.5,
-          pointRadius: 3, pointBackgroundColor: T.orange,
-          pointBorderColor: T.bg, pointBorderWidth: 1.5, spanGaps: false,
-        },
-        {
-          label: 'Target', data: visTarget,
-          borderColor: T.lime,
-          backgroundColor: (ctx: ScriptableContext<'line'>) => {
-            const { chart } = ctx; const { ctx: c, chartArea } = chart;
-            if (!chartArea) return `${T.lime}11`;
-            const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-            g.addColorStop(0, `${T.lime}22`); g.addColorStop(1, `${T.lime}00`); return g;
-          },
-          fill: true, tension: 0.42, borderWidth: 2,
-          borderDash: [8, 5], pointRadius: 0, spanGaps: true,
-        },
-        ...canalDatasets,
-      ],
-    };
-  }, [hourlyHoy, hourlyLabels, hourlyCanales, meta, slots, startSlot]);
+    const visibleLabels = hourlyLabels.slice(startSlot);
 
-  const lineOpts: ChartOptions<'line'> = {
-    responsive: true, maintainAspectRatio: false,
-    animation: { duration: 600 },
-    plugins: {
-      legend: {
-        display: true, position: 'top', align: 'end',
-        labels: { color: T.tickColor, font: { size: 11, weight: 'bold' }, boxWidth: 20, padding: 12, usePointStyle: true, pointStyle: 'line' as const },
-      },
-      tooltip: {
-        backgroundColor: '#0d1428', borderColor: T.orange, borderWidth: 1,
-        titleColor: T.orange, bodyColor: T.creamDim, padding: 10,
-        callbacks: { label: ctx => `${ctx.dataset.label}: ${fmtM(ctx.raw as number)}` },
-      },
-    },
-    scales: {
-      x: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 15, weight: 'bold' }, maxRotation: 0, maxTicksLimit: 10 } },
-      y: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 14 }, callback: v => fmtM(v as number) } },
-    },
-  };
+    return visibleLabels.map((label, i) => {
+      const slotIdx = startSlot + i;
+      const cumVal  = cumHoy[slotIdx];
+      const isActive = slotIdx <= lastSlotIdx && cumVal !== null && cumVal > 0;
+      return {
+        time:   label,
+        sales:  isActive ? cumVal : null,
+        target: Math.round(dailyMeta * (slotIdx + 1) / slots),
+      };
+    });
+  }, [hourlyHoy, hourlyLabels, meta, slots, startSlot, lastSlotIdx]);
+
+  const currentTimeLabel = hourlyLabels[lastSlotIdx] ?? null;
 
   return (
     <div style={{
@@ -245,21 +220,17 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         flexShrink: 0, position: 'relative',
       }}>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
-          {/* En vivo pill */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: T.lime, borderRadius: 99, padding: '5px 13px 5px 10px' }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: T.blue, display: 'inline-block' }} />
             <span style={{ color: T.blue, fontSize: 13, fontWeight: 900, letterSpacing: '0.12em' }}>EN VIVO</span>
           </div>
-          {/* Days pill */}
           <div style={{ background: 'rgba(221,237,89,0.15)', border: `1px solid ${T.lime}44`, borderRadius: 99, padding: '5px 13px' }}>
             <span style={{ color: T.lime, fontSize: 13, fontWeight: 700 }}>{pillLabel}</span>
           </div>
         </div>
 
-        {/* Centered logo */}
         <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 70, objectFit: 'contain', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
 
-        {/* Clock */}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', textAlign: 'right' }}>
           <div>
             <p style={{ fontFamily: "'Manrope',monospace", fontSize: 42, fontWeight: 800, color: T.lime, lineHeight: 1 }}>
@@ -295,15 +266,88 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
       {/* Hourly chart */}
       <div style={{
-        flex: 72, minHeight: 0, background: T.surfaceBlue, borderRadius: 16,
-        padding: '12px 18px', border: `1px solid ${T.border}`,
+        flex: 72, minHeight: 0, background: 'rgba(10,12,30,0.85)', borderRadius: 20,
+        padding: '16px 12px 12px 4px', border: `1px solid ${T.border}`,
         display: 'flex', flexDirection: 'column',
       }}>
-        <p style={{ fontSize: 12, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 4 }}>
+        <p style={{ fontSize: 12, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 8, paddingLeft: 16 }}>
           Venta acumulada por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' })}
         </p>
         <div style={{ flex: 1, minHeight: 0 }}>
-          <Line data={lineData} options={lineOpts} />
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData} margin={{ top: 10, right: 24, left: 10, bottom: 0 }}>
+              <defs>
+                <linearGradient id="gradSales" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%"  stopColor={T.orange} stopOpacity={0.65} />
+                  <stop offset="95%" stopColor={T.orange} stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="gradTarget" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%"  stopColor={T.lime} stopOpacity={0.18} />
+                  <stop offset="95%" stopColor={T.lime} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid strokeDasharray="3 3" stroke={T.gridLine} vertical={false} />
+
+              <XAxis
+                dataKey="time"
+                stroke="transparent"
+                tick={{ fill: T.tickColor, fontSize: 12, fontWeight: 600 }}
+                axisLine={false} tickLine={false}
+                dy={8}
+              />
+              <YAxis
+                stroke="transparent"
+                tick={{ fill: T.tickColor, fontSize: 12 }}
+                tickFormatter={formatYAxis}
+                axisLine={false} tickLine={false}
+                width={62}
+              />
+
+              <Tooltip content={<CustomTooltip />} />
+
+              {/* Vertical reference line at current hour */}
+              {currentTimeLabel && (
+                <ReferenceLine
+                  x={currentTimeLabel}
+                  stroke="rgba(255,255,255,0.55)"
+                  strokeWidth={1.5}
+                  strokeDasharray="0"
+                />
+              )}
+
+              {/* Target dashed line */}
+              <Area
+                type="step"
+                dataKey="target"
+                stroke="rgba(221,237,89,0.40)"
+                strokeWidth={1.5}
+                strokeDasharray="6 4"
+                fill="url(#gradTarget)"
+                fillOpacity={1}
+                isAnimationActive={false}
+                activeDot={false}
+                name="target"
+              />
+
+              {/* Main sales area */}
+              <Area
+                type="monotone"
+                dataKey="sales"
+                stroke={T.orange}
+                strokeWidth={3}
+                fill="url(#gradSales)"
+                fillOpacity={1}
+                connectNulls={false}
+                isAnimationActive={true}
+                animationDuration={800}
+                animationEasing="ease-out"
+                name="sales"
+                dot={(props: any) => <CustomDot {...props} data={chartData} />}
+                activeDot={{ r: 6, fill: T.orange, stroke: '#fff', strokeWidth: 2 }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
