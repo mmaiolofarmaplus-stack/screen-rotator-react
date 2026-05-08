@@ -117,12 +117,6 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
 
 const HS_START = new Date('2026-05-11');
 const HS_END   = new Date('2026-05-18');
-const CAMPAIGN_DAYS = 8;
-
-const cumsum = (arr: (number | null)[]): (number | null)[] => {
-  let acc = 0;
-  return arr.map(v => { if (v === null) return null; acc += v; return acc; });
-};
 
 const formatYAxis = (v: number) => {
   if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
@@ -142,21 +136,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <p style={{ color: T.tickColor, fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{label}</p>
       {payload.map((p: any) => p.value !== null && (
         <p key={p.dataKey} style={{ color: p.color, fontSize: 16, fontWeight: 800 }}>
-          {p.name === 'sales' ? 'Ventas' : 'Target'}: {fmtM(p.value)}
+          {p.name === 'hoy' ? 'Hoy' : 'Ayer'}: {fmtM(p.value)}
         </p>
       ))}
     </div>
   );
 };
 
-/* Custom dot: renders only at the last non-null point */
-const CustomDot = (props: any) => {
-  const { cx, cy, index, payload, data } = props;
-  if (payload.sales === null) return null;
-  const next = data?.[index + 1];
-  if (next && next.sales !== null) return null;
-  return <circle cx={cx} cy={cy} r={7} fill="#fff" stroke={T.orange} strokeWidth={2.5} />;
-};
 
 export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const [clock, setClock] = useState(new Date());
@@ -165,7 +151,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const { meta, acum, daily, hourlyHoy, hourlyLabels, lastSlotIdx } = data;
+  const { meta, acum, daily, hourlyHoy, hourlyAyer, hourlyLabels, lastSlotIdx } = data;
 
   const pctVenta    = meta.venta    > 0 ? (acum.venta    / meta.venta)    * 100 : 0;
   const pctTickets  = meta.tickets  > 0 ? (acum.tickets  / meta.tickets)  * 100 : 0;
@@ -188,21 +174,19 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const startSlot = slots === 48 ? 14 : 7;
 
   const chartData = useMemo(() => {
-    const cumHoy = cumsum(hourlyHoy);
-    const dailyMeta = meta.venta / CAMPAIGN_DAYS;
-    const visibleLabels = hourlyLabels.slice(startSlot);
-
-    return visibleLabels.map((label, i) => {
+    // Only show hours that have actually passed (no future slots)
+    const endSlot = Math.min(lastSlotIdx + 1, hourlyLabels.length);
+    return hourlyLabels.slice(startSlot, endSlot).map((label, i) => {
       const slotIdx = startSlot + i;
-      const cumVal  = cumHoy[slotIdx];
-      const isActive = slotIdx <= lastSlotIdx && cumVal !== null && cumVal > 0;
+      const hoy  = hourlyHoy[slotIdx];
+      const ayer = hourlyAyer[slotIdx];
       return {
-        time:   label,
-        sales:  isActive ? cumVal : null,
-        target: Math.round(dailyMeta * (slotIdx + 1) / slots),
+        time:  label,
+        hoy:   hoy  !== null && hoy  > 0 ? hoy  : null,
+        ayer:  ayer !== null && ayer > 0 ? ayer : null,
       };
     });
-  }, [hourlyHoy, hourlyLabels, meta, slots, startSlot, lastSlotIdx]);
+  }, [hourlyHoy, hourlyAyer, hourlyLabels, startSlot, lastSlotIdx]);
 
   const currentTimeLabel = hourlyLabels[lastSlotIdx] ?? null;
 
@@ -280,7 +264,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
 
         <p style={{ fontSize: 15, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 8, paddingLeft: 16, position: 'relative' }}>
-          Venta acumulada por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' })}
+          Venta por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' }).toUpperCase()} vs ayer
         </p>
         <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -289,10 +273,6 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
                 <linearGradient id="gradSales" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%"  stopColor={T.orange} stopOpacity={0.65} />
                   <stop offset="95%" stopColor={T.orange} stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="gradTarget" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor={T.lime} stopOpacity={0.18} />
-                  <stop offset="95%" stopColor={T.lime} stopOpacity={0} />
                 </linearGradient>
               </defs>
 
@@ -325,34 +305,36 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
                 />
               )}
 
-              {/* Target dashed line */}
-              <Area
-                type="step"
-                dataKey="target"
-                stroke="rgba(221,237,89,0.40)"
-                strokeWidth={1.5}
-                strokeDasharray="6 4"
-                fill="url(#gradTarget)"
-                fillOpacity={1}
-                isAnimationActive={false}
-                activeDot={false}
-                name="target"
-              />
-
-              {/* Main sales area */}
+              {/* Yesterday reference line */}
               <Area
                 type="monotone"
-                dataKey="sales"
+                dataKey="ayer"
+                stroke={T.cyan}
+                strokeWidth={2}
+                strokeDasharray="6 4"
+                strokeOpacity={0.55}
+                fill="none"
+                connectNulls={false}
+                isAnimationActive={false}
+                activeDot={false}
+                name="ayer"
+                dot={false}
+              />
+
+              {/* Today — per-hour wave */}
+              <Area
+                type="monotone"
+                dataKey="hoy"
                 stroke={T.orange}
                 strokeWidth={3}
                 fill="url(#gradSales)"
                 fillOpacity={1}
                 connectNulls={false}
                 isAnimationActive={true}
-                animationDuration={800}
+                animationDuration={900}
                 animationEasing="ease-out"
-                name="sales"
-                dot={(props: any) => <CustomDot {...props} data={chartData} />}
+                name="hoy"
+                dot={false}
                 activeDot={{ r: 6, fill: T.orange, stroke: '#fff', strokeWidth: 2 }}
               />
             </AreaChart>
