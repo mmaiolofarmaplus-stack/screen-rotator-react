@@ -142,7 +142,7 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     const canal    = String(row.Canal    ?? row.canal    ?? row.CANAL    ?? '').trim();
     const deposito = String(row.Deposito ?? row.deposito ?? row.DEPOSITO ?? row.Deposito_Origen ?? '').trim();
     const horaStr  = String(row.Hora     ?? row.hora     ?? row.HORA     ?? '0');
-    const neto     = n(row.Neto  ?? row.neto  ?? row.Venta  ?? row.venta  ?? 0);
+    const neto     = n(row.Neto ?? row.neto ?? row.NETO ?? row.Venta ?? row.venta ?? row.VENTA ?? row.Ventas ?? row.ventas ?? row.VentaNeta ?? row.venta_neta ?? row.Venta_Neta ?? row.Importe ?? row.importe ?? row.Monto ?? row.monto ?? 0);
     const tickets  = n(row.Tickets ?? row.tickets ?? 0);
     const unidades = n(row.Unidades ?? row.unidades ?? 0);
 

@@ -42,7 +42,7 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
 
   return (
     <div style={{
-      flex: 1, borderRadius: 20, padding: '28px 32px',
+      flex: 1, borderRadius: 20, padding: '18px 24px',
       background: isHero
         ? `linear-gradient(145deg, ${T.orange} 0%, ${T.orangeDark} 100%)`
         : T.surfaceBlue,
@@ -50,7 +50,7 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
       boxShadow: isHero
         ? `0 20px 60px -10px rgba(252,91,49,0.50), 0 0 0 1px rgba(252,91,49,0.35)`
         : `0 4px 24px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)`,
-      display: 'flex', flexDirection: 'column', gap: 12,
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
       position: 'relative', overflow: 'hidden',
     }}>
       {isHero && (
@@ -62,41 +62,42 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
       )}
       {decoSrc && (
         <img src={decoSrc} alt="" style={{
-          position: 'absolute', right: -14, bottom: -10,
-          height: '65%', opacity: isHero ? 0.18 : 0.10,
+          position: 'absolute', right: -10, bottom: -8,
+          height: '55%', opacity: isHero ? 0.15 : 0.08,
           pointerEvents: 'none', objectFit: 'contain',
           transform: 'rotate(-8deg)',
         }} />
       )}
 
-      <p style={{
-        fontSize: 14, fontWeight: 700, letterSpacing: '0.12em',
-        textTransform: 'uppercase',
-        color: isHero ? 'rgba(255,255,255,0.75)' : T.creamDim,
-        position: 'relative',
-      }}>{label}</p>
+      <div style={{ position: 'relative' }}>
+        <p style={{
+          fontSize: 13, fontWeight: 700, letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color: isHero ? 'rgba(255,255,255,0.75)' : T.creamDim,
+          marginBottom: 6,
+        }}>{label}</p>
 
-      <p style={{
-        fontFamily: "'Manrope','Inter',sans-serif",
-        fontSize: 'clamp(60px, 7.5vw, 120px)',
-        fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em',
-        color: isHero ? '#FFFFFF' : color,
-        position: 'relative',
-      }}>{value}</p>
+        <p style={{
+          fontFamily: "'Manrope','Inter',sans-serif",
+          fontSize: 'clamp(40px, 4.5vw, 74px)',
+          fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em',
+          color: isHero ? '#FFFFFF' : color,
+        }}>{value}</p>
 
-      <p style={{ fontSize: 15, color: isHero ? 'rgba(255,255,255,0.65)' : T.creamDim }}>
-        Meta: {metaStr}
-        <span style={{ opacity: 0.6 }}> · </span>
-        Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
-      </p>
+        <p style={{ fontSize: 14, color: isHero ? 'rgba(255,255,255,0.65)' : T.creamDim, marginTop: 8 }}>
+          Meta: {metaStr}
+          <span style={{ opacity: 0.6 }}> · </span>
+          Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
+        </p>
+      </div>
 
-      <div style={{ marginTop: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-          <span style={{ fontSize: 14, color: isHero ? 'rgba(255,255,255,0.50)' : T.creamFaint }}>
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+          <span style={{ fontSize: 13, color: isHero ? 'rgba(255,255,255,0.50)' : T.creamFaint }}>
             % de la meta
           </span>
           <span style={{
-            fontFamily: "'Manrope',sans-serif", fontSize: 42, fontWeight: 900, lineHeight: 1,
+            fontFamily: "'Manrope',sans-serif", fontSize: 36, fontWeight: 900, lineHeight: 1,
             color: isHero ? T.lime : pctColor,
           }}>{fmtPt(pct)}%</span>
         </div>
@@ -208,7 +209,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       </header>
 
       {/* KPI Cards */}
-      <div style={{ display: 'flex', gap: 14, flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'flex', gap: 14, flex: 3, minHeight: 0 }}>
         <KpiCard
           label="$ Venta neta" value={fmtM(acum.venta)}
           metaStr={fmtM(meta.venta)} hoyStr={fmtM(todayVenta)}
@@ -229,21 +230,21 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       </div>
 
       {/* Bottom stats row */}
-      <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: 12, flex: 2, minHeight: 0 }}>
         {stats.map(s => (
           <div key={s.label} style={{
-            flex: 1, background: T.surfaceDark, borderRadius: 12, padding: '14px 18px',
+            flex: 1, background: T.surfaceDark, borderRadius: 12, padding: '18px 22px',
             border: `1px solid ${T.borderSub}`,
             borderTop: `3px solid ${s.accent}`,
             display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
           }}>
-            <p style={{ fontSize: 14, color: T.creamDim, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            <p style={{ fontSize: 13, color: T.creamDim, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
               {s.label}
             </p>
-            <p style={{ fontFamily: "'Manrope',sans-serif", fontSize: 34, fontWeight: 900, color: '#fff', lineHeight: 1, marginTop: 8 }}>
+            <p style={{ fontFamily: "'Manrope',sans-serif", fontSize: 'clamp(28px, 2.8vw, 46px)', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
               {s.value}
             </p>
-            <p style={{ fontSize: 16, color: T.creamDim, marginTop: 4 }}>{s.sub}</p>
+            <p style={{ fontSize: 15, color: T.creamDim }}>{s.sub}</p>
           </div>
         ))}
       </div>
