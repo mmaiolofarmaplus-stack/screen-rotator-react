@@ -196,9 +196,15 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         },
         {
           label: 'Target', data: visTarget,
-          borderColor: T.lime, backgroundColor: 'transparent',
-          fill: false, tension: 0, borderWidth: 1.5,
-          borderDash: [6, 4], pointRadius: 0, spanGaps: true,
+          borderColor: T.lime,
+          backgroundColor: (ctx: ScriptableContext<'line'>) => {
+            const { chart } = ctx; const { ctx: c, chartArea } = chart;
+            if (!chartArea) return `${T.lime}11`;
+            const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            g.addColorStop(0, `${T.lime}22`); g.addColorStop(1, `${T.lime}00`); return g;
+          },
+          fill: true, tension: 0.42, borderWidth: 2,
+          borderDash: [8, 5], pointRadius: 0, spanGaps: true,
         },
         ...canalDatasets,
       ],
@@ -220,8 +226,8 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       },
     },
     scales: {
-      x: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 11, weight: 'bold' }, maxRotation: 0, maxTicksLimit: 10 } },
-      y: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 11 }, callback: v => fmtM(v as number) } },
+      x: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 15, weight: 'bold' }, maxRotation: 0, maxTicksLimit: 10 } },
+      y: { grid: { color: T.gridLine }, ticks: { color: T.tickColor, font: { size: 14 }, callback: v => fmtM(v as number) } },
     },
   };
 
