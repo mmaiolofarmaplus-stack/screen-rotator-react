@@ -27,13 +27,14 @@ const fmtM = (v: number): string => {
 };
 const fmtN  = (v: number) => new Intl.NumberFormat('es-AR').format(v);
 const fmtPt = (v: number) => v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const fmtUds = (v: number) => v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 interface KpiProps {
-  label: string; value: string; sub: string; pct: number;
+  label: string; value: string; metaStr: string; hoyStr: string; pct: number;
   color: string; isHero?: boolean; decoSrc?: string;
 }
 
-const KpiCard: React.FC<KpiProps> = ({ label, value, sub, pct, color, isHero, decoSrc }) => {
+const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color, isHero, decoSrc }) => {
   const [bar, setBar] = useState(0);
   useEffect(() => { const t = setTimeout(() => setBar(Math.min(pct, 100)), 500); return () => clearTimeout(t); }, [pct]);
 
@@ -83,14 +84,16 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, sub, pct, color, isHero, de
         position: 'relative',
       }}>{value}</p>
 
-      <p style={{ fontSize: 17, color: isHero ? 'rgba(255,255,255,0.65)' : T.creamDim }}>
-        {sub}
+      <p style={{ fontSize: 15, color: isHero ? 'rgba(255,255,255,0.65)' : T.creamDim }}>
+        Meta: {metaStr}
+        <span style={{ opacity: 0.6 }}> · </span>
+        Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
       </p>
 
       <div style={{ marginTop: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
           <span style={{ fontSize: 14, color: isHero ? 'rgba(255,255,255,0.50)' : T.creamFaint }}>
-            vs meta Hot Sale
+            % de la meta
           </span>
           <span style={{
             fontFamily: "'Manrope',sans-serif", fontSize: 42, fontWeight: 900, lineHeight: 1,
@@ -110,6 +113,10 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, sub, pct, color, isHero, de
   );
 };
 
+const HS_START = new Date('2026-05-11');
+const HS_END   = new Date('2026-05-18');
+const CAMPAIGN_DAYS = 8;
+
 export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const [clock, setClock] = useState(new Date());
   useEffect(() => {
@@ -117,18 +124,46 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const { meta, acum, daily, canales } = data;
+  const { meta, acum, daily, hourlyHoy, lastSlotIdx } = data;
 
   const pctVenta    = meta.venta    > 0 ? (acum.venta    / meta.venta)    * 100 : 0;
   const pctTickets  = meta.tickets  > 0 ? (acum.tickets  / meta.tickets)  * 100 : 0;
   const pctUnidades = meta.unidades > 0 ? (acum.unidades / meta.unidades) * 100 : 0;
 
-  const hsStart    = new Date('2026-05-11');
-  const diasHs     = Math.max(0, Math.ceil((hsStart.getTime() - clock.getTime()) / 86_400_000));
-  const bestDay    = daily.length ? daily.reduce((b, d) => d.venta > b.venta ? d : b, daily[0]) : null;
-  const ticketProm = acum.tickets > 0 ? acum.venta / acum.tickets : 0;
-  const canalLider = canales.length > 0 ? canales[0] : null;
-  const lastDate   = daily.length ? daily[daily.length - 1].fecha : '–';
+  const todayData   = daily.length ? daily[daily.length - 1] : null;
+  const todayVenta  = todayData?.venta    ?? 0;
+  const todayTix    = todayData?.tickets  ?? 0;
+  const todayUds    = todayData?.unidades ?? 0;
+
+  const ticketProm  = acum.tickets  > 0 ? acum.venta    / acum.tickets  : 0;
+  const udsTicket   = acum.tickets  > 0 ? acum.unidades / acum.tickets  : 0;
+
+  // Hourly rhythm from today's slots
+  const slotsElapsed = lastSlotIdx > 0 ? lastSlotIdx + 1 : 1;
+  const todayHourlySum = hourlyHoy.slice(0, lastSlotIdx + 1).reduce((s, v) => s + (v ?? 0), 0);
+  const ritmoHoy = slotsElapsed > 0 && todayHourlySum > 0 ? todayHourlySum / slotsElapsed : 0;
+
+  // Campaign projection: extrapolate today to full day, add prev days
+  const prevDays       = acum.venta - todayVenta;
+  const todayProjected = ritmoHoy > 0 ? ritmoHoy * 24 : todayVenta;
+  const proyeccion     = prevDays + todayProjected;
+  const proyPct        = meta.venta > 0 ? (proyeccion / meta.venta) * 100 : 0;
+
+  // Days remaining in campaign
+  const nowMs          = clock.getTime();
+  const diasRestantes  = Math.max(0, Math.ceil((HS_END.getTime() - nowMs) / 86_400_000));
+  const diasParaStart  = Math.max(0, Math.ceil((HS_START.getTime() - nowMs) / 86_400_000));
+  const enCurso        = nowMs >= HS_START.getTime() && nowMs <= HS_END.getTime() + 86_400_000;
+  const pillLabel      = enCurso
+    ? `🗓 ${diasRestantes} día${diasRestantes !== 1 ? 's' : ''} restantes`
+    : diasParaStart > 0 ? `🗓 Inicia en ${diasParaStart} día${diasParaStart !== 1 ? 's' : ''}` : '🗓 Finalizado';
+
+  const stats: { label: string; value: string; sub: string; accent: string }[] = [
+    { label: 'Ticket promedio', value: fmtM(ticketProm),      sub: `hoy ${fmtM(todayTix > 0 ? todayVenta / todayTix : 0)}`,      accent: T.cyan },
+    { label: 'Uds / ticket',   value: fmtUds(udsTicket),      sub: `objetivo ${fmtUds(meta.unidades / Math.max(meta.tickets,1))}`, accent: T.lime },
+    { label: 'Ritmo hoy',      value: fmtM(ritmoHoy) + '/h',  sub: `objetivo ${fmtM(meta.venta / CAMPAIGN_DAYS / 24)}/h`,         accent: T.orange },
+    { label: 'Proyección cierre', value: fmtM(proyeccion),    sub: `${fmtPt(proyPct)}% meta total`,                               accent: proyPct >= 100 ? T.lime : proyPct >= 80 ? T.cyan : T.orange },
+  ];
 
   return (
     <div style={{
@@ -144,14 +179,25 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         border: `1px solid ${T.borderBlue}`, borderBottom: `3px solid ${T.lime}`,
         flexShrink: 0, position: 'relative',
       }}>
-        <div style={{ flex: 1 }} />
-        <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 70, objectFit: 'contain' }} />
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* En vivo pill */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: T.lime, borderRadius: 99, padding: '5px 13px 5px 10px' }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: T.blue, display: 'inline-block' }} />
+            <span style={{ color: T.blue, fontSize: 13, fontWeight: 900, letterSpacing: '0.12em' }}>EN VIVO</span>
+          </div>
+          {/* Days pill */}
+          <div style={{ background: 'rgba(221,237,89,0.15)', border: `1px solid ${T.lime}44`, borderRadius: 99, padding: '5px 13px' }}>
+            <span style={{ color: T.lime, fontSize: 13, fontWeight: 700 }}>{pillLabel}</span>
+          </div>
+        </div>
+
+        {/* Centered logo */}
+        <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 70, objectFit: 'contain', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
+
+        {/* Clock */}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', textAlign: 'right' }}>
           <div>
-            <p style={{
-              fontFamily: "'Manrope',monospace", fontSize: 42, fontWeight: 800,
-              color: T.lime, lineHeight: 1,
-            }}>
+            <p style={{ fontFamily: "'Manrope',monospace", fontSize: 42, fontWeight: 800, color: T.lime, lineHeight: 1 }}>
               {clock.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </p>
             <p style={{ color: T.creamDim, fontSize: 15, marginTop: 3 }}>
@@ -164,65 +210,27 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       {/* KPI Cards */}
       <div style={{ display: 'flex', gap: 14, flex: 1, minHeight: 0 }}>
         <KpiCard
-          label="Venta Neta" value={fmtM(acum.venta)}
-          sub={`de ${fmtM(meta.venta)} meta campaña`}
+          label="$ Venta neta" value={fmtM(acum.venta)}
+          metaStr={fmtM(meta.venta)} hoyStr={fmtM(todayVenta)}
           pct={pctVenta} color={T.orange} isHero
           decoSrc="/Carrito de compras colorido y estilizado.png"
         />
         <KpiCard
           label="Tickets" value={fmtN(acum.tickets)}
-          sub={`de ${fmtN(meta.tickets)} meta campaña`}
+          metaStr={fmtN(meta.tickets)} hoyStr={fmtN(todayTix)}
           pct={pctTickets} color={T.cyan}
         />
         <KpiCard
           label="Unidades" value={fmtN(acum.unidades)}
-          sub={`de ${fmtN(meta.unidades)} meta campaña`}
+          metaStr={fmtN(meta.unidades)} hoyStr={fmtN(todayUds)}
           pct={pctUnidades} color={T.lime}
           decoSrc="/Tarro de crema en dibujo plano.png"
         />
       </div>
 
-      {/* Bottom row */}
+      {/* Bottom stats row */}
       <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-
-        {/* Countdown */}
-        <div style={{
-          flex: '0 0 280px',
-          background: T.surfaceBlue,
-          borderRadius: 14, padding: '16px 20px',
-          border: `1.5px solid ${T.lime}55`,
-          backgroundImage: 'url(/pattern-crosses-blue.png)',
-          backgroundSize: '60px 60px',
-          boxShadow: '0 4px 24px rgba(0,53,166,0.45)',
-          display: 'flex', flexDirection: 'column', gap: 6,
-        }}>
-          <p style={{ fontSize: 14, color: T.lime, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Hot Sale 2026
-          </p>
-          <p style={{ fontFamily: "'Manrope',sans-serif", fontSize: 28, fontWeight: 900, color: '#fff' }}>
-            11 – 18 Mayo
-          </p>
-          {diasHs > 0 ? (
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 4 }}>
-              <span style={{ fontFamily: "'Manrope',sans-serif", fontSize: 70, fontWeight: 900, color: T.lime, lineHeight: 1 }}>
-                {diasHs}
-              </span>
-              <span style={{ color: T.creamDim, fontSize: 18 }}>días para empezar</span>
-            </div>
-          ) : (
-            <div style={{ background: T.lime, borderRadius: 8, padding: '8px 16px', marginTop: 6, width: 'fit-content' }}>
-              <span style={{ color: T.blue, fontWeight: 900, fontSize: 20, letterSpacing: '0.05em' }}>¡ EN CURSO !</span>
-            </div>
-          )}
-        </div>
-
-        {/* Stats */}
-        {([
-          { label: 'Ticket Promedio',  value: fmtM(ticketProm),         sub: 'media campaña',              accent: T.cyan },
-          { label: 'Canal Líder',      value: canalLider?.short ?? '–',  sub: canalLider ? fmtM(canalLider.venta) : '', accent: T.orange },
-          { label: 'Mejor Día',        value: bestDay?.short ?? '–',     sub: bestDay ? fmtM(bestDay.venta) : '',       accent: T.lime },
-          { label: 'Días con datos',   value: String(daily.length),      sub: `inicio: ${daily[0]?.fecha ?? '–'}`,      accent: 'rgba(252,236,213,0.5)' },
-        ] as { label: string; value: string; sub: string; accent: string }[]).map(s => (
+        {stats.map(s => (
           <div key={s.label} style={{
             flex: 1, background: T.surfaceDark, borderRadius: 12, padding: '14px 18px',
             border: `1px solid ${T.borderSub}`,
