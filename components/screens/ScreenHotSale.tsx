@@ -142,34 +142,22 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         background: 'rgba(0, 16, 50, 0.80)', borderRadius: 14, padding: '10px 20px',
         border: `1px solid ${T.borderBlue}`, borderBottom: `3px solid ${T.lime}`,
-        flexShrink: 0,
+        flexShrink: 0, position: 'relative',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 54, objectFit: 'contain' }} />
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 7,
-            background: T.lime, borderRadius: 99, padding: '4px 12px 4px 9px',
-          }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%', background: T.blue,
-              display: 'inline-block',
-            }} />
-            <span style={{ color: T.blue, fontSize: 13, fontWeight: 900, letterSpacing: '0.12em' }}>LIVE</span>
+        <div style={{ flex: 1 }} />
+        <img src="/logo_hotsale.png" alt="Hot Sale 2026" style={{ height: 70, objectFit: 'contain' }} />
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', textAlign: 'right' }}>
+          <div>
+            <p style={{
+              fontFamily: "'Manrope',monospace", fontSize: 42, fontWeight: 800,
+              color: T.lime, lineHeight: 1,
+            }}>
+              {clock.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </p>
+            <p style={{ color: T.creamDim, fontSize: 15, marginTop: 3 }}>
+              {clock.toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: '2-digit' }).toUpperCase()}
+            </p>
           </div>
-          <span style={{ color: T.creamDim, fontSize: 20, fontWeight: 500 }}>Seguimiento Ecommerce</span>
-          <span style={{ color: T.creamFaint, fontSize: 18 }}>·</span>
-          <span style={{ color: 'rgba(252,236,213,0.5)', fontSize: 15 }}>Datos al {lastDate}</span>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <p style={{
-            fontFamily: "'Manrope',monospace", fontSize: 42, fontWeight: 800,
-            color: T.lime, lineHeight: 1,
-          }}>
-            {clock.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-          </p>
-          <p style={{ color: T.creamDim, fontSize: 15, marginTop: 3 }}>
-            {clock.toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: '2-digit' }).toUpperCase()}
-          </p>
         </div>
       </header>
 
