@@ -165,9 +165,13 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
   const slots = hourlyLabels.length;
   const startSlot = slots === 48 ? 14 : 7;
 
+  // Current slot from the live clock — cap chart so future hours never appear
+  const currentSlot = slots === 48
+    ? clock.getHours() * 2 + (clock.getMinutes() >= 30 ? 1 : 0)
+    : clock.getHours();
+
   const chartData = useMemo(() => {
-    // Only show hours that have actually passed (no future slots)
-    const endSlot = Math.min(lastSlotIdx + 1, hourlyLabels.length);
+    const endSlot = Math.min(lastSlotIdx + 1, currentSlot + 1, hourlyLabels.length);
     return hourlyLabels.slice(startSlot, endSlot).map((label, i) => {
       const slotIdx = startSlot + i;
       const hoy = hourlyHoy[slotIdx];
@@ -176,9 +180,9 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         hoy:  hoy !== null && hoy > 0 ? hoy : null,
       };
     });
-  }, [hourlyHoy, hourlyLabels, startSlot, lastSlotIdx]);
+  }, [hourlyHoy, hourlyLabels, startSlot, lastSlotIdx, currentSlot]);
 
-  const currentTimeLabel = hourlyLabels[lastSlotIdx] ?? null;
+  const currentTimeLabel = hourlyLabels[Math.min(lastSlotIdx, currentSlot)] ?? null;
 
   return (
     <div style={{
