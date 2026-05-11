@@ -19,12 +19,12 @@ const T = {
   blue:        '#0053A6',
   cream:       '#FCECD5',
   creamDim:    'rgba(252,236,213,0.75)',
-  creamFaint:  'rgba(252,236,213,0.22)',
+  creamFaint:  'rgba(252,236,213,0.55)',
   track:       'rgba(255,255,255,0.14)',
 };
 
 const CANAL_COLORS = [T.orange, T.blue, '#FF8C33', T.cyan, T.lime];
-const DEP_COLORS   = ['#0053A6', T.orange, T.cyan, T.lime];
+const DEP_COLORS   = ['#4D9DE0', T.orange, T.cyan, T.lime];
 
 const fmtFull = (v: number) =>
   '$ ' + new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(v));

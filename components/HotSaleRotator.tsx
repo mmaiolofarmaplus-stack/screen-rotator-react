@@ -5,8 +5,6 @@ import { ScreenHotSale  } from './screens/ScreenHotSale';
 import { ScreenHotSale2 } from './screens/ScreenHotSale2';
 import { ScreenHotSale3 } from './screens/ScreenHotSale3';
 
-const REFRESH_MS = 5 * 60 * 1000;
-
 // Variable dwell times: denser screens get more read time
 const SCREENS = [
   { id: 'kpis',     ms: 22_000, component: ScreenHotSale  },
@@ -19,12 +17,19 @@ export const HotSaleRotator: React.FC = () => {
   const [idx, setIdx]   = useState(0);
   const [progress, setProgress] = useState(0); // 0–1
 
-  // Data refresh
+  // Data refresh: at :30 of each hour, then every 60 min
   useEffect(() => {
     const load = () => fetchHotSaleData().then(setData).catch(console.error);
     load();
-    const id = setInterval(load, REFRESH_MS);
-    return () => clearInterval(id);
+    let intervalId: ReturnType<typeof setInterval>;
+    const now = new Date();
+    const m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
+    const delayMs = (m < 30 ? 30 - m : 90 - m) * 60_000 - s * 1_000 - ms;
+    const timeoutId = setTimeout(() => {
+      load();
+      intervalId = setInterval(load, 60 * 60_000);
+    }, delayMs);
+    return () => { clearTimeout(timeoutId); clearInterval(intervalId); };
   }, []);
 
   // Screen advance + progress bar
