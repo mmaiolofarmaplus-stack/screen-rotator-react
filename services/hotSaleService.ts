@@ -111,19 +111,11 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     settle(fetchSheet(SHEETS.productos),   []),
   ]);
 
-  // ── Meta ─────────────────────────────────────────────────────────────────────
-  // objetivo sheet has one row per day; sum all rows.
-  // Column names from the sheet pivot: "Suma de Meta 1 $" and "Suma de Meta 1 Unis"
-  let metaVenta = 0, metaUnidades = 0, metaTickets = 0;
-  objRows.forEach((r: any) => {
-    metaVenta    += g(r, 'Suma de Meta 1 $',    'Meta_Venta',    'meta_venta',    'Meta Venta',    'Objetivo_Venta');
-    metaUnidades += g(r, 'Suma de Meta 1 Unis',  'Meta_Unidades', 'meta_unidades', 'Meta Unidades', 'Objetivo_Unidades');
-    metaTickets  += g(r, 'Suma de Meta 1 Tkt',   'Meta_Tickets',  'meta_tickets',  'Meta Tickets',  'Objetivo_Tickets');
-  });
+  // ── Meta (fija para Hot Sale 11–18 may 2026) ─────────────────────────────────
   const meta: HotSaleMeta = {
-    venta:    metaVenta    || 1_179_149_656,
-    tickets:  metaTickets  || 26_293,
-    unidades: metaUnidades || 98_372,
+    venta:    1_179_149_656,
+    tickets:  26_293,
+    unidades: 98_372,
   };
 
   // ── Facturacion rows ──────────────────────────────────────────────────────────
