@@ -32,8 +32,6 @@ const fmtFull = (v: number) =>
 const fmtPct = (v: number) =>
   v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%';
 
-const fmtNum = (v: number) =>
-  new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(v));
 
 const makeDonutData = (items: { name: string; venta: number }[], colors: string[]) => ({
   labels: items.map(x => x.name),
@@ -79,12 +77,10 @@ const DonutCard: React.FC<{
   items: { name: string; short: string; venta: number }[];
   colors: string[];
   total: number;
-  totalTickets: number;
-  totalUnidades: number;
   pattern: string;
   deco?: string;
   animKey: number;
-}> = ({ title, items, colors, total, totalTickets, totalUnidades, pattern, deco, animKey }) => (
+}> = ({ title, items, colors, total, pattern, deco, animKey }) => (
   <div style={{
     flex: 1, background: T.cardBlue, borderRadius: 22,
     border: `1.5px solid ${T.border}`,
@@ -105,19 +101,6 @@ const DonutCard: React.FC<{
       <div style={{ flex: '0 0 52%', height: '100%', position: 'relative' }}>
         <div key={animKey} style={{ width: '100%', height: '100%' }}>
           <Doughnut data={makeDonutData(items, colors)} options={makeDonutOpts(total)} />
-        </div>
-        {/* Center label */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', gap: 3 }}>
-          <span style={{ fontSize: 13, color: T.creamFaint, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Ventas</span>
-          <span style={{ fontSize: 'clamp(14px,1.4vw,20px)', fontWeight: 900, color: '#fff', lineHeight: 1.2, textAlign: 'center', padding: '0 6%' }}>{fmtFull(total)}</span>
-          <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-            <span style={{ fontSize: 'clamp(11px,1.0vw,15px)', fontWeight: 700, color: T.cyan, background: `${T.cyan}18`, borderRadius: 99, padding: '3px 9px', whiteSpace: 'nowrap' }}>
-              {fmtNum(totalTickets)} tkt
-            </span>
-            <span style={{ fontSize: 'clamp(11px,1.0vw,15px)', fontWeight: 700, color: T.lime, background: `${T.lime}18`, borderRadius: 99, padding: '3px 9px', whiteSpace: 'nowrap' }}>
-              {fmtNum(totalUnidades)} uds
-            </span>
-          </div>
         </div>
       </div>
 
@@ -200,12 +183,8 @@ export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const totalCanal    = canales.reduce((s, c) => s + c.venta,    0);
-  const totalCanalTkt = canales.reduce((s, c) => s + c.tickets,  0);
-  const totalCanalUds = canales.reduce((s, c) => s + c.unidades, 0);
-  const totalDep      = depositos.reduce((s, d) => s + d.venta,    0);
-  const totalDepTkt   = depositos.reduce((s, d) => s + d.tickets,  0);
-  const totalDepUds   = depositos.reduce((s, d) => s + d.unidades, 0);
+  const totalCanal = canales.reduce((s, c) => s + c.venta, 0);
+  const totalDep   = depositos.reduce((s, d) => s + d.venta, 0);
   const topC = canales.slice(0, 5);
   const topD = depositos.slice(0, 4);
 
@@ -256,7 +235,6 @@ export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
         <DonutCard
           title="Canales · Mix Acumulado"
           items={topC} colors={CANAL_COLORS} total={totalCanal}
-          totalTickets={totalCanalTkt} totalUnidades={totalCanalUds}
           pattern="/pattern-crosses-orange.png"
           deco="/Carrito de compras colorido y estilizado.png"
           animKey={animKey}
@@ -264,7 +242,6 @@ export const ScreenHotSale2: React.FC<{ data: HotSaleData }> = ({ data }) => {
         <DonutCard
           title="Depósitos · Fulfilment"
           items={topD} colors={DEP_COLORS} total={totalDep}
-          totalTickets={totalDepTkt} totalUnidades={totalDepUds}
           pattern="/pattern-icons-lime.png"
           deco="/Tarro de crema en dibujo plano.png"
           animKey={animKey}
