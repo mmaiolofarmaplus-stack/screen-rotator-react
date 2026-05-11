@@ -14,7 +14,7 @@ const T = {
   blue:       '#0053A6',
   cream:      '#FCECD5',
   creamDim:   'rgba(252,236,213,0.75)',
-  creamFaint: 'rgba(252,236,213,0.22)',
+  creamFaint: 'rgba(252,236,213,0.60)',
   track:      'rgba(255,255,255,0.14)',
 };
 
@@ -111,7 +111,7 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
           <div style={{ position: 'absolute', inset: 0, opacity: 0.07, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
           <img src="/Carrito de compras colorido y estilizado.png" alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '40%', opacity: 0.09, pointerEvents: 'none', objectFit: 'contain', transform: 'rotate(-8deg)' }} />
 
-          <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
+          <p style={{ fontSize: 17, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamDim, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
             Top productos · Venta neta
           </p>
 
@@ -124,7 +124,7 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
           }}>
             {['#', 'PRODUCTO', 'TKT', 'UDS', '$ NETO'].map((h, i) => (
               <span key={i} style={{
-                fontSize: 13, fontWeight: 700, letterSpacing: '0.10em',
+                fontSize: 15, fontWeight: 700, letterSpacing: '0.10em',
                 color: T.creamFaint, textAlign: i >= 2 ? 'right' : 'left',
               }}>{h}</span>
             ))}
@@ -169,7 +169,7 @@ export const ScreenHotSale3: React.FC<{ data: HotSaleData }> = ({ data }) => {
           <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-icons-lime.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
           <img src="/Tarro de crema en dibujo plano.png" alt="" style={{ position: 'absolute', right: -8, bottom: -8, height: '40%', opacity: 0.09, pointerEvents: 'none', objectFit: 'contain' }} />
 
-          <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
+          <p style={{ fontSize: 17, fontWeight: 700, letterSpacing: '0.13em', textTransform: 'uppercase', color: T.creamFaint, marginBottom: 12, flexShrink: 0, position: 'relative' }}>
             % Contribución · Venta neta
           </p>
 
