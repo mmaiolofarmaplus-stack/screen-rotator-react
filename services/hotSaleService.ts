@@ -13,6 +13,7 @@ export interface HotSaleDaily    { fecha: string; short: string; venta: number; 
 export interface HotSaleData {
   meta: HotSaleMeta;
   acum: HotSaleMeta;
+  metaHoy: number;
   daily: HotSaleDaily[];
   hourlyHoy:  (number | null)[];
   hourlyAyer: (number | null)[];
@@ -24,6 +25,17 @@ export interface HotSaleData {
   hourlyCanales: Record<string, (number | null)[]>;
   lastUpdated: Date;
 }
+
+const DAILY_META: Record<string, number> = {
+  '11/05': 2_643_592_487,
+  '12/05': 2_547_461_195,
+  '13/05': 2_581_797_221,
+  '14/05': 2_396_773_136,
+  '15/05': 2_395_268_544,
+  '16/05': 1_691_629_817,
+  '17/05':   572_718_647,
+  '18/05': 2_421_260_145,
+};
 
 const n = (v: any): number => {
   if (v === undefined || v === null || v === '') return 0;
@@ -149,6 +161,8 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
   const _now = new Date();
   const todayMs  = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
   const yesterMs = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate() - 1).getTime();
+  const todayKey = `${String(_now.getDate()).padStart(2,'0')}/${String(_now.getMonth()+1).padStart(2,'0')}`;
+  const metaHoy  = DAILY_META[todayKey] ?? 0;
 
   const hourlyHoy:  (number | null)[] = Array(SLOTS).fill(null);
   const hourlyAyer: (number | null)[] = Array(SLOTS).fill(null);
@@ -255,7 +269,7 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
   hourlyCanalMap.forEach((arr, name) => { hourlyCanales[name] = arr; });
 
   const data: HotSaleData = {
-    meta, acum, daily,
+    meta, acum, metaHoy, daily,
     hourlyHoy, hourlyAyer, hourlyLabels, lastSlotIdx,
     hourlyCanales,
     canales, depositos, products,

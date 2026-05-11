@@ -143,7 +143,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const { meta, acum, daily, hourlyHoy, hourlyLabels, lastSlotIdx } = data;
+  const { meta, acum, metaHoy, daily, hourlyHoy, hourlyLabels, lastSlotIdx } = data;
 
   const pctVenta    = meta.venta    > 0 ? (acum.venta    / meta.venta)    * 100 : 0;
   const pctTickets  = meta.tickets  > 0 ? (acum.tickets  / meta.tickets)  * 100 : 0;
@@ -151,6 +151,8 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
 
   const todayData  = daily.length ? daily[daily.length - 1] : null;
   const todayVenta = todayData?.venta    ?? 0;
+  const pctMetaHoy = metaHoy > 0 ? (todayVenta / metaHoy) * 100 : 0;
+  const metaHoyColor = pctMetaHoy >= 100 ? '#01B693' : pctMetaHoy >= 80 ? '#f59e0b' : T.orange;
   const todayTix   = todayData?.tickets  ?? 0;
   const todayUds   = todayData?.unidades ?? 0;
 
@@ -257,9 +259,22 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         {/* Chart pattern */}
         <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
 
-        <p style={{ fontSize: 15, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 8, paddingLeft: 16, position: 'relative' }}>
-          Venta por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' }).toUpperCase()}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, marginBottom: 8, paddingLeft: 16, paddingRight: 8, position: 'relative' }}>
+          <p style={{ fontSize: 15, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            Venta por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' }).toUpperCase()}
+          </p>
+          {metaHoy > 0 && (
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, background: 'rgba(0,0,0,0.30)', borderRadius: 12, padding: '6px 18px', border: `1px solid ${metaHoyColor}44` }}>
+              <span style={{ fontFamily: "'Manrope',sans-serif", fontSize: 34, fontWeight: 900, color: metaHoyColor, lineHeight: 1, textShadow: `0 0 18px ${metaHoyColor}88` }}>
+                {fmtPt(pctMetaHoy)}%
+              </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: metaHoyColor, letterSpacing: '0.08em', textTransform: 'uppercase' }}>meta hoy</span>
+                <span style={{ fontSize: 12, color: T.creamDim }}>{fmtM(metaHoy)}</span>
+              </div>
+            </div>
+          )}
+        </div>
         <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 10, right: 24, left: 10, bottom: 0 }}>
