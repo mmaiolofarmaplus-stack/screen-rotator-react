@@ -25,12 +25,8 @@ const T = {
   tickColor:   'rgba(252,236,213,0.55)',
 };
 
-const fmtM = (v: number): string => {
-  if (v >= 1e9) return `$${(v/1e9).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}B`;
-  if (v >= 1e6) return `$${(v/1e6).toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M`;
-  if (v >= 1e3) return `$${(v/1e3).toLocaleString('es-AR', { maximumFractionDigits: 0 })}K`;
-  return `$${new Intl.NumberFormat('es-AR').format(Math.round(v))}`;
-};
+const fmtM = (v: number): string =>
+  `$ ${new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(v))}`;
 const fmtN  = (v: number) => new Intl.NumberFormat('es-AR').format(v);
 const fmtPt = (v: number) => v.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
@@ -100,7 +96,7 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
       <p style={{ fontSize: 16, color: isHero ? 'rgba(255,255,255,0.60)' : T.creamDim, position: 'relative' }}>
         Meta: {metaStr}
         <span style={{ opacity: 0.55 }}> · </span>
-        Hoy: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
+        Acum: <span style={{ color: isHero ? T.lime : color, fontWeight: 700 }}>{hoyStr}</span>
       </p>
 
       <div style={{ height: 10, background: 'rgba(255,255,255,0.18)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
@@ -118,12 +114,8 @@ const KpiCard: React.FC<KpiProps> = ({ label, value, metaStr, hoyStr, pct, color
 const HS_START = new Date('2026-05-11');
 const HS_END   = new Date('2026-05-18');
 
-const formatYAxis = (v: number) => {
-  if (v >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
-  if (v >= 1e6) return `$${(v / 1e6).toFixed(0)}M`;
-  if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}k`;
-  return v === 0 ? '$0' : `$${v}`;
-};
+const formatYAxis = (v: number) =>
+  v === 0 ? '$0' : `$${new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(v)}`;
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
@@ -136,7 +128,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <p style={{ color: T.tickColor, fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{label}</p>
       {payload.map((p: any) => p.value !== null && (
         <p key={p.dataKey} style={{ color: p.color, fontSize: 16, fontWeight: 800 }}>
-          {p.name === 'hoy' ? 'Hoy' : 'Ayer'}: {fmtM(p.value)}
+          Hoy: {fmtM(p.value)}
         </p>
       ))}
     </div>
@@ -151,7 +143,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     return () => clearInterval(id);
   }, []);
 
-  const { meta, acum, daily, hourlyHoy, hourlyAyer, hourlyLabels, lastSlotIdx } = data;
+  const { meta, acum, daily, hourlyHoy, hourlyLabels, lastSlotIdx } = data;
 
   const pctVenta    = meta.venta    > 0 ? (acum.venta    / meta.venta)    * 100 : 0;
   const pctTickets  = meta.tickets  > 0 ? (acum.tickets  / meta.tickets)  * 100 : 0;
@@ -178,15 +170,13 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
     const endSlot = Math.min(lastSlotIdx + 1, hourlyLabels.length);
     return hourlyLabels.slice(startSlot, endSlot).map((label, i) => {
       const slotIdx = startSlot + i;
-      const hoy  = hourlyHoy[slotIdx];
-      const ayer = hourlyAyer[slotIdx];
+      const hoy = hourlyHoy[slotIdx];
       return {
-        time:  label,
-        hoy:   hoy  !== null && hoy  > 0 ? hoy  : null,
-        ayer:  ayer !== null && ayer > 0 ? ayer : null,
+        time: label,
+        hoy:  hoy !== null && hoy > 0 ? hoy : null,
       };
     });
-  }, [hourlyHoy, hourlyAyer, hourlyLabels, startSlot, lastSlotIdx]);
+  }, [hourlyHoy, hourlyLabels, startSlot, lastSlotIdx]);
 
   const currentTimeLabel = hourlyLabels[lastSlotIdx] ?? null;
 
@@ -234,19 +224,19 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
       {/* KPI Cards */}
       <div style={{ display: 'flex', gap: 14, flex: 28, minHeight: 0 }}>
         <KpiCard
-          label="$ Venta neta" value={fmtM(acum.venta)}
-          metaStr={fmtM(meta.venta)} hoyStr={fmtM(todayVenta)}
+          label="$ Venta neta" value={fmtM(todayVenta)}
+          metaStr={fmtM(meta.venta)} hoyStr={fmtM(acum.venta)}
           pct={pctVenta} color={T.orange} isHero
           decoSrc="/Carrito de compras colorido y estilizado.png"
         />
         <KpiCard
-          label="Tickets" value={fmtN(acum.tickets)}
-          metaStr={fmtN(meta.tickets)} hoyStr={fmtN(todayTix)}
+          label="Tickets" value={fmtN(todayTix)}
+          metaStr={fmtN(meta.tickets)} hoyStr={fmtN(acum.tickets)}
           pct={pctTickets} color={T.cyan}
         />
         <KpiCard
-          label="Unidades" value={fmtN(acum.unidades)}
-          metaStr={fmtN(meta.unidades)} hoyStr={fmtN(todayUds)}
+          label="Unidades" value={fmtN(todayUds)}
+          metaStr={fmtN(meta.unidades)} hoyStr={fmtN(acum.unidades)}
           pct={pctUnidades} color={T.lime}
           decoSrc="/Tarro de crema en dibujo plano.png"
         />
@@ -264,7 +254,7 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
         <div style={{ position: 'absolute', inset: 0, opacity: 0.06, backgroundImage: 'url(/pattern-crosses-orange.png)', backgroundSize: '70px 70px', pointerEvents: 'none' }} />
 
         <p style={{ fontSize: 15, color: T.creamDim, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', flexShrink: 0, marginBottom: 8, paddingLeft: 16, position: 'relative' }}>
-          Venta por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' }).toUpperCase()} vs ayer
+          Venta por hora · Hoy {clock.toLocaleDateString('es-AR', { weekday: 'long', day: '2-digit', month: '2-digit' }).toUpperCase()}
         </p>
         <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -287,10 +277,10 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
               />
               <YAxis
                 stroke="transparent"
-                tick={{ fill: T.tickColor, fontSize: 15, fontWeight: 600 }}
+                tick={{ fill: T.tickColor, fontSize: 13, fontWeight: 600 }}
                 tickFormatter={formatYAxis}
                 axisLine={false} tickLine={false}
-                width={72}
+                width={130}
               />
 
               <Tooltip content={<CustomTooltip />} />
@@ -304,22 +294,6 @@ export const ScreenHotSale: React.FC<{ data: HotSaleData }> = ({ data }) => {
                   strokeDasharray="0"
                 />
               )}
-
-              {/* Yesterday reference line */}
-              <Area
-                type="monotone"
-                dataKey="ayer"
-                stroke={T.cyan}
-                strokeWidth={2}
-                strokeDasharray="6 4"
-                strokeOpacity={0.55}
-                fill="none"
-                connectNulls={false}
-                isAnimationActive={false}
-                activeDot={false}
-                name="ayer"
-                dot={false}
-              />
 
               {/* Today — per-hour wave */}
               <Area

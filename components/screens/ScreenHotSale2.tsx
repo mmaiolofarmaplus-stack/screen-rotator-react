@@ -103,7 +103,9 @@ const DonutCard: React.FC<{
     <div style={{ flex: 1, minHeight: 0, display: 'flex', gap: 24, alignItems: 'center', position: 'relative' }}>
       {/* Donut */}
       <div style={{ flex: '0 0 52%', height: '100%', position: 'relative' }}>
-        <Doughnut key={animKey} data={makeDonutData(items, colors)} options={makeDonutOpts(total)} />
+        <div key={animKey} style={{ width: '100%', height: '100%' }}>
+          <Doughnut data={makeDonutData(items, colors)} options={makeDonutOpts(total)} />
+        </div>
         {/* Center label */}
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', gap: 3 }}>
           <span style={{ fontSize: 13, color: T.creamFaint, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Ventas</span>
