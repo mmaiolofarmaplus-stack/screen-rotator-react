@@ -64,9 +64,11 @@ const n = (v: any): number => {
   if (lastComma > -1 && lastComma > lastDot) {
     // AR/EU format "1.234,56": comma = decimal, dots = thousands
     s = s.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > -1 && s.indexOf('.') !== lastDot) {
-    // Multiple dots, no comma "1.234.567": dots = thousands
-    s = s.replace(/\./g, '');
+  } else if (lastDot > -1) {
+    // Multiple dots OR single dot with exactly 3 trailing digits → AR thousands separator
+    const afterDot = s.length - lastDot - 1;
+    if (s.indexOf('.') !== lastDot || afterDot === 3) s = s.replace(/\./g, '');
+    else s = s.replace(/,/g, '');
   } else {
     s = s.replace(/,/g, '');
   }

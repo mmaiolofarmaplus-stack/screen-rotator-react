@@ -29,9 +29,16 @@ const n = (v: any): number => {
   if (v === undefined || v === null || v === '') return 0;
   let s = String(v).trim().replace(/[$\s%]/g, '');
   const lD = s.lastIndexOf('.'), lC = s.lastIndexOf(',');
-  if (lC > lD)           s = s.replace(/\./g, '').replace(',', '.');
-  else if (lD > -1 && s.indexOf('.') !== lD) s = s.replace(/\./g, '');
-  else                   s = s.replace(/,/g, '');
+  if (lC > lD) {
+    s = s.replace(/\./g, '').replace(',', '.');
+  } else if (lD > -1) {
+    // Multiple dots OR single dot with exactly 3 trailing digits → es-AR thousands separator
+    const afterDot = s.length - lD - 1;
+    if (s.indexOf('.') !== lD || afterDot === 3) s = s.replace(/\./g, '');
+    else s = s.replace(/,/g, '');
+  } else {
+    s = s.replace(/,/g, '');
+  }
   return parseFloat(s) || 0;
 };
 
