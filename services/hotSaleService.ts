@@ -151,6 +151,9 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     return parseInt(clean, 10) || 0;
   };
 
+  const HS_START_MS = new Date(2026, 4, 11).getTime(); // 11-may-2026
+  const HS_END_MS   = new Date(2026, 4, 18).getTime(); // 18-may-2026
+
   const _now = new Date();
   const todayMs  = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).getTime();
   const yesterMs = new Date(_now.getFullYear(), _now.getMonth(), _now.getDate() - 1).getTime();
@@ -173,6 +176,7 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
       dayKey  = `${String(dc[2]).padStart(2,'0')}/${String(dc[1]).padStart(2,'0')}`;
     }
     const dateMs = dayDate ? dayDate.getTime() : 0;
+    if (!dateMs || dateMs < HS_START_MS || dateMs > HS_END_MS) return;
 
     const canal    = String(row.Canal    ?? row.canal    ?? row.CANAL    ?? '').trim();
     const deposito = String(row.Deposito ?? row.deposito ?? row.DEPOSITO ?? row.Deposito_Origen ?? '').trim();
