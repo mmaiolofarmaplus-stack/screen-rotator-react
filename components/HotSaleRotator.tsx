@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { fetchHotSaleData, getCachedHotSaleData, HotSaleData } from '../services/hotSaleService';
+import { fetchHotSaleData, HotSaleData } from '../services/hotSaleService';
 import { ScreenHotSale  } from './screens/ScreenHotSale';
 import { ScreenHotSale2 } from './screens/ScreenHotSale2';
 import { ScreenHotSale3 } from './screens/ScreenHotSale3';
@@ -13,23 +13,16 @@ const SCREENS = [
 ];
 
 export const HotSaleRotator: React.FC = () => {
-  const [data, setData] = useState<HotSaleData | null>(() => getCachedHotSaleData());
+  const [data, setData] = useState<HotSaleData | null>(null);
   const [idx, setIdx]   = useState(0);
   const [progress, setProgress] = useState(0); // 0–1
 
-  // Data refresh: at :30 of each hour, then every 60 min
+  // Data refresh: immediately on mount, then every 5 minutes
   useEffect(() => {
     const load = () => fetchHotSaleData().then(setData).catch(console.error);
     load();
-    let intervalId: ReturnType<typeof setInterval>;
-    const now = new Date();
-    const m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
-    const delayMs = (m < 30 ? 30 - m : 90 - m) * 60_000 - s * 1_000 - ms;
-    const timeoutId = setTimeout(() => {
-      load();
-      intervalId = setInterval(load, 60 * 60_000);
-    }, delayMs);
-    return () => { clearTimeout(timeoutId); clearInterval(intervalId); };
+    const intervalId = setInterval(load, 5 * 60_000);
+    return () => clearInterval(intervalId);
   }, []);
 
   // Screen advance + progress bar

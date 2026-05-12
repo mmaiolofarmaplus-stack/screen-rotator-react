@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { DebugLauncher } from './components/debug/DebugLauncher';
 import { DebugHub } from './components/debug/DebugHub';
 import { HotSaleRotator } from './components/HotSaleRotator';
-import { fetchDashboardData, getCachedData } from './services/csvService';
-import { fetchHotSaleData, getCachedHotSaleData, HotSaleData } from './services/hotSaleService';
+import { fetchDashboardData } from './services/csvService';
+import { fetchHotSaleData, HotSaleData } from './services/hotSaleService';
 import { DashboardData } from './types';
 import { ScreenRanking } from './components/screens/ScreenRanking';
 import { ScreenBeneficios } from './components/screens/ScreenBeneficios';
@@ -43,11 +43,6 @@ const PLAYLIST: Slot[] = [
   { type: 'reg',   component: ScreenAlertas,         ms: REG_MS  },
 ];
 
-function msUntilNextHalfHour(): number {
-  const now = new Date();
-  const m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
-  return (m < 30 ? 30 - m : 90 - m) * 60_000 - s * 1_000 - ms;
-}
 
 const params    = new URLSearchParams(window.location.search);
 const isDebug   = params.has('debug');
@@ -55,8 +50,8 @@ const isScreens = params.has('screens');
 const isHotSale = window.location.pathname === '/hot-sale';
 
 const App: React.FC = () => {
-  const [data,     setData]     = useState<DashboardData | null>(() => getCachedData());
-  const [hsData,   setHsData]   = useState<HotSaleData | null>(() => getCachedHotSaleData());
+  const [data,     setData]     = useState<DashboardData | null>(null);
+  const [hsData,   setHsData]   = useState<HotSaleData | null>(null);
   const [idx,      setIdx]      = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -68,16 +63,12 @@ const App: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
-  // Hot Sale data: at :30 of each hour, then every 60 min
+  // Hot Sale data: every 5 min
   useEffect(() => {
     const load = () => fetchHotSaleData().then(setHsData).catch(console.error);
     load();
-    let intervalId: ReturnType<typeof setInterval>;
-    const timeoutId = setTimeout(() => {
-      load();
-      intervalId = setInterval(load, 60 * 60_000);
-    }, msUntilNextHalfHour());
-    return () => { clearTimeout(timeoutId); clearInterval(intervalId); };
+    const id = setInterval(load, 5 * 60_000);
+    return () => clearInterval(id);
   }, []);
 
   // RAF progress bar + screen advance

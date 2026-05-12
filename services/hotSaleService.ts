@@ -275,6 +275,5 @@ export const fetchHotSaleData = async (): Promise<HotSaleData> => {
     lastUpdated: new Date(),
   };
 
-  try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch {}
   return data;
 };

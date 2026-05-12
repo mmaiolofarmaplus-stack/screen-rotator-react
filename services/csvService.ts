@@ -36,11 +36,6 @@ export const getCachedData = (): DashboardData | null => {
   }
 };
 
-const setCachedData = (data: DashboardData): void => {
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-  } catch {}
-};
 
 const fetchSheet = async (gid: string, skipRows = 0): Promise<any[]> => {
   const controller = new AbortController();
@@ -270,6 +265,5 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
     systemVersion: '2.0',
   };
 
-  setCachedData(data);
   return data;
 };
