@@ -24,7 +24,7 @@ const BranchRow: React.FC<{ b: BranchData; rank: number; maxTicket: number }> = 
           {ticketSemAnt > 0 && (
             <div className="text-right">
               <p className="text-gray-500 text-xs font-bold tracking-widest uppercase">Sem. Ant.</p>
-              <p className={`font-mono font-bold text-base ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+              <p className={`font-mono font-bold text-base ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#f59e0b]'}`}>
                 {varPct >= 0 ? '↑' : '↓'} {formatMillions(ticketSemAnt)}
               </p>
             </div>
@@ -70,7 +70,7 @@ export const ScreenTicketPromedio: React.FC<Props> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-gray-400 text-sm font-bold tracking-widest uppercase">VS Sem. Ant.</p>
-            <p className={`font-mono font-black text-3xl ${redVarPct >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+            <p className={`font-mono font-black text-3xl ${redVarPct >= 0 ? 'text-[#01B693]' : 'text-[#f59e0b]'}`}>
               {redVarPct >= 0 ? '+' : ''}{formatPct(redVarPct)}%
             </p>
           </div>

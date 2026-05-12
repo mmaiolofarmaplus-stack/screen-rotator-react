@@ -39,7 +39,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
       {
         label: 'Hoy',
         data: todaySlice,
-        borderColor: '#C8102E',
+        borderColor: '#f59e0b',
         backgroundColor: (context: ScriptableContext<'line'>) => {
           const { ctx, chartArea } = context.chart;
           if (!chartArea) return 'transparent';
@@ -51,7 +51,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
         fill: true,
         tension: 0.4,
         pointRadius: 5,
-        pointBackgroundColor: '#C8102E',
+        pointBackgroundColor: '#f59e0b',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
         borderWidth: 4,
@@ -119,7 +119,7 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-gray-400 text-sm font-bold tracking-widest">VS SEM. ANT.</p>
-            <p className={`font-mono font-black text-3xl ${varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+            <p className={`font-mono font-black text-3xl ${varPctVsSemAnt >= 0 ? 'text-[#01B693]' : 'text-[#f59e0b]'}`}>
               {varPctVsSemAnt >= 0 ? '+' : ''}{formatPct(varPctVsSemAnt)}%
             </p>
           </div>

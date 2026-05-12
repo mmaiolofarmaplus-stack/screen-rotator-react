@@ -43,12 +43,12 @@ export const ScreenAlertas: React.FC<Props> = ({ data }) => {
     <div className="w-screen h-screen bg-[#0b0e14] text-white flex flex-col p-8 overflow-hidden">
       <div className="mb-6 shrink-0 flex items-end justify-between border-b border-white/5 pb-4">
         <div>
-          <p className="text-[#C8102E] text-sm font-bold tracking-[0.3em] uppercase mb-1">Sin ticket en la última hora</p>
+          <p className="text-[#f59e0b] text-sm font-bold tracking-[0.3em] uppercase mb-1">Sin ticket en la última hora</p>
           <h1 className="text-4xl font-black uppercase tracking-wider">Alertas de Inactividad</h1>
         </div>
         <div className="flex gap-8">
           <div className="text-center">
-            <p className="text-[#C8102E] font-mono font-black text-3xl">{critical.length}</p>
+            <p className="text-[#f59e0b] font-mono font-black text-3xl">{critical.length}</p>
             <p className="text-gray-400 text-sm font-bold tracking-widest">+2hs</p>
           </div>
           <div className="text-center">
@@ -66,9 +66,9 @@ export const ScreenAlertas: React.FC<Props> = ({ data }) => {
         <div className="flex flex-col overflow-hidden pr-2 gap-3">
           {critical.length > 0 && (
             <div>
-              <p className="text-[#C8102E] text-sm font-bold tracking-widest uppercase mb-2">Crítico (+2hs)</p>
+              <p className="text-[#f59e0b] text-sm font-bold tracking-widest uppercase mb-2">Crítico (+2hs)</p>
               <div className="flex flex-col gap-1.5">
-                {critical.map(b => <AlertRow key={b.id} b={b} accent="#C8102E" pulse />)}
+                {critical.map(b => <AlertRow key={b.id} b={b} accent="#f59e0b" pulse />)}
               </div>
             </div>
           )}

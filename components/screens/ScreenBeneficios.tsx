@@ -93,13 +93,13 @@ export const ScreenBeneficios: React.FC<Props> = ({ data }) => {
           <p className="text-[#4a7cc7] text-xl font-black tracking-[0.25em] uppercase">% de Tickets Nominados Hoy</p>
           <CircleGauge
             pct={(safePctNom / safeMetaNom) * 100}
-            color={diffNominados >= 0 ? '#01B693' : '#C8102E'}
+            color={diffNominados >= 0 ? '#01B693' : '#f59e0b'}
             size={340}
             strokeWidth={26}
           >
             <span
               className="font-mono font-black text-7xl leading-none"
-              style={{ color: diffNominados >= 0 ? '#01B693' : '#C8102E' }}
+              style={{ color: diffNominados >= 0 ? '#01B693' : '#f59e0b' }}
             >
               {formatPct(safePctNom, 1)}%
             </span>

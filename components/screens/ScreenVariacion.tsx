@@ -50,7 +50,7 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
         <div className="flex gap-8">
           <div className="text-right">
             <p className="text-gray-400 text-sm font-bold tracking-widest">RED TOTAL</p>
-            <p className={`font-mono font-black text-3xl ${varRed >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+            <p className={`font-mono font-black text-3xl ${varRed >= 0 ? 'text-[#01B693]' : 'text-[#f59e0b]'}`}>
               {varRed >= 0 ? '+' : ''}{formatPct(varRed)}%
             </p>
           </div>
@@ -60,7 +60,7 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-gray-400 text-sm font-bold tracking-widest">BAJAN</p>
-            <p className="text-[#C8102E] font-mono font-black text-3xl">{negative.length}</p>
+            <p className="text-[#f59e0b] font-mono font-black text-3xl">{negative.length}</p>
           </div>
         </div>
       </div>
@@ -77,12 +77,12 @@ export const ScreenVariacion: React.FC<Props> = ({ data }) => {
           </div>
         </div>
         <div className="flex flex-col overflow-hidden pl-2 border-l border-white/5">
-          <p className="text-[#C8102E] text-sm font-bold tracking-widest uppercase mb-3 shrink-0">↓ Peores</p>
+          <p className="text-[#f59e0b] text-sm font-bold tracking-widest uppercase mb-3 shrink-0">↓ Peores</p>
           <div className="flex-1 min-h-0 overflow-hidden">
             <AutoScrollList
               items={negative}
               itemHeight={52}
-              renderItem={(b) => <VariacionRow key={b.id} b={b} color="#C8102E" maxAbs={maxAbs} />}
+              renderItem={(b) => <VariacionRow key={b.id} b={b} color="#f59e0b" maxAbs={maxAbs} />}
             />
           </div>
         </div>

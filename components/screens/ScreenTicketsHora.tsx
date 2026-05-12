@@ -104,7 +104,7 @@ export const ScreenTicketsHora: React.FC<Props> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-gray-400 text-sm font-bold tracking-widest">VS SEM. ANT.</p>
-            <p className={`font-mono font-black text-3xl ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#C8102E]'}`}>
+            <p className={`font-mono font-black text-3xl ${varPct >= 0 ? 'text-[#01B693]' : 'text-[#f59e0b]'}`}>
               {varPct >= 0 ? '+' : ''}{formatPct(varPct)}%
             </p>
           </div>

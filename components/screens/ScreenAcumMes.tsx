@@ -7,7 +7,7 @@ import { AutoScrollList } from '../AutoScrollList';
 interface Props { data: DashboardData; }
 
 const rowColor = (pct: number) =>
-  pct >= 100 ? '#01B693' : pct >= 80 ? '#f59e0b' : '#C8102E';
+  pct >= 100 ? '#01B693' : pct >= 80 ? '#f59e0b' : '#f59e0b';
 
 const COLS = '2.5rem 1fr 280px 140px 240px';
 
@@ -35,7 +35,7 @@ const BranchRow: React.FC<{ b: BranchData; rank: number; diasMes: number }> = ({
       <span className="font-mono font-black text-3xl text-right" style={{ color: c }}>
         {formatPct(pct)}%
       </span>
-      <span className="font-mono font-black text-2xl text-right" style={{ color: diff >= 0 ? '#01B693' : '#C8102E' }}>
+      <span className="font-mono font-black text-2xl text-right" style={{ color: diff >= 0 ? '#01B693' : '#f59e0b' }}>
         {diff >= 0 ? `+${formatMillions(diff)}` : `-${formatMillions(Math.abs(diff))}`}
       </span>
     </div>
@@ -86,8 +86,8 @@ export const ScreenAcumMes: React.FC<Props> = ({ data }) => {
             <p className="font-mono font-black text-3xl text-[#01B693]">{sobre}</p>
             <p className="text-gray-400 text-xs font-bold tracking-wider uppercase mt-0.5">Sobre Meta</p>
           </div>
-          <div className="text-center px-4 py-2 rounded-xl bg-[#C8102E]/10 border border-[#C8102E]/20">
-            <p className="font-mono font-black text-3xl text-[#C8102E]">{bajo}</p>
+          <div className="text-center px-4 py-2 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/20">
+            <p className="font-mono font-black text-3xl text-[#f59e0b]">{bajo}</p>
             <p className="text-gray-400 text-xs font-bold tracking-wider uppercase mt-0.5">Bajo Meta</p>
           </div>
         </div>

@@ -11,7 +11,7 @@ const DAY_END   = 19;
 const DAY_HOURS = DAY_END - DAY_START;
 
 const rowColor = (pct: number) =>
-  pct >= 100 ? '#01B693' : pct >= 80 ? '#f59e0b' : '#C8102E';
+  pct >= 100 ? '#01B693' : pct >= 80 ? '#f59e0b' : '#f59e0b';
 
 type BranchProjection = BranchData & { projected: number; projectedPct: number };
 
@@ -39,7 +39,7 @@ const BranchRow: React.FC<{ b: BranchProjection; rank: number }> = ({ b, rank })
       <span className="font-mono font-black text-3xl text-right" style={{ color: c }}>
         {formatPct(b.projectedPct)}%
       </span>
-      <span className="font-mono font-black text-2xl text-right" style={{ color: diff >= 0 ? '#01B693' : '#C8102E' }}>
+      <span className="font-mono font-black text-2xl text-right" style={{ color: diff >= 0 ? '#01B693' : '#f59e0b' }}>
         {diff >= 0 ? `+${formatMillions(diff)}` : `-${formatMillions(Math.abs(diff))}`}
       </span>
     </div>
@@ -98,8 +98,8 @@ export const ScreenProyeccionDia: React.FC<Props> = ({ data }) => {
             <p className="font-mono font-black text-3xl text-[#01B693]">{sobre}</p>
             <p className="text-gray-400 text-xs font-bold tracking-wider uppercase mt-0.5">Llegan</p>
           </div>
-          <div className="text-center px-4 py-2 rounded-xl bg-[#C8102E]/10 border border-[#C8102E]/20">
-            <p className="font-mono font-black text-3xl text-[#C8102E]">{bajo}</p>
+          <div className="text-center px-4 py-2 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/20">
+            <p className="font-mono font-black text-3xl text-[#f59e0b]">{bajo}</p>
             <p className="text-gray-400 text-xs font-bold tracking-wider uppercase mt-0.5">No llegan</p>
           </div>
         </div>
