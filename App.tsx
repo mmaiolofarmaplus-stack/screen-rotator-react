@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DebugLauncher } from './components/debug/DebugLauncher';
-import { DebugHub } from './components/debug/DebugHub';
 import { HotSaleRotator } from './components/HotSaleRotator';
 import { fetchDashboardData } from './services/csvService';
 import { fetchHotSaleData, HotSaleData } from './services/hotSaleService';
@@ -71,6 +70,14 @@ const App: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
+  // Write live slot to localStorage so /?debug can highlight it
+  useEffect(() => {
+    if (isDebug || isScreens || isHotSale) return;
+    const slot = PLAYLIST[idx];
+    const componentName = slot.type !== 'video' ? slot.component.name : '';
+    localStorage.setItem('farmaplus_live_slot', JSON.stringify({ componentName }));
+  }, [idx]);
+
   // RAF progress bar + screen advance
   const rafRef  = useRef<number>(0);
   const startTs = useRef<number>(0);
@@ -92,8 +99,7 @@ const App: React.FC = () => {
   }, [idx]);
 
   if (isHotSale) return <HotSaleRotator />;
-  if (isDebug)   return <DebugHub />;
-  if (isScreens) return <DebugLauncher />;
+  if (isDebug || isScreens) return <DebugLauncher />;
 
   if (!data) {
     return (

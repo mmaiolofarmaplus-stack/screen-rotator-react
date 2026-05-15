@@ -18,6 +18,28 @@ import { ScreenHotSale3 } from '../screens/ScreenHotSale3';
 
 type ScreenId = 'ranking' | 'acum-mes' | 'meta-diaria' | 'proyeccion-dia' | 'facturacion-hora' | 'tickets-hora' | 'ticket-promedio' | 'variacion' | 'alertas' | 'beneficios' | 'hs-kpis' | 'hs-hora' | 'hs-evol';
 
+const COMP_TO_ID: Record<string, ScreenId> = {
+  ScreenRanking:         'ranking',
+  ScreenBeneficios:      'beneficios',
+  ScreenAcumMes:         'acum-mes',
+  ScreenFacturacionHora: 'facturacion-hora',
+  ScreenMetaDiaria:      'meta-diaria',
+  ScreenTicketPromedio:  'ticket-promedio',
+  ScreenAlertas:         'alertas',
+  ScreenHotSale:         'hs-kpis',
+  ScreenHotSale2:        'hs-hora',
+  ScreenHotSale3:        'hs-evol',
+};
+
+const readLive = (): ScreenId | null => {
+  try {
+    const raw = localStorage.getItem('farmaplus_live_slot');
+    if (!raw) return null;
+    const { componentName } = JSON.parse(raw);
+    return COMP_TO_ID[componentName] ?? null;
+  } catch { return null; }
+};
+
 interface ScreenDef {
   id: ScreenId;
   label: string;
@@ -62,6 +84,12 @@ export const DebugLauncher: React.FC = () => {
   const [loading, setLoading] = useState(!getCachedData());
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<ScreenId | null>(null);
+  const [liveId, setLiveId] = useState<ScreenId | null>(readLive);
+
+  useEffect(() => {
+    const id = setInterval(() => setLiveId(readLive()), 3000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     fetchDashboardData()
@@ -148,12 +176,13 @@ export const DebugLauncher: React.FC = () => {
         <div className="grid grid-cols-5 gap-4">
           {SCREENS.map((screen) => {
             const ScreenComponent = screen.component;
+            const isLive = liveId === screen.id;
             return (
               <button
                 key={screen.id}
                 onClick={() => setSelected(screen.id)}
                 className="group flex flex-col gap-0 rounded-xl overflow-hidden border border-white/8 hover:border-white/25 transition-all duration-200 cursor-pointer focus:outline-none hover:scale-[1.02] active:scale-[0.99]"
-                style={{ boxShadow: `0 0 0 0 ${screen.accent}`, transition: 'border-color 200ms, transform 200ms, box-shadow 200ms' }}
+                style={{ outline: isLive ? '2px solid #01B693' : 'none', outlineOffset: '-1px', boxShadow: `0 0 0 0 ${screen.accent}`, transition: 'border-color 200ms, transform 200ms, box-shadow 200ms' }}
                 onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 20px 2px ${screen.accent}44`)}
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 0 0 0 transparent')}
               >
@@ -165,6 +194,11 @@ export const DebugLauncher: React.FC = () => {
                   ) : (
                     <div className="w-full h-full bg-[#0b0e14] flex items-center justify-center">
                       <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    </div>
+                  )}
+                  {isLive && (
+                    <div style={{ position: 'absolute', top: 5, right: 5, zIndex: 10, background: '#01B693', color: '#000', fontSize: 7, fontWeight: 900, padding: '2px 5px', borderRadius: 3, letterSpacing: '0.08em', textTransform: 'uppercase', lineHeight: 1.4 }}>
+                      ● EN PANTALLA
                     </div>
                   )}
                 </div>
@@ -191,12 +225,13 @@ export const DebugLauncher: React.FC = () => {
         <div className="grid grid-cols-5 gap-4 w-full">
           {HS_SCREENS.map((screen) => {
             const ScreenComponent = screen.component;
+            const isLive = liveId === screen.id;
             return (
               <button
                 key={screen.id}
                 onClick={() => setSelected(screen.id)}
                 className="group flex flex-col gap-0 rounded-xl overflow-hidden border border-white/8 hover:border-white/25 transition-all duration-200 cursor-pointer focus:outline-none hover:scale-[1.02] active:scale-[0.99]"
-                style={{ boxShadow: '0 0 0 0 transparent', transition: 'border-color 200ms, transform 200ms, box-shadow 200ms' }}
+                style={{ outline: isLive ? '2px solid #01B693' : 'none', outlineOffset: '-1px', boxShadow: '0 0 0 0 transparent', transition: 'border-color 200ms, transform 200ms, box-shadow 200ms' }}
                 onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 0 20px 2px ${screen.accent}44`)}
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 0 0 0 transparent')}
               >
@@ -208,6 +243,11 @@ export const DebugLauncher: React.FC = () => {
                   ) : (
                     <div className="w-full h-full bg-[#09091e] flex items-center justify-center">
                       <div className="w-4 h-4 border-2 border-[#DDED59]/20 border-t-[#DDED59] rounded-full animate-spin" />
+                    </div>
+                  )}
+                  {isLive && (
+                    <div style={{ position: 'absolute', top: 5, right: 5, zIndex: 10, background: '#01B693', color: '#000', fontSize: 7, fontWeight: 900, padding: '2px 5px', borderRadius: 3, letterSpacing: '0.08em', textTransform: 'uppercase', lineHeight: 1.4 }}>
+                      ● EN PANTALLA
                     </div>
                   )}
                 </div>
