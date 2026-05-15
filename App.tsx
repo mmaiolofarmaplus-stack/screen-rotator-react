@@ -70,13 +70,6 @@ const App: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
-  // Write live slot to localStorage so /?debug can highlight it
-  useEffect(() => {
-    const slot = PLAYLIST[idx];
-    const componentName = slot.type !== 'video' ? slot.component.name : '';
-    localStorage.setItem('farmaplus_live_slot', JSON.stringify({ componentName }));
-  }, [idx]);
-
   // RAF progress bar + screen advance
   const rafRef  = useRef<number>(0);
   const startTs = useRef<number>(0);
