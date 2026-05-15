@@ -72,7 +72,6 @@ const App: React.FC = () => {
 
   // Write live slot to localStorage so /?debug can highlight it
   useEffect(() => {
-    if (isDebug || isScreens || isHotSale) return;
     const slot = PLAYLIST[idx];
     const componentName = slot.type !== 'video' ? slot.component.name : '';
     localStorage.setItem('farmaplus_live_slot', JSON.stringify({ componentName }));
