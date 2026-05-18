@@ -342,8 +342,8 @@ function construirMapaSucursal(datos, mapaColumnas) {
 function parsearMetaDiaria(csvRaw, fechaStr) {
   var lineas = csvRaw.split('\n');
   var mapa   = {};
-  for (var i = 3; i < lineas.length; i++) {
-    var cols     = lineas[i].split(';');
+  for (var i = 1; i < lineas.length; i++) {
+    var cols     = lineas[i].split(',');
     if (cols.length < 3) continue;
     var fecha    = cols[0].trim().replace(/"/g, '');
     var farmacia = cols[1].trim().replace(/"/g, '');
