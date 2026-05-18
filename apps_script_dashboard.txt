@@ -1,0 +1,410 @@
+// ============================================================
+// GENERADOR BASE DE CONOCIMIENTO - DASHBOARD FARMACIAS
+// ============================================================
+
+var DASHBOARD_FILE_ID = '1rTow4rq7UJL4Kuts-JdMLBS6AUqXcHXUrYOgEWj_fI4';
+var GID_OBJETIVOS     = '1440527970';
+
+var SHEET_BASE      = 'base_conocimiento';
+var SHEET_HORAS_HOY = 'horas_hoy';
+var SHEET_HORAS_SEM = 'horas_semana_anterior';
+
+// ============================================================
+// FUNCIÓN PRINCIPAL
+// ============================================================
+
+function generarBaseConocimiento() {
+  Logger.log('=== Iniciando generación de base de conocimiento ===');
+
+  var ss = SpreadsheetApp.openById(DASHBOARD_FILE_ID);
+
+  // [1] Facturación acumulada del mes
+  Logger.log('[1] Leyendo Facturacion Mes...');
+  var datosMes = leerHoja(ss, 'Facturacion Mes');
+  var dfMes = construirMapaSucursal(datosMes, {
+    'Nombre_Sucu':      'Sucursal',
+    'sucursal':         'ID_Sucursal',
+    'Tickets':          'Acum_Tickets',
+    'Unidades':         'Acum_Unidades',
+    'Neto':             'Acum_Neto',
+    'Saldo_Cobertura':  'Acum_Cobertura',
+    'Saldo_Cliente':    'Acum_Cliente',
+  });
+
+  // [2] Facturación del día + detección de fecha
+  Logger.log('[2] Leyendo Facturacion x Dia...');
+  var datosDia = leerHoja(ss, 'Facturacion x Dia');
+
+  var fechaHoy;
+  if (datosDia.length <= 1) {
+    fechaHoy = new Date();
+  } else {
+    var serial = Number(datosDia[1][indiceCol(datosDia[0], 'Fecha')]);
+    var ms = (serial - 25569) * 86400 * 1000;
+    var d = new Date(ms);
+    fechaHoy = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  }
+  var diaActual     = fechaHoy.getDate();
+  var diasMes       = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth() + 1, 0).getDate();
+  var diasRestantes = diasMes - diaActual;
+  var fechaStr      = diaActual + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getFullYear();
+  Logger.log('    Fecha: ' + fechaStr + ' | Día ' + diaActual + '/' + diasMes + ' | Restan: ' + diasRestantes);
+
+  var dfDia = construirMapaSucursal(datosDia, {
+    'Nombre_Sucu':      'Sucursal',
+    'Tickets':          'Hoy_Tickets',
+    'Unidades':         'Hoy_Unidades',
+    'Neto':             'Hoy_Neto',
+    'Saldo_Cobertura':  'Hoy_Cobertura',
+    'Saldo_Cliente':    'Hoy_Cliente',
+  });
+
+  // [3] Sucursal × Hora (hoy)
+  Logger.log('[3] Leyendo Sucursal x Hora...');
+  var datosHora     = leerHoja(ss, 'Sucursal x Hora');
+  var idxFechHora   = datosHora[0].indexOf('Fecha');
+  var idxSucHora    = indiceCol(datosHora[0], 'Nombre_Sucu');
+  var idxFranjaHora = indiceCol(datosHora[0], 'Franja_Horaria');
+  var idxNetoHora   = indiceCol(datosHora[0], 'Neto');
+  var idxTickHora   = indiceCol(datosHora[0], 'Tickets');
+  var idxUnidHora   = indiceCol(datosHora[0], 'Unidades');
+  var idxIdHora     = indiceCol(datosHora[0], 'sucursal');
+  var idxCobHora    = indiceCol(datosHora[0], 'Saldo_Cobertura');
+  var idxCliHora    = indiceCol(datosHora[0], 'Saldo_Cliente');
+
+  var ultimaFranjaHoy = 0;
+  var horaPicoMap     = {};
+  var ultFranjaMap    = {};
+  var horaNetoMap     = {};
+
+  for (var i = 1; i < datosHora.length; i++) {
+    var row = datosHora[i];
+    if (idxFechHora !== -1) {
+      var fSrc  = row[idxFechHora];
+      var fDate = (fSrc instanceof Date) ? fSrc : new Date((Number(fSrc) - 25569) * 86400000);
+      if (fDate.getDate()     !== fechaHoy.getDate()     ||
+          fDate.getMonth()    !== fechaHoy.getMonth()    ||
+          fDate.getFullYear() !== fechaHoy.getFullYear()) continue;
+    }
+    var suc  = norm(row[idxSucHora]);
+    var fran = Number(row[idxFranjaHora]);
+    var neto = Number(row[idxNetoHora]) || 0;
+    var tick = Number(row[idxTickHora]) || 0;
+    var unid = Number(row[idxUnidHora]) || 0;
+
+    if (fran > ultimaFranjaHoy) ultimaFranjaHoy = fran;
+    if (!horaPicoMap[suc] || neto > horaPicoMap[suc].neto)
+      horaPicoMap[suc] = { franja: fran, neto: neto };
+    if (!ultFranjaMap[suc] || fran > ultFranjaMap[suc])
+      ultFranjaMap[suc] = fran;
+    if (!horaNetoMap[suc]) horaNetoMap[suc] = { neto: 0, tickets: 0, unidades: 0 };
+    horaNetoMap[suc].neto     += neto;
+    horaNetoMap[suc].tickets  += tick;
+    horaNetoMap[suc].unidades += unid;
+  }
+  Logger.log('    Última franja: ' + ultimaFranjaHoy + 'hs');
+
+  // [4] Semana anterior
+  Logger.log('[4] Leyendo Sucursal Semana Anterior...');
+  var datosSem    = leerHoja(ss, 'Sucursal Semana Anterior');
+  var semHastaMap = {};
+  var semTotalMap = {};
+  var idxSucSem   = indiceCol(datosSem[0], 'Nombre_Sucu');
+  var idxFranSem  = indiceCol(datosSem[0], 'Franja_Horaria');
+  var idxNetoSem  = indiceCol(datosSem[0], 'Neto');
+  var idxTickSem  = indiceCol(datosSem[0], 'Tickets');
+  var idxUnidSem  = indiceCol(datosSem[0], 'Unidades');
+  var idxIdSem    = indiceCol(datosSem[0], 'sucursal');
+  var idxFechSem  = indiceCol(datosSem[0], 'Fecha');
+  var idxCobSem   = indiceCol(datosSem[0], 'Saldo_Cobertura');
+  var idxCliSem   = indiceCol(datosSem[0], 'Saldo_Cliente');
+
+  for (var i = 1; i < datosSem.length; i++) {
+    var row  = datosSem[i];
+    var suc  = norm(row[idxSucSem]);
+    var fran = Number(row[idxFranSem]);
+    var neto = Number(row[idxNetoSem])  || 0;
+    var tick = Number(row[idxTickSem])  || 0;
+    var unid = Number(row[idxUnidSem])  || 0;
+    if (!semTotalMap[suc]) semTotalMap[suc] = { neto: 0, tickets: 0 };
+    semTotalMap[suc].neto    += neto;
+    semTotalMap[suc].tickets += tick;
+    if (fran <= ultimaFranjaHoy) {
+      if (!semHastaMap[suc]) semHastaMap[suc] = { neto: 0, tickets: 0, unidades: 0 };
+      semHastaMap[suc].neto     += neto;
+      semHastaMap[suc].tickets  += tick;
+      semHastaMap[suc].unidades += unid;
+    }
+  }
+
+  // [5] Última hora de ticket
+  Logger.log('[5] Leyendo Ultima Hora Ticket...');
+  var datosUlt  = leerHoja(ss, 'Ultima Hora Ticket');
+  var ultHoraMap = {};
+  var idxSucUlt  = indiceCol(datosUlt[0], 'sucursal(2)');
+  var idxHoraUlt = indiceCol(datosUlt[0], 'ultima_hora');
+  for (var i = 1; i < datosUlt.length; i++) {
+    var suc = norm(datosUlt[i][idxSucUlt]);
+    ultHoraMap[suc] = datosUlt[i][idxHoraUlt];
+  }
+
+  // [6] Meta diaria
+  Logger.log('[6] Leyendo Meta diaria desde Objetivos...');
+  var urlObj = 'https://docs.google.com/spreadsheets/d/' + DASHBOARD_FILE_ID +
+               '/export?format=csv&gid=' + GID_OBJETIVOS;
+  var csvRaw = UrlFetchApp.fetch(urlObj).getContentText('UTF-8');
+  var metaMap = parsearMetaDiaria(csvRaw, fechaStr);
+  Logger.log('    Meta diaria: ' + Object.keys(metaMap).length + ' sucursales para ' + fechaStr);
+
+  // [7] MERGE MAESTRO
+  Logger.log('[7] Unificando tablas...');
+  var sucursales = Object.keys(dfMes);
+  var resultado  = [];
+  var cabecera = [
+    'ID_Sucursal', 'Sucursal',
+    'Ctx_Fecha_Hoy', 'Ctx_Dia_Del_Mes', 'Ctx_Dias_Totales_Mes', 'Ctx_Dias_Restantes',
+    'Ctx_Pct_Mes_Transcurrido', 'Ctx_Ultima_Franja_Hora',
+    'Acum_Tickets', 'Acum_Unidades', 'Acum_Neto', 'Acum_Cobertura', 'Acum_Cliente',
+    'Hoy_Tickets', 'Hoy_Unidades', 'Hoy_Neto', 'Hoy_Cobertura', 'Hoy_Cliente',
+    'Hora_Pico_Hoy', 'Hora_Pico_Hoy_Neto', 'Ultima_Franja_Con_Datos',
+    'Hora_Neto_Total', 'Hora_Tickets_Total', 'Hora_Unidades_Total',
+    'Ultima_Hora_Ticket', 'Alerta_Inactividad',
+    'SemAnt_Neto_HastaAhora', 'SemAnt_Tickets_HastaAhora', 'SemAnt_Unidades_HastaAhora',
+    'SemAnt_Neto_DiaCompleto', 'SemAnt_Tickets_DiaCompleto', 'Var_Pct_vs_SemAnt_HastaAhora',
+    'Meta_Diaria', 'Avance_Pct_Diario', 'Falta_Meta_Diaria',
+  ];
+  resultado.push(cabecera);
+
+  for (var s = 0; s < sucursales.length; s++) {
+    var suc  = sucursales[s];
+    var mes  = dfMes[suc]         || {};
+    var dia  = dfDia[suc]         || {};
+    var hora = horaNetoMap[suc]   || {};
+    var pico = horaPicoMap[suc]   || {};
+    var ulf  = ultFranjaMap[suc]  || 0;
+    var sem  = semHastaMap[suc]   || {};
+    var semt = semTotalMap[suc]   || {};
+    var ult  = ultHoraMap[suc]    || '';
+    var meta = metaMap[suc]       || 0;
+
+    var hoyNeto    = Number(dia.Hoy_Neto)  || 0;
+    var semAntNeto = Number(sem.neto)       || 0;
+    var metaDiaria = Number(meta)           || 0;
+
+    resultado.push([
+      mes.ID_Sucursal  || '',
+      suc,
+      fechaStr,
+      diaActual,
+      diasMes,
+      diasRestantes,
+      round1(diaActual / diasMes * 100),
+      ultimaFranjaHoy,
+      mes.Acum_Tickets   || 0,
+      mes.Acum_Unidades  || 0,
+      mes.Acum_Neto      || 0,
+      mes.Acum_Cobertura || 0,
+      mes.Acum_Cliente   || 0,
+      dia.Hoy_Tickets    || 0,
+      dia.Hoy_Unidades   || 0,
+      hoyNeto,
+      dia.Hoy_Cobertura  || 0,
+      dia.Hoy_Cliente    || 0,
+      pico.franja        || 0,
+      pico.neto          || 0,
+      ulf,
+      hora.neto          || 0,
+      hora.tickets       || 0,
+      hora.unidades      || 0,
+      ult,
+      alertaInactividad(ult, ultimaFranjaHoy),
+      semAntNeto,
+      sem.tickets        || 0,
+      sem.unidades       || 0,
+      semt.neto          || 0,
+      semt.tickets       || 0,
+      semAntNeto > 0 ? round1((hoyNeto - semAntNeto) / semAntNeto * 100) : 0,
+      metaDiaria,
+      metaDiaria > 0 ? round1(hoyNeto / metaDiaria * 100) : 0,
+      round0(metaDiaria - hoyNeto),
+    ]);
+  }
+
+  // [8] Armar hoja horas_hoy
+  Logger.log('[8] Armando horas_hoy...');
+  var horasHoy = [[
+    'ID_Sucursal', 'Nombre_Sucu', 'Fecha', 'Franja_Horaria',
+    'Tickets', 'Unidades', 'Neto', 'Saldo_Cobertura', 'Saldo_Cliente',
+  ]];
+  for (var i = 1; i < datosHora.length; i++) {
+    var row = datosHora[i];
+    if (idxFechHora !== -1) {
+      var fSrc  = row[idxFechHora];
+      var fDate = (fSrc instanceof Date) ? fSrc : new Date((Number(fSrc) - 25569) * 86400000);
+      if (fDate.getDate()     !== fechaHoy.getDate()     ||
+          fDate.getMonth()    !== fechaHoy.getMonth()    ||
+          fDate.getFullYear() !== fechaHoy.getFullYear()) continue;
+    }
+    horasHoy.push([
+      row[idxIdHora]    || '',
+      norm(row[idxSucHora]),
+      fechaStr,
+      row[idxFranjaHora],
+      row[idxTickHora],
+      row[idxUnidHora],
+      row[idxNetoHora],
+      row[idxCobHora]   || 0,
+      row[idxCliHora]   || 0,
+    ]);
+  }
+
+  // [9] Armar hoja horas_semana_anterior
+  Logger.log('[9] Armando horas_semana_anterior...');
+  var horasSem = [[
+    'ID_Sucursal', 'Nombre_Sucu', 'Fecha', 'Franja_Horaria',
+    'Tickets', 'Unidades', 'Neto', 'Saldo_Cobertura', 'Saldo_Cliente',
+  ]];
+  for (var i = 1; i < datosSem.length; i++) {
+    var row  = datosSem[i];
+    var fSem = row[idxFechSem];
+    var fSemStr;
+    if (fSem instanceof Date) {
+      fSemStr = fSem.getFullYear() + '-' + pad2(fSem.getMonth() + 1) + '-' + pad2(fSem.getDate());
+    } else {
+      var dSem = new Date((Number(fSem) - 25569) * 86400000 + new Date().getTimezoneOffset() * -60000);
+      fSemStr  = dSem.getFullYear() + '-' + pad2(dSem.getMonth() + 1) + '-' + pad2(dSem.getDate());
+    }
+    horasSem.push([
+      row[idxIdSem]  || '',
+      norm(row[idxSucSem]),
+      fSemStr,
+      row[idxFranSem],
+      row[idxTickSem],
+      row[idxUnidSem],
+      row[idxNetoSem],
+      row[idxCobSem] || 0,
+      row[idxCliSem] || 0,
+    ]);
+  }
+
+  // [10] Escribir las 3 hojas
+  Logger.log('[10] Escribiendo hojas...');
+  var ssActivo = SpreadsheetApp.getActiveSpreadsheet();
+  escribirHoja(ssActivo, SHEET_BASE,      resultado);
+  escribirHoja(ssActivo, SHEET_HORAS_HOY, horasHoy);
+  escribirHoja(ssActivo, SHEET_HORAS_SEM, horasSem);
+
+  Logger.log('══════════════════════════════════════════');
+  Logger.log('  LISTO');
+  Logger.log('  Fecha         : ' + fechaStr + ' (día ' + diaActual + '/' + diasMes + ')');
+  Logger.log('  Franja actual : ' + ultimaFranjaHoy + 'hs');
+  Logger.log('  Sucursales    : ' + sucursales.length);
+  Logger.log('══════════════════════════════════════════');
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function norm(v) {
+  return String(v).toUpperCase().trim();
+}
+
+function leerHoja(ss, nombre) {
+  var hoja = ss.getSheetByName(nombre);
+  if (!hoja) throw new Error('Hoja no encontrada: ' + nombre);
+  return hoja.getDataRange().getValues();
+}
+
+function indiceCol(cabecera, nombre) {
+  var idx = cabecera.indexOf(nombre);
+  if (idx === -1) throw new Error('Columna no encontrada: ' + nombre);
+  return idx;
+}
+
+function construirMapaSucursal(datos, mapaColumnas) {
+  var cabecera = datos[0];
+  var mapa     = {};
+  for (var i = 1; i < datos.length; i++) {
+    var fila    = datos[i];
+    var sucNorm = norm(fila[indiceCol(cabecera, 'Nombre_Sucu')]);
+    var obj     = {};
+    for (var orig in mapaColumnas) {
+      var dest = mapaColumnas[orig];
+      var idx  = cabecera.indexOf(orig);
+      if (idx !== -1) obj[dest] = fila[idx];
+    }
+    mapa[sucNorm] = obj;
+  }
+  return mapa;
+}
+
+function parsearMetaDiaria(csvRaw, fechaStr) {
+  var lineas = csvRaw.split('\n');
+  var mapa   = {};
+  for (var i = 3; i < lineas.length; i++) {
+    var cols     = lineas[i].split(';');
+    if (cols.length < 3) continue;
+    var fecha    = cols[0].trim().replace(/"/g, '');
+    var farmacia = cols[1].trim().replace(/"/g, '');
+    var metaRaw  = cols[2].trim().replace(/"/g, '');
+    if (!fecha || fecha.indexOf('Total') === 0) continue;
+    if (fecha !== fechaStr) continue;
+    mapa[norm(farmacia)] = parseMeta(metaRaw);
+  }
+  return mapa;
+}
+
+function parseMeta(v) {
+  try {
+    return parseFloat(
+      String(v).replace('$', '').replace(/\./g, '').replace(',', '.').replace(/\s/g, '')
+    ) || 0;
+  } catch (e) { return 0; }
+}
+
+function alertaInactividad(ultimaHora, ultimaFranja) {
+  try {
+    var partes = String(ultimaHora).split(':');
+    var h      = parseInt(partes[0]) + parseInt(partes[1]) / 60;
+    if (h < (ultimaFranja - 1)) return 'SIN TICKET DESDE ' + ultimaHora;
+    return 'ACTIVA';
+  } catch (e) { return 'SIN DATOS'; }
+}
+
+function escribirHoja(ss, nombre, datos) {
+  var hoja = ss.getSheetByName(nombre);
+  if (!hoja) {
+    hoja = ss.insertSheet(nombre);
+  } else {
+    hoja.clearContents();
+  }
+  if (datos.length === 0) return;
+  hoja.getRange(1, 1, datos.length, datos[0].length).setValues(datos);
+  var cab = hoja.getRange(1, 1, 1, datos[0].length);
+  cab.setFontWeight('bold');
+  cab.setBackground('#4A90D9');
+  cab.setFontColor('#FFFFFF');
+  Logger.log("  ✓ '" + nombre + "' → " + (datos.length - 1) + ' filas × ' + datos[0].length + ' cols');
+}
+
+function round1(n) { return Math.round(n * 10) / 10; }
+function round0(n) { return Math.round(n); }
+function pad2(n)   { return n < 10 ? '0' + n : String(n); }
+
+// ============================================================
+// INSTALAR TRIGGER — correr UNA SOLA VEZ desde el editor
+// ============================================================
+
+function instalarTrigger() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    ScriptApp.deleteTrigger(triggers[i]);
+  }
+  // Dispara cada 5 minutos sin depender de ediciones manuales
+  ScriptApp.newTrigger('generarBaseConocimiento')
+    .timeBased()
+    .everyMinutes(5)
+    .create();
+  Logger.log('✅ Trigger instalado: cada 5 minutos.');
+}

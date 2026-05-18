@@ -15,6 +15,8 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
   const { hourlyTotalsHoy, hourlyTotalsSemAnt, ultimaFranjaHora, totalNeto, varPctVsSemAnt } = data;
 
   const startIndex = 7;
+  const hasHourlyData = ultimaFranjaHora > 0 && hourlyTotalsHoy.some(v => v > 0);
+
   const rawEnd = Math.min(ultimaFranjaHora, 19);
   let endIndex = startIndex;
   for (let h = startIndex; h <= rawEnd; h++) {
@@ -134,8 +136,11 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0">
-        <Line data={chartData} options={options} />
+      <div className="flex-1 min-h-0 flex items-center justify-center">
+        {hasHourlyData
+          ? <Line data={chartData} options={options} style={{ width: '100%', height: '100%' }} />
+          : <p className="text-gray-500 text-2xl font-semibold tracking-widest uppercase">Esperando datos del día…</p>
+        }
       </div>
     </div>
   );
