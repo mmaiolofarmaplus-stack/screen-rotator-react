@@ -72,16 +72,6 @@ function generarBaseConocimiento() {
   var idxCobHora    = indiceCol(datosHora[0], 'Saldo_Cobertura');
   var idxCliHora    = indiceCol(datosHora[0], 'Saldo_Cliente');
 
-  // DEBUG: mostrar total de filas y fechas presentes en Sucursal x Hora
-  Logger.log('    Total filas en Sucursal x Hora: ' + (datosHora.length - 1));
-  if (datosHora.length > 1 && idxFechHora !== -1) {
-    var fechasVistas = {};
-    for (var d = 1; d < Math.min(datosHora.length, 6); d++) {
-      var fv = datosHora[d][idxFechHora];
-      Logger.log('    Fila ' + d + ' fecha raw: ' + fv + ' (tipo: ' + typeof fv + ')');
-    }
-  }
-
   var ultimaFranjaHoy = 0;
   var horaPicoMap     = {};
   var ultFranjaMap    = {};
