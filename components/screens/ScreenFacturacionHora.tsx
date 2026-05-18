@@ -136,10 +136,10 @@ export const ScreenFacturacionHora: React.FC<Props> = ({ data }) => {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 flex items-center justify-center">
+      <div className="flex-1 min-h-0 relative">
         {hasHourlyData
-          ? <Line data={chartData} options={options} style={{ width: '100%', height: '100%' }} />
-          : <p className="text-gray-500 text-2xl font-semibold tracking-widest uppercase">Esperando datos del día…</p>
+          ? <Line data={chartData} options={options} />
+          : <div className="absolute inset-0 flex items-center justify-center"><p className="text-gray-500 text-2xl font-semibold tracking-widest uppercase">Esperando datos del día…</p></div>
         }
       </div>
     </div>
